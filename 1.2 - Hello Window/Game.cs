@@ -63,7 +63,8 @@ namespace LearnOpenGL_TK
 
             //We've got the vertices done, but how exactly should this be converted to pixels for the final image?
             //To decide this, we must create what are known as shaders; these are small programs that live on the graphics card, and transform the vertices into pixels.
-            shader = new Shader("shaderVertex.glsl", "shaderFragment.glsl");
+            //The file shader.vert has an example of what shader programming is like.
+            shader = new Shader("shader.vert", "shader.frag");
 
             //Now, enable the shader.
             //Just like the VBO, this is global, so every function that modifies a shader will modify this one until a new one is bound instead.

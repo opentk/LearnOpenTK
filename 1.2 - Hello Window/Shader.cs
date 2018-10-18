@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
@@ -15,6 +16,7 @@ namespace LearnOpenGL_TK
         //This is how you create a simple shader.
         //Shaders are written in GLSL, which is a language very similar to C in its semantics.
         //The GLSL source is compiled *at runtime*, so it can optimize itself for the graphics card it's currently being used on.
+        //A commented example of GLSL can be found in shader.vert
         public Shader(string vertPath, string fragPath)
         {
             //There are several different types of shaders, but the only two you need for basic rendering are the vertex and fragment shaders.
@@ -62,7 +64,7 @@ namespace LearnOpenGL_TK
             //TO do this, create a program...
             Handle = GL.CreateProgram();
 
-            //Attack both shaders...
+            //Attach both shaders...
             GL.AttachShader(Handle, VertexShader);
             GL.AttachShader(Handle, FragmentShader);
 
@@ -134,10 +136,16 @@ namespace LearnOpenGL_TK
             }
         }
 
+        ~Shader()
+        {
+            GL.DeleteProgram(Handle);
+        }
+
 
         public void Dispose()
         {
             Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
