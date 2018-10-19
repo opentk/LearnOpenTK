@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1 - Creating a Window", "1.1 - Creating a Window\1.1 - Creating a Window.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.2 - Hello Window", "1.2 - Hello Window\1.2 - Hello Window.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.2 - Hello Triangle", "1.2 - Hello Triangle\1.2 - Hello Triangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
