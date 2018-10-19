@@ -69,8 +69,9 @@ namespace LearnOpenGL_TK
         }
 
         //Activate texture
-        public void Use()
+        public void Use(TextureUnit unit = TextureUnit.Texture0)
         {
+            GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Handle);
         }
 

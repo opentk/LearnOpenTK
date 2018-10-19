@@ -56,15 +56,16 @@ namespace LearnOpenGL_TK
             //Because there's now 5 floats between the start of the first vertex and the start of the second,
             //we modify this from 3 * sizeof(float) to 5 * sizeof(float).
             //This will now pass the new vertex array to the buffer.
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
+            int vertexLocation = shader.GetAttribLocation("aPosition");
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
+            GL.EnableVertexAttribArray(vertexLocation);
 
             //Next, we also setup texture coordinates. It works in much the same way.
-            //We use 1 instead of 0 because that's the location of the texture coordinates in shader.vert
-            //We also add an offset of 3, since the first vertex coordinate comes after the first vertex
+            //We add an offset of 3, since the first vertex coordinate comes after the first vertex
             //and change the amount of data to 2 because there's only 2 floats for vertex coordinates
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3);
-            GL.EnableVertexAttribArray(1);
+            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3);
+            GL.EnableVertexAttribArray(texCoordLocation);
 
             base.OnLoad(e);
         }
