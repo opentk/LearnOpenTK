@@ -56,7 +56,7 @@ namespace LearnOpenGL_TK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
 
             //We also buffer data to the EBO the same way.
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(int), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
             //The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
