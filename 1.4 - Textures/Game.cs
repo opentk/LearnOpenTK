@@ -7,6 +7,7 @@ namespace LearnOpenGL_TK
 {
     class Game : GameWindow
     {
+        int ElementBufferObject;
         int VertexBufferObject;
         int VertexArrayObject;
         Shader shader;
@@ -20,38 +21,50 @@ namespace LearnOpenGL_TK
         
         protected override void OnLoad(EventArgs e)
         {
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            //Because we're adding a texture, we modify the triangle's vertices to include texture coordinates.
+            //Because we're adding a texture, we modify the vertex array to include texture coordinates.
             //Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
             //The new layout is three floats to create a vertex, then two floats to create the coordinates
-            float[] vertices = {
-                //Vertices       //Texture coordinates
-             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,    //Bottom-left vertex
-              0.5f, -0.5f, 0.0f, 1.0f, 0.0f,    //Bottom-right vertex
-              0.0f,  0.5f, 0.0f, 0.5f, 1.0f     //Top vertex
+            float[] vertices =
+            {
+                //Position          Texture coordinates
+                 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
+                 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,// bottom right
+                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,// bottom left
+                -0.5f,  0.5f, 0.0f, 0.0f, 1.0f// top left 
+            };
+
+            uint[] indices =
+            {
+                0, 1, 3,
+                1, 2, 3
             };
 
 
             VertexBufferObject = GL.GenBuffer();
-
-
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-
-
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
+            ElementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
+
+            //The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             shader = new Shader("shader.vert", "shader.frag");
             shader.Use();
 
 
-            texture = new Texture("test.png");
+            texture = new Texture("container.png");
             texture.Use();
 
 
             VertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayObject);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
 
             //Because there's now 5 floats between the start of the first vertex and the start of the second,
             //we modify this from 3 * sizeof(float) to 5 * sizeof(float).
@@ -83,7 +96,7 @@ namespace LearnOpenGL_TK
             texture.Use();
             shader.Use();
 
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
+            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 
