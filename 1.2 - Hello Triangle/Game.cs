@@ -21,8 +21,8 @@ namespace LearnOpenGL_TK
         //Now, we start initializing OpenGL.
         protected override void OnLoad(EventArgs e)
         {
-            //Set the color of the background after we clear it, in normalized colors. This is just black.
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            //This will be the color of the background after we clear it, in normalized colors. This is a deep green.
+            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 
             //Create the vertices for our triangle. These are listed in normalized device coordinates (NDC)

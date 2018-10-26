@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.2 - Hello Triangle", "1.2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.4 - Textures", "1.4 - Textures\1.4 - Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.3 - Element Buffer Objects", "1.3 - Element Buffer Objects\1.3 - Element Buffer Objects.csproj", "{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{63476AD1-106A-4086-8B0E-E295567BC526}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63476AD1-106A-4086-8B0E-E295567BC526}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63476AD1-106A-4086-8B0E-E295567BC526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
