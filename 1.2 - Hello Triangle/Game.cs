@@ -97,7 +97,10 @@ namespace LearnOpenGL_TK
             //tedious to do this over and over again every time you need to switch what object is being drawn. Because of this, OpenGL now *requires* that you create
             //what is known as a Vertex Array Object (VAO). This stores the layout you create with VertexAttribPointer/EnableVertexAttribArray so that it can be
             //recreated with one simple function call.
-            //By creating the VertexArrayObject, it has automatically saved this layout, so we don't need to do anything else with it right now.
+            //By creating the VertexArrayObject, it has automatically saved this layout, so you can simply bind the VAO again to get everything back how it should be.
+
+            //Finally, we bind the VBO again so that the VAO will bind that as well.
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 
 
             //Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
