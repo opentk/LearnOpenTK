@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1 - Creating a Window", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.2 - Hello Triangle", "1.2 - Hello Triangle\1.2 - Hello Triangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.3 - Textures", "1.3 - Textures\1.3 - Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.4 - Textures", "1.4 - Textures\1.4 - Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

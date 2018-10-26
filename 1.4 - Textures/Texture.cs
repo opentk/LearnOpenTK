@@ -24,30 +24,37 @@ namespace LearnOpenGL_TK
 
             //Load the image
             var image = new Bitmap(path);
-            OpenTK.Graphics.OpenGL4.PixelFormat format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgra;
-            PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
 
-
+            //Determine the format of the pixels. This is the order that each color channel is supplied.
+            //We're loading a PNG image, which is always either RGB or RGBA.
+            //However, System.Drawing loads in the opposite order of what OpenGL expects, for some reason.
+            //So we use BGR or BGRA instead, to make it work properly.
+            OpenTK.Graphics.OpenGL4.PixelFormat format;
             if (image.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
             {
                 format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgr;
-                internalFormat = PixelInternalFormat.Rgb;
+            }
+            else
+            {
+                format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgra;
             }
 
+            //Obtain bitmap data. This contains our pixels.
             BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
 
 
-            //Alright, we've got our pixels. Now we need to set a few settings.
+            //Now that have our pixels, we need to set a few settings.
             //If you don't include these settings, OpenTK will refuse to draw the texture.
 
             //First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
-            //Here, we use Linear for both. This means that OpenGL will try to blend pictures, meaning that textures scaled too far will look blurred.
+            //Here, we use Linear for both. This means that OpenGL will try to blend pixels, meaning that textures scaled too far will look blurred.
             //You could also use (amonst other options) Nearest, which just grabs the nearest pixel, which makes the texture look pixelated if scaled too far.
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
 
             //Now, set the wrapping mode. S is for the X axis, and T is for the Y axis.
+            //We set this to Repeat so that textures will repeat when wrapped. Not demonstrated here since the texture coordinates exactly match
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
@@ -60,9 +67,9 @@ namespace LearnOpenGL_TK
             //  Width of the image
             //  Height of the image.
             //  Border of the image. This must always be 0; it's a legacy parameter that Khronos never got rid of.
-            //  The format of the pixels. Different formats can list the pixels in a different order. In this case, with PNG, it's RGBA.
-            //  Data type of the pixels
-            //  And finally, the actual pixels
+            //  The format of the pixels, explained above.
+            //  Data type of the pixels.
+            //  And finally, the actual pixels.
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, format, PixelType.UnsignedByte, bitmapData.Scan0);
 
 
@@ -79,6 +86,9 @@ namespace LearnOpenGL_TK
         }
 
         //Activate texture
+        //Multiple textures can be bound, if your shader needs more than just one.
+        //If you want to do that, use GL.ActiveTexture to set which slot GL.BindTexture binds to.
+        //The OpenGL standard requires that there be at least 16, but there can be more depending on your graphics card.
         public void Use(TextureUnit unit = TextureUnit.Texture0)
         {
             GL.ActiveTexture(unit);
