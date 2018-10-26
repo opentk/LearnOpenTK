@@ -24,6 +24,16 @@ namespace LearnOpenGL_TK
 
             //Load the image
             var image = new Bitmap(path);
+            OpenTK.Graphics.OpenGL4.PixelFormat format = OpenTK.Graphics.OpenGL4.PixelFormat.Rgba;
+            PixelInternalFormat internalFormat = PixelInternalFormat.Rgba;
+
+
+            if (image.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+            {
+                format = OpenTK.Graphics.OpenGL4.PixelFormat.Rgb;
+                internalFormat = PixelInternalFormat.Rgb;
+            }
+
             var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 
@@ -53,7 +63,7 @@ namespace LearnOpenGL_TK
             //  The format of the pixels. Different formats can list the pixels in a different order. In this case, with PNG, it's RGBA.
             //  Data type of the pixels
             //  And finally, the actual pixels
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Rgba, PixelType.Byte, bitmapData.Scan0);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, image.Width, image.Height, 0, format, PixelType.UnsignedByte, bitmapData.Scan0);
 
 
             //Free the data now that we're done with the texture

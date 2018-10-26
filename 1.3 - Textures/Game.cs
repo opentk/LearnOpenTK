@@ -57,15 +57,15 @@ namespace LearnOpenGL_TK
             //we modify this from 3 * sizeof(float) to 5 * sizeof(float).
             //This will now pass the new vertex array to the buffer.
             int vertexLocation = shader.GetAttribLocation("aPosition");
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
             GL.EnableVertexAttribArray(vertexLocation);
+            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
             //Next, we also setup texture coordinates. It works in much the same way.
             //We add an offset of 3, since the first vertex coordinate comes after the first vertex
             //and change the amount of data to 2 because there's only 2 floats for vertex coordinates
             int texCoordLocation = shader.GetAttribLocation("aTexCoord");
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3);
             GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             base.OnLoad(e);
         }
@@ -75,10 +75,13 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            texture.Use();
-            shader.Use();
+            while (GL.GetError() != ErrorCode.NoError)
+                Console.WriteLine("An error occurred!");
 
             GL.BindVertexArray(VertexArrayObject);
+
+            texture.Use();
+            shader.Use();
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
