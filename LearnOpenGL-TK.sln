@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.3 - Element Buffer Object
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.5 - Multiple Textures", "1.5 - Multiple Textures\1.5 - Multiple Textures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.6 - Transformations", "1.6 - Transformations\1.6 - Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{1A16223E-7FC4-41A4-9487-71B1782BC98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A16223E-7FC4-41A4-9487-71B1782BC98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A16223E-7FC4-41A4-9487-71B1782BC98D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
