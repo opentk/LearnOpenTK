@@ -126,7 +126,7 @@ namespace LearnOpenGL_TK
             //Go over to shader.vert to see how we finally apply this to the vertices
             shader.SetMatrix4("transform", transform);
 
-            //And that's it for now!
+            //And that's it for now! In the next tutorial, I'll show you how to setup a full coordinates system.
 
             GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
 
@@ -168,6 +168,7 @@ namespace LearnOpenGL_TK
             shader.Dispose();
             texture.Dispose();
             texture2.Dispose();
+
             base.OnUnload(e);
         }
     }
