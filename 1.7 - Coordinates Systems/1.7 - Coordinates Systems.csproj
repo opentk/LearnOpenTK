@@ -160,6 +160,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="awesomeface.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="container.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

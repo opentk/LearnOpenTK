@@ -24,6 +24,7 @@ namespace LearnOpenGL_TK
 
         Shader shader;
         Texture texture;
+        Texture texture2;
 
 
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -65,7 +66,11 @@ namespace LearnOpenGL_TK
             texture = new Texture("container.png");
             texture.Use(TextureUnit.Texture0);
 
+            texture2 = new Texture("awesomeface.png");
+            texture2.Use(TextureUnit.Texture1);
+
             shader.SetInt("texture0", 0);
+            shader.SetInt("texture1", 1);
 
             VertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayObject);
@@ -114,6 +119,7 @@ namespace LearnOpenGL_TK
             transform *= Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
 
             texture.Use(TextureUnit.Texture0);
+            texture2.Use(TextureUnit.Texture1);
             shader.Use();
 
             //Now that the matrix is finished, pass it to the vertex shader.
@@ -161,6 +167,7 @@ namespace LearnOpenGL_TK
 
             shader.Dispose();
             texture.Dispose();
+            texture2.Dispose();
             base.OnUnload(e);
         }
     }

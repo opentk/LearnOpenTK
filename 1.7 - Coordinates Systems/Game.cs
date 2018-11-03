@@ -15,6 +15,9 @@ namespace LearnOpenGL_TK
 
         Shader shader;
         Texture texture;
+        Texture texture2;
+
+        double time = 0.0;
 
 
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -56,7 +59,11 @@ namespace LearnOpenGL_TK
             texture = new Texture("container.png");
             texture.Use(TextureUnit.Texture0);
 
+            texture2 = new Texture("awesomeface.png");
+            texture2.Use(TextureUnit.Texture1);
+
             shader.SetInt("texture0", 0);
+            shader.SetInt("texture1", 1);
 
             VertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayObject);
@@ -80,14 +87,16 @@ namespace LearnOpenGL_TK
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            time += 4.0 * e.Time;
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.BindVertexArray(VertexArrayObject);
 
             texture.Use(TextureUnit.Texture0);
+            texture2.Use(TextureUnit.Texture1);
             shader.Use();
 
-            Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(55.0));
+            Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(time));
             Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
             Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(45.0), base.Width / base.Height, 0.1f, 100.0f);
             shader.SetMatrix4("model", model);
@@ -133,6 +142,8 @@ namespace LearnOpenGL_TK
 
             shader.Dispose();
             texture.Dispose();
+            texture2.Dispose();
+
             base.OnUnload(e);
         }
     }
