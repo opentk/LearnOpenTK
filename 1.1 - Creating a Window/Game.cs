@@ -1,5 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Input;
 
 namespace LearnOpenGL_TK
 {
@@ -8,5 +9,18 @@ namespace LearnOpenGL_TK
     {
         //A simple constructor to let us set the width/height/title of the window.
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+
+        //OpenTK allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            KeyboardState input = Keyboard.GetState();
+
+            if (input.IsKeyDown(Key.Escape))
+            {
+                Exit();
+            }
+
+            base.OnUpdateFrame(e);
+        }
     }
 }

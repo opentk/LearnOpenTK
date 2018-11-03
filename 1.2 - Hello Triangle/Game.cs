@@ -2,10 +2,10 @@
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 
 namespace LearnOpenGL_TK
 {
-    //OpenTK allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
     //Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     class Game : GameWindow
     {
@@ -145,6 +145,19 @@ namespace LearnOpenGL_TK
 
             //And that's all you have to do for rendering! You should now see a yellow triangle on a black screen.
             base.OnRenderFrame(e);
+        }
+
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            KeyboardState input = Keyboard.GetState();
+
+            if (input.IsKeyDown(Key.Escape))
+            {
+                Exit();
+            }
+
+            base.OnUpdateFrame(e);
         }
 
 

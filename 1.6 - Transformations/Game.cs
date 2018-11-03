@@ -3,6 +3,7 @@ using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 
 namespace LearnOpenGL_TK
 {
@@ -129,6 +130,19 @@ namespace LearnOpenGL_TK
             Context.SwapBuffers();
 
             base.OnRenderFrame(e);
+        }
+
+
+        protected override void OnUpdateFrame(FrameEventArgs e)
+        {
+            KeyboardState input = Keyboard.GetState();
+
+            if (input.IsKeyDown(Key.Escape))
+            {
+                Exit();
+            }
+
+            base.OnUpdateFrame(e);
         }
 
 
