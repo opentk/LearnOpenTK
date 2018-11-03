@@ -89,9 +89,6 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            while (GL.GetError() != ErrorCode.NoError)
-                Console.WriteLine("An error occurred!");
-
             GL.BindVertexArray(VertexArrayObject);
 
             texture.Use();

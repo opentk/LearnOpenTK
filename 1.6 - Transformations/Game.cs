@@ -91,9 +91,6 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            while (GL.GetError() != ErrorCode.NoError)
-                Console.WriteLine("An error occurred!");
-
             GL.BindVertexArray(VertexArrayObject);
 
             //Note: The matrices we'll use for transformations are all 4x4.
