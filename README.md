@@ -8,5 +8,5 @@ A port of [the tutorials at LearnOpenGL](https://learnopengl.com/) to C#/OpenTK.
 * 1.4 - Textures: Complete
 * 1.5 - Multiple Textures: Complete
 * 1.6 - Transformations: Complete
-* 1.7 - Coordinate systems: In progress, needs comments
+* 1.7 - Coordinate systems: Complete
 * 1.8 - Camera: Not started
