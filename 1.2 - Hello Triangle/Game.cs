@@ -9,6 +9,17 @@ namespace LearnOpenGL_TK
     //Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     class Game : GameWindow
     {
+        //Create the vertices for our triangle. These are listed in normalized device coordinates (NDC)
+        //In NDC, (0, 0) is the center of the screen.
+        //Negative X coordinates move to the left, positive X move to the right.
+        //Negative Y coordinates move to the bottom, positive Y move to the top.
+        //OpenGL only supports rendering in 3D, so to create a flat triange, the Z coordinate will be kept as 0.
+        float[] vertices = {
+            -0.5f, -0.5f, 0.0f, //Bottom-left vertex
+             0.5f, -0.5f, 0.0f, //Bottom-right vertex
+             0.0f,  0.5f, 0.0f  //Top vertex
+        };
+
         //This will be explained down in OnLoad
         int VertexBufferObject;
         int VertexArrayObject;
@@ -24,20 +35,7 @@ namespace LearnOpenGL_TK
             //This will be the color of the background after we clear it, in normalized colors. This is a deep green.
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-
-            //Create the vertices for our triangle. These are listed in normalized device coordinates (NDC)
-            //In NDC, (0, 0) is the center of the screen.
-            //Negative X coordinates move to the left, positive X move to the right.
-            //Negative Y coordinates move to the bottom, positive Y move to the top.
-            //OpenGL only supports rendering in 3D, so to create a flat triange, the Z coordinate will be kept as 0.
-            float[] vertices = {
-             -0.5f, -0.5f, 0.0f, //Bottom-left vertex
-              0.5f, -0.5f, 0.0f, //Bottom-right vertex
-              0.0f,  0.5f, 0.0f  //Top vertex
-            };
-
-
-            //Next, we need to send these vertices over to the graphics card so OpenGL can use them.
+            //We need to send our vertices over to the graphics card so OpenGL can use them.
             //To do this, we need to create what's called a Vertex Buffer Object (VBO).
             //These allow you to upload a bunch of data to a buffer, and send the buffer to the graphics card.
             //This effectively sends all the vertices at the same time.

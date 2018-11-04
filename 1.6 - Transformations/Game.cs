@@ -18,6 +18,21 @@ namespace LearnOpenGL_TK
     //Head down to RenderFrame to see how we can apply transformations to our shape.
     class Game : GameWindow
     {
+        float[] vertices =
+        {
+            //Position          Texture coordinates
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
+        };
+
+        uint[] indices =
+        {
+            0, 1, 3,
+            1, 2, 3
+        };
+
         int ElementBufferObject;
         int VertexBufferObject;
         int VertexArrayObject;
@@ -33,22 +48,6 @@ namespace LearnOpenGL_TK
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-            float[] vertices =
-            {
-                //Position          Texture coordinates
-                 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-                 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-                -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
-            };
-
-            uint[] indices =
-            {
-                0, 1, 3,
-                1, 2, 3
-            };
-
 
             VertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
@@ -128,7 +127,7 @@ namespace LearnOpenGL_TK
 
             //And that's it for now! In the next tutorial, I'll show you how to setup a full coordinates system.
 
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 

@@ -135,7 +135,7 @@ namespace LearnOpenGL_TK
             shader.SetMatrix4("view", view);
             shader.SetMatrix4("projection", projection);
 
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 

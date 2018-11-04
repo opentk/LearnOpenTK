@@ -16,6 +16,24 @@ namespace LearnOpenGL_TK
     //This is called an Element Buffer Object. This tutorial will be all about how to set one up.
     class Game : GameWindow
     {
+        //We modify the vertex array to include four vertices for our rectangle.
+        float[] vertices =
+        {
+             0.5f,  0.5f, 0.0f, // top right
+             0.5f, -0.5f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f, // top left 
+        };
+
+        //Then, we create a new array: Indices.
+        //This array controls how the EBO will use those vertices to create triangles
+        uint[] indices =
+        {
+            //Note that indices start at 0!
+            0, 1, 3, //The first triangle will be the bottom-right half of the triangle
+            1, 2, 3  //Then the second will be the top-right half of the triangle
+        };
+
         int VertexBufferObject;
         int VertexArrayObject;
         Shader shader;
@@ -29,24 +47,6 @@ namespace LearnOpenGL_TK
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-            //We modify the vertex array to include four vertices for our rectangle.
-            float[] vertices =
-            {
-                 0.5f,  0.5f, 0.0f,  // top right
-                 0.5f, -0.5f, 0.0f,  // bottom right
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                -0.5f,  0.5f, 0.0f   // top left 
-            };
-
-            //Then, we create a new array: Indices.
-            //This array controls how the EBO will use those vertices to create triangles
-            uint[] indices =
-            {
-                //Note that indices start at 0!
-                0, 1, 3, //The first triangle will be the bottom-right half of the triangle
-                1, 2, 3  //Then the second will be the top-right half of the triangle
-            };
 
             VertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
@@ -91,7 +91,7 @@ namespace LearnOpenGL_TK
             //  How many indices should be drawn. Six in this case.
             //  Data type of the indices. The indices are an unsigned int, so we want that here too.
             //  Offset in the EBO. Set this to 0 because we want to draw the whole thing.
-            GL.DrawElements(PrimitiveType.Triangles, 6, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 
