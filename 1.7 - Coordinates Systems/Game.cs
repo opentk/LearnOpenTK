@@ -53,6 +53,10 @@ namespace LearnOpenGL_TK
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            //We enable depth testing here. If you try to draw something more complex than one plane without this,
+            //you'll notice that polygons further in the background will occasionally be drawn over the top of the ones in the foreground.
+            //Obviously, we don't want this, so we enable depth testing. We also clear the depth buffer in GL.Clear over in OnRenderFrame.
             GL.Enable(EnableCap.DepthTest);
 
             VertexBufferObject = GL.GenBuffer();
@@ -113,6 +117,8 @@ namespace LearnOpenGL_TK
         {
             //We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
             time += 4.0 * e.Time;
+
+            //We clear the depth buffer in addition to the color buffer
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.BindVertexArray(VertexArrayObject);
