@@ -12,6 +12,21 @@ namespace LearnOpenGL_TK
     //In addition, we'll make the rectangle rotate over time.
     class Game : GameWindow
     {
+        float[] vertices =
+        {
+            //Position          Texture coordinates
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
+        };
+
+        uint[] indices =
+        {
+            0, 1, 3,
+            1, 2, 3
+        };
+
         int ElementBufferObject;
         int VertexBufferObject;
         int VertexArrayObject;
@@ -39,22 +54,6 @@ namespace LearnOpenGL_TK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
-
-            float[] vertices =
-            {
-                //Position          Texture coordinates
-                 0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-                 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
-                -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-                -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
-            };
-
-            uint[] indices =
-            {
-                0, 1, 3,
-                1, 2, 3
-            };
-
 
             VertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
@@ -95,14 +94,14 @@ namespace LearnOpenGL_TK
 
             //For the view, we don't do too much here. Next tutorial will be all about a Camera class that will make it much easier to manipulate the view.
             //For now, we move it backwards three units on the Z axis.
-            Matrix4 view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
+            view = Matrix4.CreateTranslation(0.0f, 0.0f, -3.0f);
 
             //For the matrix, we use a few parameters.
             //  Field of view. This determines how much the viewport can see at once. 45 is considered the most "realistic" setting, but most video games nowadays use 90
             //  Aspect ratio. This should be set to Width / Height.
             //  Near-clipping. Any vertices closer to the camera than this value will be clipped.
             //  Far-clipping. Any vertices farther away from the camera than this value will be clipped.
-            Matrix4 projection = Matrix4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(45.0), Width / Height, 0.1f, 100.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(45.0), Width / Height, 0.1f, 100.0f);
 
             //Now, head over to OnRenderFrame to see how we setup the model matrix
 
