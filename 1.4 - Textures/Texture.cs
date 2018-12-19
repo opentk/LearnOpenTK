@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
-using System.Drawing.Imaging;
-using System.Drawing;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.MetaData;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Primitives;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.Memory;
+using SixLabors.Primitives;
 
 namespace LearnOpenGL_TK
 {
@@ -23,32 +31,28 @@ namespace LearnOpenGL_TK
 
 
             //Load the image
-            var image = new Bitmap(path);
+            Image<Rgba32> image = Image.Load(path);
 
-            //Determine the format of the pixels. This is the order that each color channel is supplied.
-            //We're loading a PNG image, which is always either RGB or RGBA.
-            //However, System.Drawing loads in the opposite order of what OpenGL expects, for some reason.
-            //So we use BGR or BGRA instead, to make it work properly.
-            OpenTK.Graphics.OpenGL4.PixelFormat format;
-            if (image.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+            //Get an array of the pixels, in ImageSharp's internal format.
+            Rgba32[] tempPixels = image.GetPixelSpan().ToArray();
+
+            //Convert ImageSharp's format into a byte array, so we can use it with OpenGL.
+            List<byte> pixels = new List<byte>();
+
+            foreach (Rgba32 p in tempPixels)
             {
-                format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgr;
+                pixels.Add(p.R);
+                pixels.Add(p.G);
+                pixels.Add(p.B);
+                pixels.Add(p.A);
             }
-            else
-            {
-                format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgra;
-            }
-
-            //Obtain bitmap data. This contains our pixels.
-            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
-
 
             //Now that have our pixels, we need to set a few settings.
             //If you don't include these settings, OpenTK will refuse to draw the texture.
 
             //First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
             //Here, we use Linear for both. This means that OpenGL will try to blend pixels, meaning that textures scaled too far will look blurred.
-            //You could also use (amonst other options) Nearest, which just grabs the nearest pixel, which makes the texture look pixelated if scaled too far.
+            //You could also use (amongst other options) Nearest, which just grabs the nearest pixel, which makes the texture look pixelated if scaled too far.
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
 
@@ -70,11 +74,7 @@ namespace LearnOpenGL_TK
             //  The format of the pixels, explained above.
             //  Data type of the pixels.
             //  And finally, the actual pixels.
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, format, PixelType.UnsignedByte, bitmapData.Scan0);
-
-
-            //Free the data now that we're done with the texture
-            image.UnlockBits(bitmapData);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
 
 
             //Next, generate mipmaps.
