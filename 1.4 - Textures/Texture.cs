@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.MetaData;
 using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Primitives;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.Memory;
-using SixLabors.Primitives;
 
 namespace LearnOpenGL_TK
 {
@@ -32,6 +27,10 @@ namespace LearnOpenGL_TK
 
             //Load the image
             Image<Rgba32> image = Image.Load(path);
+
+            //ImageSharp loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
+            //This will correct that, making the texture display properly.
+            image.Mutate(x => x.Flip(FlipMode.Vertical));
 
             //Get an array of the pixels, in ImageSharp's internal format.
             Rgba32[] tempPixels = image.GetPixelSpan().ToArray();

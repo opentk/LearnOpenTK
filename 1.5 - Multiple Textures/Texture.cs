@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
-using System.Drawing.Imaging;
-using System.Drawing;
+
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Advanced;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace LearnOpenGL_TK
 {
@@ -10,27 +13,26 @@ namespace LearnOpenGL_TK
     {
         int Handle;
 
-        public Texture(string path, RotateFlipType rotate = RotateFlipType.RotateNoneFlipNone)
+        public Texture(string path)
         {
             Handle = GL.GenTexture();
             Use();
 
-            var image = new Bitmap(path);
+            Image<Rgba32> image = Image.Load(path);
 
-            //Flip the texture according to the rotation
-            image.RotateFlip(rotate);
+            image.Mutate(x => x.Flip(FlipMode.Vertical));
 
-            OpenTK.Graphics.OpenGL4.PixelFormat format;
-            if (image.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+            Rgba32[] tempPixels = image.GetPixelSpan().ToArray();
+
+            List<byte> pixels = new List<byte>();
+
+            foreach (Rgba32 p in tempPixels)
             {
-                format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgr;
+                pixels.Add(p.R);
+                pixels.Add(p.G);
+                pixels.Add(p.B);
+                pixels.Add(p.A);
             }
-            else
-            {
-                format = OpenTK.Graphics.OpenGL4.PixelFormat.Bgra;
-            }
-
-            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height), ImageLockMode.ReadOnly, image.PixelFormat);
 
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
@@ -38,9 +40,7 @@ namespace LearnOpenGL_TK
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
 
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, format, PixelType.UnsignedByte, bitmapData.Scan0);
-
-            image.UnlockBits(bitmapData);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
 
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }

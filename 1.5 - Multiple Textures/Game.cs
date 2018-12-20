@@ -62,7 +62,7 @@ namespace LearnOpenGL_TK
 
             //The texture constructor has been modified so that you can optionally supply a RotateFlipType, which can let you modify the way the texture is displayed
             //This is helpful because System.Drawing reads the pixels differently than OpenGL expects
-            texture2 = new Texture("awesomeface.png", RotateFlipType.RotateNoneFlipY);
+            texture2 = new Texture("awesomeface.png");
             //Then, the second goes in texture unit 1.
             texture2.Use(TextureUnit.Texture1);
 
