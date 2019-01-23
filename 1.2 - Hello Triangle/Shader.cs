@@ -72,7 +72,7 @@ namespace LearnOpenGL_TK
             GL.LinkProgram(Handle);
 
             //Check for linker errors
-            string infoLogLink = GL.GetShaderInfoLog(VertexShader);
+            string infoLogLink = GL.GetProgramInfoLog(Handle);
             if (infoLogLink != System.String.Empty)
                 System.Console.WriteLine(infoLogLink);
 
