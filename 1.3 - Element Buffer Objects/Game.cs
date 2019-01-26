@@ -67,7 +67,7 @@ namespace LearnOpenGL_TK
             VertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             //We bind the EBO here too, just like with the VBO in the previous tutorial.
             //Now, the EBO will be bound when we find the VAO.
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
