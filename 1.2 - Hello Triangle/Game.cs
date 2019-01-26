@@ -98,6 +98,7 @@ namespace LearnOpenGL_TK
             //By creating the VertexArrayObject, it has automatically saved this layout, so you can simply bind the VAO again to get everything back how it should be.
 
             //Finally, we bind the VBO again so that the VAO will bind that as well.
+            //This means that, when you bind the VAO, it will automatically bind the VBO as well.
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
 
 
