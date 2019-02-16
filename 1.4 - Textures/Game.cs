@@ -63,7 +63,7 @@ namespace LearnOpenGL_TK
             VertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(VertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
 
             //Because there's now 5 floats between the start of the first vertex and the start of the second,

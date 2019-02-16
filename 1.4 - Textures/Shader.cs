@@ -30,7 +30,7 @@ namespace LearnOpenGL_TK
             GL.ShaderSource(FragmentShader, FragmentShaderSource);
             GL.CompileShader(FragmentShader);
 
-            string infoLogFrag = GL.GetShaderInfoLog(VertexShader);
+            string infoLogFrag = GL.GetShaderInfoLog(FragmentShader);
             if (infoLogFrag != System.String.Empty)
                 System.Console.WriteLine(infoLogFrag);
 
