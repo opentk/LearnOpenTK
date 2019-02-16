@@ -41,7 +41,7 @@ namespace LearnOpenGL_TK
 
             GL.LinkProgram(Handle);
 
-            GL.GetProgramInfoLog(Handle);
+            string infoLogLink = GL.GetProgramInfoLog(Handle);
             if (infoLogLink != System.String.Empty)
                 System.Console.WriteLine(infoLogLink);
 
