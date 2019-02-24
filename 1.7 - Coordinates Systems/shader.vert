@@ -14,5 +14,5 @@ void main(void)
 {
 	texCoord = aTexCoord;
 
-    gl_Position = model * view * projection * vec4(aPosition, 1.0);
+    gl_Position = vec4(aPosition, 1.0) * model * view * projection;
 }
