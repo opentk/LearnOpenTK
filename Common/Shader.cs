@@ -5,7 +5,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
 
-namespace LearnOpenGL_TK
+namespace LearnOpenGL_TK.Common
 {
     //A simple class meant to help create shaders.
     public class Shader: System.IDisposable
@@ -95,7 +95,7 @@ namespace LearnOpenGL_TK
 
 
         //The shader sources provided with this project use hardcoded layout(location)-s. If you want to do it dynamically,
-        //you can omit the layaout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
+        //you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
         public int GetAttribLocation(string attribName)
         {
             return GL.GetAttribLocation(Handle, attribName);
@@ -113,6 +113,44 @@ namespace LearnOpenGL_TK
             }
 
             return readContents;
+        }
+        
+        //Uniform setters
+        //Uniforms are variables that can be set by user code, instead of reading them from the VBO.
+        //You use VBOs for vertex-related data, and uniforms for almost everything else.
+        
+        //Setting a uniform is almost always the exact same, so I'll explain it here once, instead of in every method:
+        //    1. Bind the program you want to set the uniform on
+        //    2. Get a handle to the location of the uniform with GL.GetUniformLocation.
+        //    3. Use the appropriate GL.Uniform* function to set the uniform.
+
+        /// <summary>
+        /// Set a uniform int on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetInt(string name, int data)
+        {
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
+            GL.Uniform1(location, data);
+        }
+
+        /// <summary>
+        /// Set a uniform Matrix4 on this shader
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        /// <remarks>
+        ///   <para>
+        ///   The matrix is transposed before being sent to the shader.
+        ///   </para>
+        /// </remarks>
+        public void SetMatrix4(string name, Matrix4 data)
+        {
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
+            GL.UniformMatrix4(location, true, ref data);
         }
 
 

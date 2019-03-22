@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Drawing;
 using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
+using LearnOpenGL_TK.Common;
 
 namespace LearnOpenGL_TK
 {
