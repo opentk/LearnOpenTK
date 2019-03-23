@@ -7,7 +7,7 @@ using LearnOpenGL_TK.Common;
 
 namespace LearnOpenGL_TK
 {
-    //We now have a rotating rectangle but how can we make the rectangle move based on user input
+    //We now have a rotating rectangle but how can we make the view move based on the users input
     //In this tutorial we will take a look at how you could implement a camera class
     //and start responding to user input
     //You can move to the camera class to see a lot of the new code added
@@ -42,6 +42,8 @@ namespace LearnOpenGL_TK
         
         //The movementSpeed is how many units the camera will move in one second
         float movementSpeed = 1.5f;
+        //The sensitivity is as you might have guessed the sensitivity (or how fast) the mouse moves along the screen
+        float sensitivity = .001f;
 
         double time = 0.0;
 
@@ -100,7 +102,7 @@ namespace LearnOpenGL_TK
             Camera.Init(45, Width / Height);
             //We should start moving the camera a bit back so we can see the rectangle,
             //otherwise we will start with the rectangle within our near clipping plane
-            Camera.Move(Vector3.UnitZ * -3);
+            Camera.Move(Vector3.UnitZ * -3);;
 
             base.OnLoad(e);
         }
@@ -122,7 +124,8 @@ namespace LearnOpenGL_TK
             shader.SetMatrix4("model", model);
             //The camera now takes care of passing the view matrix and the projection matrix
             //You can head to UpdateFrame to see how we process the user input to update the camera
-            Camera.Use(shader);
+            shader.SetMatrix4("projection", Camera.projection);
+            shader.SetMatrix4("view", Camera.GetView());
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -153,10 +156,27 @@ namespace LearnOpenGL_TK
             if (input.IsKeyDown(Key.A)) Camera.Move(Vector3.UnitX * (float)e.Time * movementSpeed);        //Move to the left
             if (input.IsKeyDown(Key.Space)) Camera.Move(Vector3.UnitY * (float)e.Time * movementSpeed);    //Move up
             if (input.IsKeyDown(Key.LShift)) Camera.Move(-Vector3.UnitY * (float)e.Time * movementSpeed);  //Move down
-
+            
+            //To handle the rotation of the camera you should check out MouseMove
+            
             base.OnUpdateFrame(e);
         }
-
+        
+        //This is called whenever the mouse position has changed from one frame to the next
+        //For now we want to use this to rotate the camera
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            //Only perform the movement if the right mouse button is down
+            if (e.Mouse.IsButtonDown(MouseButton.Right))
+            {
+                //Next we should get the x and y position of the mouse within the window
+                //Then we should rotate the the camera based on that position
+                Camera.Rotate(new Vector3(sensitivity * -e.YDelta,
+                    sensitivity * -e.XDelta,0));
+            }
+            
+            base.OnMouseMove(e);
+        }
 
         protected override void OnResize(EventArgs e)
         {

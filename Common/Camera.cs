@@ -10,8 +10,10 @@ namespace LearnOpenGL_TK.Common
         //For now we split up the position and the rotation of the view matrix before we actually need the view matrix
         //This way we can easily modify each of the components before putting them together to form the view matrix
         static Vector3 position = Vector3.Zero;
-        static Quaternion rotation = Quaternion.Identity;
-        static Matrix4 projection;
+        static Vector3 rotation = Vector3.Zero;
+        //The projection matrix should only need to be modified very rarely
+        //Therefor the matrix is set to being private write, but it is public read so we can use it for our shader
+        public static Matrix4 projection { get; private set; }
 
         //The fov is the field of view, or the angle of the camera
         public static void Init(float fov, float aspectRatio)
@@ -27,23 +29,19 @@ namespace LearnOpenGL_TK.Common
             position += move;
         }
 
-        public static void Rotate(Vector4 rotate)
+        public static void Rotate(Vector3 rotate)
         {
             //To rotate a quaternion we can just multiply it with another quaternion
             //We generate the quaternion from an axis angle which is an axis defined by the x, y and z components and
             //an angle defined by the w component of the vector
-            rotation *= Quaternion.FromAxisAngle(rotate.Xyz, rotate.W);
+            rotation += rotate;
         }
         
-        public static void Use(Shader shader)
+        public static Matrix4 GetView()
         {
-            //Remember from the last tutorial that in order to "use" a camera we need to
-            //hand the view and projection matrices over to the shaders
-            shader.SetMatrix4("projection", projection);
-            
-            //First we generate and send over the view matrix
-            Matrix4 view = Matrix4.Identity * Matrix4.CreateTranslation(position) * Matrix4.CreateFromQuaternion(rotation);
-            shader.SetMatrix4("view", view);
+            //We generate the matrix from our position and rotation
+            //After that we return the calculated view matrix
+            return Matrix4.Identity * Matrix4.CreateTranslation(position) * Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(rotation));
         }
     }
 }
