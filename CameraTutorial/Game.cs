@@ -105,9 +105,10 @@ namespace LearnOpenGL_TK
             //You can think of the fov as the angle of the camera
             //The aspect ratio is just the width of the viewport divided by the height
             //Head to RenderFrame to see how we pass the matrices to the shader
+            //Also remember to set the perspective OnResize, since the aspect ratio can change once the window is resized
             camera = new Camera();
             camera.SetPerspective(45, Width / Height);
-            //We should start moving the camera a bit back so we can see the rectangle,
+            //We should have the camera moved a bit back at the start so we can see the rectangle,
             //otherwise we will start with the rectangle within our near clipping plane
             camera.Move(Vector3.UnitZ * -3);;
 
@@ -188,6 +189,7 @@ namespace LearnOpenGL_TK
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
+            camera.SetPerspective(45, Width / Height);
             base.OnResize(e);
         }
 
