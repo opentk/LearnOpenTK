@@ -16,7 +16,7 @@ namespace LearnOpenGL_TK
     //In reality we can't move the camera but we actually move the rectangle
     //I will explain this more in depth in the web version, however it pretty much gives us the same result
     //as if i could move the view
-    class Game : GameWindow
+    public class Game : GameWindow
     {
         float[] vertices =
         {
