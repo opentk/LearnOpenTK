@@ -12,6 +12,10 @@ namespace LearnOpenGL_TK
     //and start responding to user input
     //You can move to the camera class to see a lot of the new code added
     //Otherwise you can move to Load to see how the camera is initialized
+    
+    //In reality we can't move the camera but we actually move the rectangle
+    //I will explain this more in depth in the web version, however it pretty much gives us the same result
+    //as if i could move the view
     class Game : GameWindow
     {
         float[] vertices =
@@ -40,6 +44,8 @@ namespace LearnOpenGL_TK
         //I have removed the view and projection matrices as we dont need them here anymore
         //They can now be found in the new camera class
         
+        //We need an instance of the new camera class so it can manage the view and projection matrix code
+        Camera camera;
         //The movementSpeed is how many units the camera will move in one second
         float movementSpeed = 1.5f;
         //The sensitivity is as you might have guessed the sensitivity (or how fast) the mouse moves along the screen
@@ -93,16 +99,17 @@ namespace LearnOpenGL_TK
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            //Initialize the camera, it needs the field of view and an aspect ratio
+            //Initialize the camera, and set the perspective it needs the field of view and an aspect ratio
             //Go to the camera class to see more specifically how the camera is made
             //The fov is set to 45 as that is considered most realistic however most games use 90
             //You can think of the fov as the angle of the camera
             //The aspect ratio is just the width of the viewport divided by the height
             //Head to RenderFrame to see how we pass the matrices to the shader
-            Camera.Init(45, Width / Height);
+            camera = new Camera();
+            camera.SetPerspective(45, Width / Height);
             //We should start moving the camera a bit back so we can see the rectangle,
             //otherwise we will start with the rectangle within our near clipping plane
-            Camera.Move(Vector3.UnitZ * -3);;
+            camera.Move(Vector3.UnitZ * -3);;
 
             base.OnLoad(e);
         }
@@ -124,8 +131,8 @@ namespace LearnOpenGL_TK
             shader.SetMatrix4("model", model);
             //The camera now takes care of passing the view matrix and the projection matrix
             //You can head to UpdateFrame to see how we process the user input to update the camera
-            shader.SetMatrix4("projection", Camera.projection);
-            shader.SetMatrix4("view", Camera.GetView());
+            shader.SetMatrix4("projection", camera.projection);
+            shader.SetMatrix4("view", camera.view);
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -150,12 +157,12 @@ namespace LearnOpenGL_TK
             //We multiply our movement with the time between frames to make the movement based on real time
             //This way you will move equally fast if you have a slow and/or fast computer
             //Then we multiply by the movementSpeed to apply that
-            if (input.IsKeyDown(Key.W)) Camera.Move(Vector3.UnitZ * (float)e.Time * movementSpeed);        //Move forwards
-            if (input.IsKeyDown(Key.S)) Camera.Move(-Vector3.UnitZ * (float)e.Time * movementSpeed);       //Move backwards
-            if (input.IsKeyDown(Key.D)) Camera.Move(-Vector3.UnitX * (float)e.Time * movementSpeed);       //Move to the right
-            if (input.IsKeyDown(Key.A)) Camera.Move(Vector3.UnitX * (float)e.Time * movementSpeed);        //Move to the left
-            if (input.IsKeyDown(Key.Space)) Camera.Move(Vector3.UnitY * (float)e.Time * movementSpeed);    //Move up
-            if (input.IsKeyDown(Key.LShift)) Camera.Move(-Vector3.UnitY * (float)e.Time * movementSpeed);  //Move down
+            if (input.IsKeyDown(Key.W)) camera.Move(Vector3.UnitZ * (float)e.Time * movementSpeed);        //Move forwards
+            if (input.IsKeyDown(Key.S)) camera.Move(-Vector3.UnitZ * (float)e.Time * movementSpeed);       //Move backwards
+            if (input.IsKeyDown(Key.D)) camera.Move(-Vector3.UnitX * (float)e.Time * movementSpeed);       //Move to the right
+            if (input.IsKeyDown(Key.A)) camera.Move(Vector3.UnitX * (float)e.Time * movementSpeed);        //Move to the left
+            if (input.IsKeyDown(Key.Space)) camera.Move(-Vector3.UnitY * (float)e.Time * movementSpeed);    //Move up
+            if (input.IsKeyDown(Key.LShift)) camera.Move(Vector3.UnitY * (float)e.Time * movementSpeed);  //Move down
             
             //To handle the rotation of the camera you should check out MouseMove
             
@@ -171,7 +178,7 @@ namespace LearnOpenGL_TK
             {
                 //Next we should get the x and y position of the mouse within the window
                 //Then we should rotate the the camera based on that position
-                Camera.Rotate(new Vector3(sensitivity * -e.YDelta,
+                camera.Rotate(new Vector3(sensitivity * -e.YDelta,
                     sensitivity * -e.XDelta,0));
             }
             
