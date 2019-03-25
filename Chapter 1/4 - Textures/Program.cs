@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            using (Game game = new Game(800, 600, "LearnOpenGL"))
+            using (Game game = new Game(800, 600, "LearnOpenTK - Textures"))
             {
                 game.Run(60.0);
             }

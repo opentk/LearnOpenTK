@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.1 - Creating a Window", "1.1 - Creating a Window\1.1 - Creating a Window.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1 - Creating a Window", "Chapter 1\1 - Creating a Window\1 - Creating a Window.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.2 - Hello Triangle", "1.2 - Hello Triangle\1.2 - Hello Triangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2 - Hello Triangle", "Chapter 1\2 - Hello Triangle\2 - Hello Triangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.4 - Textures", "1.4 - Textures\1.4 - Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4 - Textures", "Chapter 1\4 - Textures\4 - Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.3 - Element Buffer Objects", "1.3 - Element Buffer Objects\1.3 - Element Buffer Objects.csproj", "{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3 - Element Buffer Objects", "Chapter 1\3 - Element Buffer Objects\3 - Element Buffer Objects.csproj", "{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.5 - Multiple Textures", "1.5 - Multiple Textures\1.5 - Multiple Textures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Multiple Textures", "Chapter 1\5 - Multiple Textures\5 - Multiple Textures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.6 - Transformations", "1.6 - Transformations\1.6 - Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6 - Transformations", "Chapter 1\6 - Transformations\6 - Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "1.7 - Coordinates Systems", "1.7 - Coordinates Systems\1.7 - Coordinates Systems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7 - Coordinates Systems", "Chapter 1\7 - Coordinates Systems\7 - Coordinates Systems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8 - Camera", "Chapter 1\8 - Camera\8 - Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}"
 EndProject
@@ -57,6 +59,10 @@ Global
 		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
