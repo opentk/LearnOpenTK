@@ -3,35 +3,121 @@ using OpenTK;
 
 namespace LearnOpenGL_TK.Common
 {
+    //This is the camera class as it could be set up after the tutorials on the website
+    //It is important to note there are a few ways you could have set up this camera, for example
+    //you could have also managed the player input inside the camera class, and a lot of the properties could have
+    //been made into functions.
+    
+    //TL;DR: This is just one of many ways in which we could have set up the camera
+    //Check out the web version if you don't know why we are doing a specific thing or want to know more about the code
     public class Camera
     {
-        //The projection matrix should only need to be modified very rarely
-        //Therefor the matrix is set to being private write, but it is public read so we can use it for our shader
-        public Matrix4 projection { get; private set; }
-        //The view matrix represents the position of the camera
-        //In reality it is a bit more complicated but i will go more in depth in the web version
-        public Matrix4 view { get; private set; } = Matrix4.Identity;
-        
-        //The fov is the field of view, or the angle of the camera
-        public void SetPerspective(float fov, float aspectRatio)
+        //We need quite the amount of vectors to define the camera
+        //The position is simply the position of the camera
+        //the other vectors are directions pointing outwards from the camera to define how it is rotated
+        public Vector3 Position;
+        private Vector3 front = -Vector3.UnitZ;
+        public Vector3 Front => front;
+        private Vector3 up = Vector3.UnitY;
+        public Vector3 Up => up;
+        private Vector3 right = Vector3.UnitX;
+        public Vector3 Right => right;
+
+        //Pitch is the rotation around the x axis, and it is explained more specifically in the tutorial how we can use this
+        private float _pitch;
+        public float Pitch
         {
-            //We only need to create the projection matrix once
-            //So we can just create it in the constructor
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(fov), aspectRatio, 0.1f, 100.0f);
+            get => _pitch;
+            set
+            {
+                //We clamp the pitch value between -89 and 89 to prevent the camera from going upside down, and a bunch
+                //of weird "bugs" when you are using euler angles for rotation. If you want to read more about this you can try researching a topic called gimbal lock
+                if (value > 89.0f)
+                {
+                    _pitch = 89.0f;
+                }
+                else if (value <= -89.0f)
+                {
+                    _pitch = -89.0f;
+                }
+                else
+                {
+                    _pitch = value;
+                }
+                UpdateVertices();
+            }
         }
-        
-        public void Move(Vector3 move)
+        //Yaw is the rotation around the y axis, and it is explained more specifically in the tutorial how we can use this
+        private float yaw;
+        public float Yaw
         {
-            //To move by a position just add the two positions together
-            view *= Matrix4.CreateTranslation(move);
+            get => yaw;
+            set
+            {
+                yaw = value;
+                UpdateVertices();
+            }
         }
 
-        public void Rotate(Vector3 rotate)
+        //The speed and the sensitivity are the speeds of respectively,
+        //the movement of the camera and the rotation of the camera (mouse sensitivity)
+        public float Speed = 1.5f;
+        public float Sensitivity = 0.2f;
+
+        //The fov (field of view) is how wide the camera is viewing, this has been discussed more in depth in a
+        //previous tutorial, but in this tutorial you have also learned how we can use this to simulate a zoom feature.
+        private float fov = 45.0f;
+        public float Fov
         {
-            //To rotate a quaternion we can just multiply it with another quaternion
-            //We generate the quaternion from an axis angle which is an axis defined by the x, y and z components and
-            //an angle defined by the w component of the vector
-            view *= Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(rotate));
+            get => fov;
+            set
+            {
+                if (value >= 45.0f)
+                {
+                    fov = 45.0f;
+                }
+                else if (value <= 1.0f)
+                {
+                    fov = 1.0f;
+                }
+                else
+                {
+                    fov = value;
+                }
+            }
+        }
+        public float AspectRatio { get; set; } //This is simply the aspect ratio of the viewport, used for the projection matrix
+        
+        //In the instructor we take in a position
+        //We also set the yaw to -90, the code would work without this, but you would be started rotated 90 degrees away from the rectangle
+        public Camera(Vector3 position)
+        {
+            Position = position;
+            yaw = -90;
+        }
+        
+        //Get the view matrix using the amazing LookAt function described more in depth on the web version of the tutorial
+        public Matrix4 GetViewMatrix() => 
+            Matrix4.LookAt(Position, Position + Front, Up);
+        //Get the projection matrix using the same method we have used up until this point
+        public Matrix4 GetProjectionMatrix() => 
+            Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), AspectRatio, 0.01f, 100f);
+
+        //This function is going to update the direction vertices using some of the math learned in the web tutorials
+        private void UpdateVertices()
+        {
+            //First the front matrix is calculated using some basic trigonometry
+            front.X = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(Yaw));
+            front.Y = (float)Math.Sin(MathHelper.DegreesToRadians(Pitch));
+            front.Z = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Sin(MathHelper.DegreesToRadians(Yaw));
+            //We need to make sure the vectors are all normalized, as otherwise we would get some funky results
+            front = Vector3.Normalize(front);
+            
+            //Calculate both the right and the up vector using the cross product
+            //Note that we are calculating the right from the global up, this behaviour might
+            //not be what you need for all cameras so keep this in mind if you do not want a FPS camera
+            right = Vector3.Normalize(Vector3.Cross(Front, Vector3.UnitY));
+            up = Vector3.Normalize(Vector3.Cross(Right, Front));
         }
     }
 }
