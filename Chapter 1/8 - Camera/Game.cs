@@ -136,6 +136,9 @@ namespace LearnOpenGL_TK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            if (!Focused) // check to see if the window is focused
+                return;
+            
             KeyboardState input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
@@ -164,7 +167,7 @@ namespace LearnOpenGL_TK
                 lastPos = new Vector2(mouse.X, mouse.Y);
                 firstMove = false;
             }
-            else if (Focused) // check to see if the window is focused
+            else
             {
                 //Calculate the offset of the mouse position
                 float deltaX = mouse.X - lastPos.X;
