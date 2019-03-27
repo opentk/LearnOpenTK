@@ -137,8 +137,10 @@ namespace LearnOpenGL_TK
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             if (!Focused) // check to see if the window is focused
+            {
                 return;
-            
+            }
+
             KeyboardState input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
@@ -188,7 +190,9 @@ namespace LearnOpenGL_TK
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
             if (Focused) // check to see if the window is focused
+            {
                 Mouse.SetPosition(X + Width/2f, Y + Height/2f);
+            }
             
             base.OnMouseMove(e);
         }
