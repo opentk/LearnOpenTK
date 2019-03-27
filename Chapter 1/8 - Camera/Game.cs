@@ -164,7 +164,7 @@ namespace LearnOpenGL_TK
                 lastPos = new Vector2(mouse.X, mouse.Y);
                 firstMove = false;
             }
-            else
+            else if (Focused) // check to see if the window is focused
             {
                 //Calculate the offset of the mouse position
                 float deltaX = mouse.X - lastPos.X;
@@ -184,7 +184,8 @@ namespace LearnOpenGL_TK
         //further out
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
-            Mouse.SetPosition(X + Width/2f, Y + Height/2f);
+            if (Focused) // check to see if the window is focused
+                Mouse.SetPosition(X + Width/2f, Y + Height/2f);
             
             base.OnMouseMove(e);
         }
