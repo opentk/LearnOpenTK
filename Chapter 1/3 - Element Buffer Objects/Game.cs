@@ -15,10 +15,10 @@ namespace LearnOpenGL_TK
 
     //OpenGL provides a way to reuse vertices, which can heavily reduce memory usage on complex objects.
     //This is called an Element Buffer Object. This tutorial will be all about how to set one up.
-    class Game : GameWindow
+    public class Game : GameWindow
     {
         //We modify the vertex array to include four vertices for our rectangle.
-        float[] vertices =
+        private readonly float[] _vertices =
         {
              0.5f,  0.5f, 0.0f, // top right
              0.5f, -0.5f, 0.0f, // bottom right
@@ -26,21 +26,21 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, // top left 
         };
 
-        //Then, we create a new array: Indices.
+        //Then, we create a new array: indices.
         //This array controls how the EBO will use those vertices to create triangles
-        uint[] indices =
+        private readonly uint[] _indices =
         {
             //Note that indices start at 0!
             0, 1, 3, //The first triangle will be the bottom-right half of the triangle
             1, 2, 3  //Then the second will be the top-right half of the triangle
         };
 
-        int VertexBufferObject;
-        int VertexArrayObject;
-        Shader shader;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
+        private Shader _shader;
 
         //Add a handle for the EBO
-        int ElementBufferObject;
+        int _elementBufferObject;
 
 
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -49,29 +49,30 @@ namespace LearnOpenGL_TK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             //We create/bind the EBO the same way as the VBO, just with a different BufferTarget.
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
             //We also buffer data to the EBO the same way.
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            //The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
+            _shader = new Shader("shader.vert", "shader.frag");
+            _shader.Use();
 
-            shader = new Shader("shader.vert", "shader.frag");
-            shader.Use();
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            
             //We bind the EBO here too, just like with the VBO in the previous tutorial.
             //Now, the EBO will be bound when we bind the VAO.
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            
+            //The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
             
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
@@ -84,9 +85,9 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            shader.Use();
+            _shader.Use();
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
             //Then replace your call to DrawTriangles with one to DrawElements
             //Arguments:
@@ -94,7 +95,7 @@ namespace LearnOpenGL_TK
             //  How many indices should be drawn. Six in this case.
             //  Data type of the indices. The indices are an unsigned int, so we want that here too.
             //  Offset in the EBO. Set this to 0 because we want to draw the whole thing.
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 
@@ -104,7 +105,7 @@ namespace LearnOpenGL_TK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
+            var input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {
@@ -124,12 +125,14 @@ namespace LearnOpenGL_TK
         protected override void OnUnload(EventArgs e)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
-            shader.Dispose();
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteBuffer(_elementBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
+            _shader.Dispose();
 
             base.OnUnload(e);
         }

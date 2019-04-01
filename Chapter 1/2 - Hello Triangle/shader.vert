@@ -1,4 +1,4 @@
-//For more information on how shaders work, check out https://learnopengl.com/Getting-started/Shaders
+//For more information on how shaders work, check out the web version of this tutorial
 //I'll include a simpler summary here.
 
 //First non-comment line should always be a #version statement; this just tells the GLSL compiler what version it should use
@@ -24,6 +24,7 @@
 //	a call to GL.GetAttribLocation(shaderHandle, attributeName)
 //Next, the keyword "in" defines this as an input variable. We'll have an example of the "out" keyword in the next tutorial.
 //Then, the keyword "vec3" means this is a vector with 3 floats inside.
+
 layout(location = 0) in vec3 aPosition;
 
 
@@ -33,6 +34,7 @@ layout(location = 0) in vec3 aPosition;
 //Keep in mind that we only pass a vec3 to this shader; the fourth component of a vertex is known as "w".
 //It's only used in some more advanced OpenGL functions; it's not needed here.
 //so with a call to the vec4 function, we just give it a constant value of 1.0
+
 void main(void)
 {
     gl_Position = vec4(aPosition, 1.0);

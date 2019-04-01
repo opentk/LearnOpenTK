@@ -12,7 +12,7 @@ namespace LearnOpenGL_TK
         //Because we're adding a texture, we modify the vertex array to include texture coordinates.
         //Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
         //The new layout is three floats to create a vertex, then two floats to create the coordinates
-        float[] vertices =
+        private readonly float[] _vertices =
         {
             //Position          Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -21,19 +21,19 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        uint[] indices =
+        private readonly uint[] _indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        int ElementBufferObject;
-        int VertexBufferObject;
-        int VertexArrayObject;
-        Shader shader;
+        private int _elementBufferObject;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
+        private Shader _shader;
 
         //For documentation on this, check Texture.cs
-        Texture texture;
+        private Texture _texture;
 
 
         public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -43,41 +43,41 @@ namespace LearnOpenGL_TK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
 
             //The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-            shader = new Shader("shader.vert", "shader.frag");
-            shader.Use();
+            _shader = new Shader("shader.vert", "shader.frag");
+            _shader.Use();
 
 
-            texture = new Texture("container.png");
-            texture.Use();
+            _texture = new Texture("container.png");
+            _texture.Use();
 
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
             //Because there's now 5 floats between the start of the first vertex and the start of the second,
             //we modify this from 3 * sizeof(float) to 5 * sizeof(float).
             //This will now pass the new vertex array to the buffer.
-            int vertexLocation = shader.GetAttribLocation("aPosition");
+            int vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
             //Next, we also setup texture coordinates. It works in much the same way.
             //We add an offset of 3, since the first vertex coordinate comes after the first vertex
             //and change the amount of data to 2 because there's only 2 floats for vertex coordinates
-            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            int texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -89,12 +89,12 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
-            texture.Use();
-            shader.Use();
+            _texture.Use();
+            _shader.Use();
 
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             Context.SwapBuffers();
 
@@ -104,7 +104,7 @@ namespace LearnOpenGL_TK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
+            var input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {
@@ -128,12 +128,12 @@ namespace LearnOpenGL_TK
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
 
-            shader.Dispose();
+            _shader.Dispose();
             //Don't forget to dispose of the texture too!
-            texture.Dispose();
+            _texture.Dispose();
             base.OnUnload(e);
         }
     }
