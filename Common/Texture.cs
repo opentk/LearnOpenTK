@@ -105,7 +105,7 @@ namespace LearnOpenGL_TK.Common
                     // TODO: dispose managed state (managed objects).
                 }
 
-                GL.DeleteProgram(Handle);
+                GL.DeleteTexture(Handle);
 
                 disposedValue = true;
             }
@@ -113,7 +113,7 @@ namespace LearnOpenGL_TK.Common
 
         ~Texture()
         {
-            GL.DeleteProgram(Handle);
+            GL.DeleteTexture(Handle);
         }
 
 
