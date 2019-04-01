@@ -45,11 +45,11 @@ namespace LearnOpenGL_TK
         //They can now be found in the new camera class
         
         //We need an instance of the new camera class so it can manage the view and projection matrix code
+        //We also need a boolean set to true to detect whether or not the mouse has been moved for the first time
+        //Finally we add the last position of the mouse so we can calculate the mouse offset easily
         Camera camera;
-        //The movementSpeed is how many units the camera will move in one second
-        float movementSpeed = 1.5f;
-        //The sensitivity is as you might have guessed the sensitivity (or how fast) the mouse moves along the screen
-        float sensitivity = .001f;
+        bool firstMove = true;
+        Vector2 lastPos;
 
         double time = 0.0;
 
@@ -99,19 +99,13 @@ namespace LearnOpenGL_TK
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            //Initialize the camera, and set the perspective it needs the field of view and an aspect ratio
-            //Go to the camera class to see more specifically how the camera is made
-            //The fov is set to 45 as that is considered most realistic however most games use 90
-            //You can think of the fov as the angle of the camera
-            //The aspect ratio is just the width of the viewport divided by the height
-            //Head to RenderFrame to see how we pass the matrices to the shader
-            //Also remember to set the perspective OnResize, since the aspect ratio can change once the window is resized
-            camera = new Camera();
-            camera.SetPerspective(45, Width / Height);
-            //We should have the camera moved a bit back at the start so we can see the rectangle,
-            //otherwise we will start with the rectangle within our near clipping plane
-            camera.Move(Vector3.UnitZ * -3);;
-
+            //We initialize the camera so that it is 3 units back from where the rectangle is
+            //and give it the proper aspect ratio
+            camera = new Camera(Vector3.UnitZ * 3);
+            camera.AspectRatio = Width / (float)Height;
+            //We make the mouse cursor invisible so we can have proper FPS-camera movement
+            CursorVisible = false;
+            
             base.OnLoad(e);
         }
 
@@ -130,10 +124,8 @@ namespace LearnOpenGL_TK
 
             Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(time));
             shader.SetMatrix4("model", model);
-            //The camera now takes care of passing the view matrix and the projection matrix
-            //You can head to UpdateFrame to see how we process the user input to update the camera
-            shader.SetMatrix4("projection", camera.projection);
-            shader.SetMatrix4("view", camera.view);
+            shader.SetMatrix4("view", camera.GetViewMatrix());
+            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -142,54 +134,82 @@ namespace LearnOpenGL_TK
             base.OnRenderFrame(e);
         }
 
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            if (!Focused) // check to see if the window is focused
+            {
+                return;
+            }
+
             KeyboardState input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {
                 Exit();
             }
-
-            //Here some new inputs for the camera has been added
-            //So now we can actually start listening for user inputs and make a responsible window
-            //We want to check if the window should move
-            //We multiply our movement with the time between frames to make the movement based on real time
-            //This way you will move equally fast if you have a slow and/or fast computer
-            //Then we multiply by the movementSpeed to apply that
-            if (input.IsKeyDown(Key.W)) camera.Move(Vector3.UnitZ * (float)e.Time * movementSpeed);        //Move forwards
-            if (input.IsKeyDown(Key.S)) camera.Move(-Vector3.UnitZ * (float)e.Time * movementSpeed);       //Move backwards
-            if (input.IsKeyDown(Key.D)) camera.Move(-Vector3.UnitX * (float)e.Time * movementSpeed);       //Move to the right
-            if (input.IsKeyDown(Key.A)) camera.Move(Vector3.UnitX * (float)e.Time * movementSpeed);        //Move to the left
-            if (input.IsKeyDown(Key.Space)) camera.Move(-Vector3.UnitY * (float)e.Time * movementSpeed);    //Move up
-            if (input.IsKeyDown(Key.LShift)) camera.Move(Vector3.UnitY * (float)e.Time * movementSpeed);  //Move down
             
-            //To handle the rotation of the camera you should check out MouseMove
+            if (input.IsKeyDown(Key.W))
+                camera.Position += camera.Front * camera.Speed * (float)e.Time; //Forward 
+            if (input.IsKeyDown(Key.S))
+                camera.Position -= camera.Front * camera.Speed * (float)e.Time; //Backwards
+            if (input.IsKeyDown(Key.A))
+                camera.Position -= camera.Right * camera.Speed * (float)e.Time; //Left
+            if (input.IsKeyDown(Key.D))
+                camera.Position += camera.Right * camera.Speed * (float)e.Time; //Right
+            if (input.IsKeyDown(Key.Space))
+                camera.Position += camera.Up * camera.Speed * (float)e.Time; //Up 
+            if (input.IsKeyDown(Key.LShift))
+                camera.Position -= camera.Up * camera.Speed * (float)e.Time; //Down
+
+            //Get the mouse state
+            MouseState mouse = Mouse.GetState();
+
+            if (firstMove) // this bool variable is initially set to true
+            {
+                lastPos = new Vector2(mouse.X, mouse.Y);
+                firstMove = false;
+            }
+            else
+            {
+                //Calculate the offset of the mouse position
+                float deltaX = mouse.X - lastPos.X;
+                float deltaY = mouse.Y - lastPos.Y;
+                lastPos = new Vector2(mouse.X, mouse.Y);
+                
+                //Apply the camera pitch and yaw (we clamp the pitch in the camera class)
+                camera.Yaw += deltaX * camera.Sensitivity;
+                camera.Pitch -= deltaY * camera.Sensitivity; // reversed since y-coordinates range from bottom to top
+            }
             
             base.OnUpdateFrame(e);
         }
-        
-        //This is called whenever the mouse position has changed from one frame to the next
-        //For now we want to use this to rotate the camera
+
+        //This function's main purpose is to set the mouse position back to the center of the window
+        //every time the mouse has moved. So the cursor doesn't end up at the edge of the window where it cannot move
+        //further out
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
-            //Only perform the movement if the right mouse button is down
-            if (e.Mouse.IsButtonDown(MouseButton.Right))
+            if (Focused) // check to see if the window is focused
             {
-                //Next we should get the x and y position of the mouse within the window
-                //Then we should rotate the the camera based on that position
-                camera.Rotate(new Vector3(sensitivity * -e.YDelta,
-                    sensitivity * -e.XDelta,0));
+                Mouse.SetPosition(X + Width/2f, Y + Height/2f);
             }
             
             base.OnMouseMove(e);
         }
 
+        //In the mouse wheel function we manage all the zooming of the camera
+        //this is simply done by changing the FOV of the camera
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            camera.Fov -= e.DeltaPrecise;
+            base.OnMouseWheel(e);
+        }
+
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
-            camera.SetPerspective(45, Width / Height);
+            //We need to update the aspect ratio once the window has been resized
+            camera.AspectRatio = Width / (float)Height;
             base.OnResize(e);
         }
 
