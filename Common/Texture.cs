@@ -113,7 +113,7 @@ namespace LearnOpenGL_TK.Common
 
         ~Texture()
         {
-            GL.DeleteTexture(Handle);
+            Dispose(false);
         }
 
 

@@ -176,7 +176,7 @@ namespace LearnOpenGL_TK.Common
 
         ~Shader()
         {
-            GL.DeleteProgram(Handle);
+            Dispose(false);
         }
 
 
