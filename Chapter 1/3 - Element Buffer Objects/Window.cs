@@ -97,7 +97,7 @@ namespace LearnOpenGL_TK
             //   Offset in the EBO. Set this to 0 because we want to draw the whole thing.
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }

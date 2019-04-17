@@ -18,7 +18,7 @@ namespace LearnOpenGL_TK
     // as if i could move the view
     public class Window : GameWindow
     {
-        float[] vertices =
+        private readonly float[] vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -27,19 +27,19 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        uint[] indices =
+        private readonly uint[] indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        int ElementBufferObject;
-        int VertexBufferObject;
-        int VertexArrayObject;
+        private int _elementBufferObject;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
 
-        Shader shader;
-        Texture texture;
-        Texture texture2;
+        private Shader shader;
+        private Texture texture;
+        private Texture texture2;
         
         // I have removed the view and projection matrices as we dont need them here anymore
         // They can now be found in the new camera class
@@ -47,11 +47,11 @@ namespace LearnOpenGL_TK
         // We need an instance of the new camera class so it can manage the view and projection matrix code
         // We also need a boolean set to true to detect whether or not the mouse has been moved for the first time
         // Finally we add the last position of the mouse so we can calculate the mouse offset easily
-        Camera camera;
-        bool firstMove = true;
-        Vector2 lastPos;
+        private Camera camera;
+        private bool firstMove = true;
+        private Vector2 lastPos;
 
-        double time = 0.0;
+        private double time = 0.0;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -63,12 +63,12 @@ namespace LearnOpenGL_TK
 
             GL.Enable(EnableCap.DepthTest);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
             shader = new Shader("shader.vert", "shader.frag");
@@ -83,11 +83,11 @@ namespace LearnOpenGL_TK
             shader.SetInt("texture0", 0);
             shader.SetInt("texture1", 1);
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
             int vertexLocation = shader.GetAttribLocation("aPosition");
@@ -116,7 +116,7 @@ namespace LearnOpenGL_TK
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
             texture.Use(TextureUnit.Texture0);
             texture2.Use(TextureUnit.Texture1);
@@ -129,11 +129,12 @@ namespace LearnOpenGL_TK
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }
 
+        
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             if (!Focused) // check to see if the window is focused
@@ -184,6 +185,7 @@ namespace LearnOpenGL_TK
             base.OnUpdateFrame(e);
         }
 
+        
         // This function's main purpose is to set the mouse position back to the center of the window
         // every time the mouse has moved. So the cursor doesn't end up at the edge of the window where it cannot move
         // further out
@@ -196,6 +198,7 @@ namespace LearnOpenGL_TK
             
             base.OnMouseMove(e);
         }
+        
 
         // In the mouse wheel function we manage all the zooming of the camera
         // this is simply done by changing the FOV of the camera
@@ -205,6 +208,7 @@ namespace LearnOpenGL_TK
             base.OnMouseWheel(e);
         }
 
+        
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
@@ -220,8 +224,8 @@ namespace LearnOpenGL_TK
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
 
             shader.Dispose();
             texture.Dispose();

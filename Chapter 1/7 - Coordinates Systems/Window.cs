@@ -10,9 +10,9 @@ namespace LearnOpenGL_TK
     // We can now move around objects. However, how can we move our "camera", or modify our perspective?
     // In this tutorial, I'll show you how to setup a full projection/view/model (PVM) matrix.
     // In addition, we'll make the rectangle rotate over time.
-    class Window : GameWindow
+    public class Window : GameWindow
     {
-        float[] vertices =
+        private readonly float[] vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -21,30 +21,30 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        uint[] indices =
+        private readonly uint[] indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        int ElementBufferObject;
-        int VertexBufferObject;
-        int VertexArrayObject;
+        private int _elementBufferObject;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
 
-        Shader shader;
-        Texture texture;
-        Texture texture2;
+        private Shader shader;
+        private Texture texture;
+        private Texture texture2;
 
         // We create a double to hold how long has passed since the program was opened.
-        double time = 0.0;
+        private double time;
 
         // Then, we create two matrices to hold our view and projection. They're initialized at the bottom of OnLoad.
         // The view matrix is what you might consider the "camera". It represents the current viewport in the window.
-        Matrix4 view;
+        private Matrix4 view;
 
         // This represents how the vertices will be projected. It's hard to explain through comments,
         // so check out the web version for a good demonstration of what this does.
-        Matrix4 projection;
+        private Matrix4 projection;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -59,12 +59,12 @@ namespace LearnOpenGL_TK
             // Obviously, we don't want this, so we enable depth testing. We also clear the depth buffer in GL.Clear over in OnRenderFrame.
             GL.Enable(EnableCap.DepthTest);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
             // shader.vert has been modified. Take a look at it after the explanation in OnRenderFrame.
@@ -80,11 +80,11 @@ namespace LearnOpenGL_TK
             shader.SetInt("texture0", 0);
             shader.SetInt("texture1", 1);
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
             int vertexLocation = shader.GetAttribLocation("aPosition");
@@ -121,7 +121,7 @@ namespace LearnOpenGL_TK
             // We clear the depth buffer in addition to the color buffer
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
             texture.Use(TextureUnit.Texture0);
             texture2.Use(TextureUnit.Texture1);
@@ -143,7 +143,7 @@ namespace LearnOpenGL_TK
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }
@@ -175,8 +175,8 @@ namespace LearnOpenGL_TK
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
 
             shader.Dispose();
             texture.Dispose();

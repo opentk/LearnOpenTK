@@ -7,7 +7,7 @@ using LearnOpenGL_TK.Common;
 
 namespace LearnOpenGL_TK
 {
-    class Window : GameWindow
+    public class Window : GameWindow
     {
         // Because we're adding a texture, we modify the vertex array to include texture coordinates.
         // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
@@ -96,7 +96,7 @@ namespace LearnOpenGL_TK
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }

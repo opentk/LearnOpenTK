@@ -7,9 +7,9 @@ using LearnOpenGL_TK.Common;
 
 namespace LearnOpenGL_TK
 {
-    class Window : GameWindow
+    public class Window : GameWindow
     {
-        float[] vertices =
+        private readonly float[] _vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -18,35 +18,38 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        uint[] indices =
+        private readonly uint[] _indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        int ElementBufferObject;
-        int VertexBufferObject;
-        int VertexArrayObject;
+        private int _elementBufferObject;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
 
-        Shader shader;
-        Texture texture;
-        Texture texture2;
+        private Shader shader;
+        private Texture texture;
+        private Texture texture2;
 
-
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
-
+        
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
+        {
+            
+        }
+        
         
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
 
             // shader.frag has been modified yet again, take a look at it as well.
@@ -71,11 +74,11 @@ namespace LearnOpenGL_TK
             shader.SetInt("texture1", 1);
 
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
             int vertexLocation = shader.GetAttribLocation("aPosition");
@@ -95,15 +98,15 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
             texture.Use(TextureUnit.Texture0);
             texture2.Use(TextureUnit.Texture1);
             shader.Use();
 
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }
@@ -135,8 +138,8 @@ namespace LearnOpenGL_TK
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
 
             shader.Dispose();
             texture.Dispose();

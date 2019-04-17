@@ -16,9 +16,9 @@ namespace LearnOpenGL_TK
     // A deep understanding of linear algebra won't be necessary for this tutorial as OpenTK includes built-in matrix types that abstract over the actual math.
 
     // Head down to RenderFrame to see how we can apply transformations to our shape.
-    class Window : GameWindow
+    public class Window : GameWindow
     {
-        float[] vertices =
+        private readonly float[] vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -27,19 +27,19 @@ namespace LearnOpenGL_TK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        uint[] indices =
+        private readonly uint[] indices =
         {
             0, 1, 3,
             1, 2, 3
         };
 
-        int ElementBufferObject;
-        int VertexBufferObject;
-        int VertexArrayObject;
+        private int _elementBufferObject;
+        private int _vertexBufferObject;
+        private int _vertexArrayObject;
 
-        Shader shader;
-        Texture texture;
-        Texture texture2;
+        private Shader shader;
+        private Texture texture;
+        private Texture texture2;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -49,12 +49,12 @@ namespace LearnOpenGL_TK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            VertexBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
+            _vertexBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            _elementBufferObject = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
 
@@ -71,11 +71,11 @@ namespace LearnOpenGL_TK
             shader.SetInt("texture0", 0);
             shader.SetInt("texture1", 1);
 
-            VertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(VertexArrayObject);
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, VertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
+            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
             int vertexLocation = shader.GetAttribLocation("aPosition");
@@ -95,7 +95,7 @@ namespace LearnOpenGL_TK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.BindVertexArray(VertexArrayObject);
+            GL.BindVertexArray(_vertexArrayObject);
 
             // Note: The matrices we'll use for transformations are all 4x4.
 
@@ -129,7 +129,7 @@ namespace LearnOpenGL_TK
 
             GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 
-            Context.SwapBuffers();
+            SwapBuffers();
 
             base.OnRenderFrame(e);
         }
@@ -161,8 +161,8 @@ namespace LearnOpenGL_TK
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            GL.DeleteBuffer(VertexBufferObject);
-            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteVertexArray(_vertexArrayObject);
 
             shader.Dispose();
             texture.Dispose();

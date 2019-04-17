@@ -36,7 +36,10 @@ namespace LearnOpenGL_TK
         private Shader _shader;
 
 
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
+        {
+            
+        }
 
         
         // Now, we start initializing OpenGL.
@@ -168,7 +171,7 @@ namespace LearnOpenGL_TK
             // One is rendered to while the other is currently displayed by the window.
             // This avoids screen tearing, a visual artifact that can happen if the buffer is modified while being displayed.
             // After drawing, call this function to swap the buffers. If you don't, it won't display what you've rendered.
-            Context.SwapBuffers();
+            SwapBuffers();
 
 
             // And that's all you have to do for rendering! You should now see a yellow triangle on a black screen.
