@@ -16,7 +16,7 @@ namespace LearnOpenGL_TK
     // In reality we can't move the camera but we actually move the rectangle
     // I will explain this more in depth in the web version, however it pretty much gives us the same result
     // as if i could move the view
-    public class Game : GameWindow
+    public class Window : GameWindow
     {
         float[] vertices =
         {
@@ -54,7 +54,7 @@ namespace LearnOpenGL_TK
         double time = 0.0;
 
 
-        public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
 
         
         protected override void OnLoad(EventArgs e)

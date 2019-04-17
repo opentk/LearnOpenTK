@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            using (var game = new Game(800, 600, "LearnOpenTK - Creating a Window"))
+            using (var game = new Window(800, 600, "LearnOpenTK - Creating a Window"))
             {
                 // To create a new window, create a class that extends GameWindow, then call Run() on it.
                 // Run takes a double, which is how many frames per second it should strive to reach.

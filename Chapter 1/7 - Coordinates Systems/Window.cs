@@ -10,7 +10,7 @@ namespace LearnOpenGL_TK
     // We can now move around objects. However, how can we move our "camera", or modify our perspective?
     // In this tutorial, I'll show you how to setup a full projection/view/model (PVM) matrix.
     // In addition, we'll make the rectangle rotate over time.
-    class Game : GameWindow
+    class Window : GameWindow
     {
         float[] vertices =
         {
@@ -47,7 +47,7 @@ namespace LearnOpenGL_TK
         Matrix4 projection;
 
 
-        public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
 
         
         protected override void OnLoad(EventArgs e)

@@ -9,7 +9,7 @@ namespace LearnOpenGL_TK
 {
     // Be warned, there is a LOT of stuff here. It might seem complicated, but just take it slow and you'll be fine.
     // OpenGL's initial hurdle is quite large, but once you get past that, things will start making more sense.
-    public class Game : GameWindow
+    public class Window : GameWindow
     {
         // Create the vertices for our triangle. These are listed in normalized device coordinates (NDC)
         // In NDC, (0, 0) is the center of the screen.
@@ -36,7 +36,7 @@ namespace LearnOpenGL_TK
         private Shader _shader;
 
 
-        public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
 
         
         // Now, we start initializing OpenGL.

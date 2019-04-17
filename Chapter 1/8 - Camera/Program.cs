@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            using (Game game = new Game(800, 600, "LearnOpenTK - Camera Tutorial"))
+            using (Window window = new Window(800, 600, "LearnOpenTK - Camera Tutorial"))
             {
-                game.Run(60.0);
+                window.Run(60.0);
             }
         }
     }

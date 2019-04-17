@@ -4,9 +4,9 @@
     {
         static void Main(string[] args)
         {
-            using (var game = new Game(800, 600, "LearnOpenTK - Element Buffer Objects"))
+            using (var window = new Window(800, 600, "LearnOpenTK - Element Buffer Objects"))
             {
-                game.Run(60.0);
+                window.Run(60.0);
             }
         }
     }

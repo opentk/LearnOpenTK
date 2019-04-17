@@ -15,7 +15,7 @@ namespace LearnOpenGL_TK
 
     // OpenGL provides a way to reuse vertices, which can heavily reduce memory usage on complex objects.
     // This is called an Element Buffer Object. This tutorial will be all about how to set one up.
-    public class Game : GameWindow
+    public class Window : GameWindow
     {
         // We modify the vertex array to include four vertices for our rectangle.
         private readonly float[] _vertices =
@@ -43,7 +43,7 @@ namespace LearnOpenGL_TK
         int _elementBufferObject;
 
 
-        public Game(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
         
         protected override void OnLoad(EventArgs e)
         {
