@@ -8,9 +8,9 @@ using OpenTK.Graphics.OpenGL4;
 namespace LearnOpenGL_TK.Common
 {
     // A simple class meant to help create shaders.
-    public class Shader: System.IDisposable
+    public class Shader : IDisposable
     {
-        int Handle;
+        private readonly int _handle;
 
         
         // This is how you create a simple shader.
@@ -25,72 +25,80 @@ namespace LearnOpenGL_TK.Common
             // The fragment shader is responsible for then converting the vertices to "fragments", which represent all the data OpenGL needs to draw a pixel.
             //   The fragment shader is what we'll be using the most here.
 
-            // Create handles for both the vertex and fragment shaders.
-            int VertexShader;
-            int FragmentShader;
-
             // Load vertex shader and compile
             // LoadSource is a simple function that just loads all text from the file whose path is given.
-            string VertexShaderSource = LoadSource(vertPath);
+            string shaderSource = LoadSource(vertPath);
 
             // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.
-            VertexShader = GL.CreateShader(ShaderType.VertexShader);
+            var vertexShader = GL.CreateShader(ShaderType.VertexShader);
 
             // Now, bind the GLSL source code
-            GL.ShaderSource(VertexShader, VertexShaderSource);
+            GL.ShaderSource(vertexShader, shaderSource);
 
             // And then compile
-            GL.CompileShader(VertexShader);
+            CompileShader(vertexShader);
 
-            // Check for compile errors
-            string infoLogVert = GL.GetShaderInfoLog(VertexShader);
-            if (infoLogVert != System.String.Empty)
-                System.Console.WriteLine(infoLogVert);
-
-
-            // Do the same thing for the fragment shader
-            string FragmentShaderSource = LoadSource(fragPath);
-            FragmentShader = GL.CreateShader(ShaderType.FragmentShader);
-            GL.ShaderSource(FragmentShader, FragmentShaderSource);
-            GL.CompileShader(FragmentShader);
-
-            // Check for compile errors
-            string infoLogFrag = GL.GetShaderInfoLog(VertexShader);
-            if (infoLogFrag != System.String.Empty)
-                System.Console.WriteLine(infoLogFrag);
+            
+            // We do the same for the fragment shader
+            shaderSource = LoadSource(fragPath);
+            var fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
+            GL.ShaderSource(fragmentShader, shaderSource);
+            CompileShader(fragmentShader);
 
 
             // These two shaders must then be merged into a shader program, which can then be used by OpenGL.
             // To do this, create a program...
-            Handle = GL.CreateProgram();
+            _handle = GL.CreateProgram();
 
             // Attach both shaders...
-            GL.AttachShader(Handle, VertexShader);
-            GL.AttachShader(Handle, FragmentShader);
+            GL.AttachShader(_handle, vertexShader);
+            GL.AttachShader(_handle, fragmentShader);
 
             // And then link them together.
-            GL.LinkProgram(Handle);
+            LinkProgram(_handle);
 
-            // Check for linker errors
-            string infoLogLink = GL.GetProgramInfoLog(Handle);
-            if (infoLogLink != System.String.Empty)
-                System.Console.WriteLine(infoLogLink);
-
-
-            // Now that it's done, clean up.
             // When the shader program is linked, it no longer needs the individual shaders attacked to it; the compiled code is copied into the shader program.
-            // Detact them, and then delete them.
-            GL.DetachShader(Handle, VertexShader);
-            GL.DetachShader(Handle, FragmentShader);
-            GL.DeleteShader(FragmentShader);
-            GL.DeleteShader(VertexShader);
+            // Detach them, and then delete them.
+            GL.DetachShader(_handle, vertexShader);
+            GL.DetachShader(_handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
         }
 
+
+        private static void CompileShader(int shader)
+        {
+            // Try to compile the shader
+            GL.CompileShader(shader);
+            
+            // Check for compilation errors
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out int code);
+            if (code != (int) All.True)
+            {
+                // We can use `GL.GetShaderInfoLog(shader)` to get information about the error.
+                throw new Exception($"Error occurred whilst compiling Shader({shader})");
+            }
+        }
+        
+        private static void LinkProgram(int program)
+        {
+            // We link the program
+            GL.LinkProgram(program);
+            
+            // Check for linking errors
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int code);
+            if (code != (int) All.True)
+            {
+                // We can use `GL.GetProgramInfoLog(program)` to get information about the error.
+                throw new Exception($"Error occurred whilst linking Program({program})");
+            }
+        }
+        
 
         // A wrapper function that enables the shader program.
         public void Use()
         {
-            GL.UseProgram(Handle);
+            GL.UseProgram(_handle);
         }
 
 
@@ -98,21 +106,15 @@ namespace LearnOpenGL_TK.Common
         // you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
         public int GetAttribLocation(string attribName)
         {
-            return GL.GetAttribLocation(Handle, attribName);
+            return GL.GetAttribLocation(_handle, attribName);
         }
 
 
         // Just loads the entire file into a string.
-        private string LoadSource(string path)
+        private static string LoadSource(string path)
         {
-            string readContents;
-
-            using (StreamReader streamReader = new StreamReader(path, Encoding.UTF8))
-            {
-                readContents = streamReader.ReadToEnd();
-            }
-
-            return readContents;
+            using (var sr = new StreamReader(path, Encoding.UTF8))
+                return sr.ReadToEnd();
         }
         
         // Uniform setters
@@ -131,8 +133,8 @@ namespace LearnOpenGL_TK.Common
         /// <param name="data">The data to set</param>
         public void SetInt(string name, int data)
         {
-            GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
+            GL.UseProgram(_handle);
+            var location = GL.GetUniformLocation(_handle, name);
             GL.Uniform1(location, data);
         }
 
@@ -148,8 +150,8 @@ namespace LearnOpenGL_TK.Common
         /// </remarks>
         public void SetMatrix4(string name, Matrix4 data)
         {
-            GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
+            GL.UseProgram(_handle);
+            var location = GL.GetUniformLocation(_handle, name);
             GL.UniformMatrix4(location, true, ref data);
         }
 
@@ -168,7 +170,7 @@ namespace LearnOpenGL_TK.Common
                     // TODO: dispose managed state (managed objects).
                 }
 
-                GL.DeleteProgram(Handle);
+                GL.DeleteProgram(_handle);
 
                 disposedValue = true;
             }
