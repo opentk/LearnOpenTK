@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>LearnOpenGL_TK</RootNamespace>
+    <RootNamespace>LearnOpenGL_TK.Common</RootNamespace>
     <AssemblyName>LearnOpenTK.Common</AssemblyName>
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
