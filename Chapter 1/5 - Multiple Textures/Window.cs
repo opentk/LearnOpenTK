@@ -53,18 +53,18 @@ namespace LearnOpenGL_TK
 
 
             // shader.frag has been modified yet again, take a look at it as well.
-            shader = new Shader("shader.vert", "shader.frag");
+            shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             shader.Use();
 
 
-            texture = new Texture("container.png");
+            texture = new Texture("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
             // Use will implicitly fill in Texture0 if you pass it in empty, but I'm just doing the full thing to give you a better idea of how it works.
             // First texture goes in texture unit 0.
             texture.Use(TextureUnit.Texture0);
 
             // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
-            texture2 = new Texture("awesomeface.png");
+            texture2 = new Texture("Resources/awesomeface.png");
             // Then, the second goes in texture unit 1.
             texture2.Use(TextureUnit.Texture1);
 

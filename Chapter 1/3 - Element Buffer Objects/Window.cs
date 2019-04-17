@@ -60,7 +60,7 @@ namespace LearnOpenGL_TK
             // We also buffer data to the EBO the same way.
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            _shader = new Shader("shader.vert", "shader.frag");
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
             _vertexArrayObject = GL.GenVertexArray();

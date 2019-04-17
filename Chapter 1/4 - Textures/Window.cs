@@ -53,11 +53,11 @@ namespace LearnOpenGL_TK
 
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-            _shader = new Shader("shader.vert", "shader.frag");
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
 
-            _texture = new Texture("container.png");
+            _texture = new Texture("Resources/container.png");
             _texture.Use();
 
 

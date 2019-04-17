@@ -59,13 +59,13 @@ namespace LearnOpenGL_TK
 
 
             // shader.frag has been modified yet again, take a look at it as well.
-            shader = new Shader("shader.vert", "shader.frag");
+            shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             shader.Use();
 
-            texture = new Texture("container.png");
+            texture = new Texture("Resources/container.png");
             texture.Use(TextureUnit.Texture0);
 
-            texture2 = new Texture("awesomeface.png");
+            texture2 = new Texture("Resources/awesomeface.png");
             texture2.Use(TextureUnit.Texture1);
 
             shader.SetInt("texture0", 0);
