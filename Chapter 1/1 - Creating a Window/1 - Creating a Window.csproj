@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>LearnOpenGL_TK</RootNamespace>
+    <AssemblyName>LearnOpenTK</AssemblyName>
     <TargetFramework>net461</TargetFramework>
   </PropertyGroup>
   
