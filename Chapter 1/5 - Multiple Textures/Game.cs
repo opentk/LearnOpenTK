@@ -11,7 +11,7 @@ namespace LearnOpenGL_TK
     {
         float[] vertices =
         {
-            //Position          Texture coordinates
+            // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
@@ -49,24 +49,24 @@ namespace LearnOpenGL_TK
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
 
 
-            //shader.frag has been modified yet again, take a look at it as well.
+            // shader.frag has been modified yet again, take a look at it as well.
             shader = new Shader("shader.vert", "shader.frag");
             shader.Use();
 
 
             texture = new Texture("container.png");
-            //Texture units are explained in Texture.cs, at the Use function.
-            //Use will implicitly fill in Texture0 if you pass it in empty, but I'm just doing the full thing to give you a better idea of how it works.
-            //First texture goes in texture unit 0.
+            // Texture units are explained in Texture.cs, at the Use function.
+            // Use will implicitly fill in Texture0 if you pass it in empty, but I'm just doing the full thing to give you a better idea of how it works.
+            // First texture goes in texture unit 0.
             texture.Use(TextureUnit.Texture0);
 
-            //This is helpful because System.Drawing reads the pixels differently than OpenGL expects
+            // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
             texture2 = new Texture("awesomeface.png");
-            //Then, the second goes in texture unit 1.
+            // Then, the second goes in texture unit 1.
             texture2.Use(TextureUnit.Texture1);
 
-            //Next, we must setup the samplers in the shaders to use the right textures.
-            //The int we send to the uniform is which texture unit the sampler should use.
+            // Next, we must setup the samplers in the shaders to use the right textures.
+            // The int we send to the uniform is which texture unit the sampler should use.
             shader.SetInt("texture0", 0);
             shader.SetInt("texture1", 1);
 

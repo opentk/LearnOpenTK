@@ -9,12 +9,12 @@ namespace LearnOpenGL_TK
 {
     class Game : GameWindow
     {
-        //Because we're adding a texture, we modify the vertex array to include texture coordinates.
-        //Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
-        //The new layout is three floats to create a vertex, then two floats to create the coordinates
+        // Because we're adding a texture, we modify the vertex array to include texture coordinates.
+        // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
+        // The new layout is three floats to create a vertex, then two floats to create the coordinates
         private readonly float[] _vertices =
         {
-            //Position          Texture coordinates
+            // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
@@ -32,7 +32,7 @@ namespace LearnOpenGL_TK
         private int _vertexArrayObject;
         private Shader _shader;
 
-        //For documentation on this, check Texture.cs
+        // For documentation on this, check Texture.cs
         private Texture _texture;
 
 
@@ -52,7 +52,7 @@ namespace LearnOpenGL_TK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
 
-            //The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
+            // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             _shader = new Shader("shader.vert", "shader.frag");
             _shader.Use();
 
@@ -67,16 +67,16 @@ namespace LearnOpenGL_TK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
-            //Because there's now 5 floats between the start of the first vertex and the start of the second,
-            //we modify this from 3 * sizeof(float) to 5 * sizeof(float).
-            //This will now pass the new vertex array to the buffer.
+            // Because there's now 5 floats between the start of the first vertex and the start of the second,
+            // we modify this from 3 * sizeof(float) to 5 * sizeof(float).
+            // This will now pass the new vertex array to the buffer.
             int vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            //Next, we also setup texture coordinates. It works in much the same way.
-            //We add an offset of 3, since the first vertex coordinate comes after the first vertex
-            //and change the amount of data to 2 because there's only 2 floats for vertex coordinates
+            // Next, we also setup texture coordinates. It works in much the same way.
+            // We add an offset of 3, since the first vertex coordinate comes after the first vertex
+            // and change the amount of data to 2 because there's only 2 floats for vertex coordinates
             int texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
@@ -132,7 +132,7 @@ namespace LearnOpenGL_TK
             GL.DeleteVertexArray(_vertexArrayObject);
 
             _shader.Dispose();
-            //Don't forget to dispose of the texture too!
+            // Don't forget to dispose of the texture too!
             _texture.Dispose();
             base.OnUnload(e);
         }
