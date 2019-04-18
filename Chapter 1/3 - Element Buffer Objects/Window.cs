@@ -40,7 +40,7 @@ namespace LearnOpenGL_TK
         private Shader _shader;
 
         // Add a handle for the EBO
-        int _elementBufferObject;
+        private int _elementBufferObject;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }

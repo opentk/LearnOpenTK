@@ -51,7 +51,7 @@ namespace LearnOpenGL_TK
         private bool firstMove = true;
         private Vector2 lastPos;
 
-        private double time = 0.0;
+        private double time;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -90,12 +90,12 @@ namespace LearnOpenGL_TK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            int vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -122,7 +122,7 @@ namespace LearnOpenGL_TK
             texture2.Use(TextureUnit.Texture1);
             shader.Use();
 
-            Matrix4 model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(time));
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(time));
             shader.SetMatrix4("model", model);
             shader.SetMatrix4("view", camera.GetViewMatrix());
             shader.SetMatrix4("projection", camera.GetProjectionMatrix());
@@ -142,7 +142,7 @@ namespace LearnOpenGL_TK
                 return;
             }
 
-            KeyboardState input = Keyboard.GetState();
+            var input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {
@@ -163,7 +163,7 @@ namespace LearnOpenGL_TK
                 camera.Position -= camera.Up * camera.Speed * (float)e.Time; // Down
 
             // Get the mouse state
-            MouseState mouse = Mouse.GetState();
+            var mouse = Mouse.GetState();
 
             if (firstMove) // this bool variable is initially set to true
             {
@@ -173,8 +173,8 @@ namespace LearnOpenGL_TK
             else
             {
                 // Calculate the offset of the mouse position
-                float deltaX = mouse.X - lastPos.X;
-                float deltaY = mouse.Y - lastPos.Y;
+                var deltaX = mouse.X - lastPos.X;
+                var deltaY = mouse.Y - lastPos.Y;
                 lastPos = new Vector2(mouse.X, mouse.Y);
                 
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)

@@ -81,12 +81,12 @@ namespace LearnOpenGL_TK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            int vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -114,7 +114,7 @@ namespace LearnOpenGL_TK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
+            var input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {

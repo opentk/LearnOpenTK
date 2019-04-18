@@ -4,7 +4,7 @@
     {
         private static void Main(string[] args)
         {
-            using (Window window = new Window(800, 600, "LearnOpenTK - Coordinates Systems"))
+            using (var window = new Window(800, 600, "LearnOpenTK - Coordinates Systems"))
                 window.Run(60.0);
         }
     }

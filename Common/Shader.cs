@@ -27,7 +27,7 @@ namespace LearnOpenGL_TK.Common
 
             // Load vertex shader and compile
             // LoadSource is a simple function that just loads all text from the file whose path is given.
-            string shaderSource = LoadSource(vertPath);
+            var shaderSource = LoadSource(vertPath);
 
             // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.
             var vertexShader = GL.CreateShader(ShaderType.VertexShader);
@@ -72,7 +72,7 @@ namespace LearnOpenGL_TK.Common
             GL.CompileShader(shader);
             
             // Check for compilation errors
-            GL.GetShader(shader, ShaderParameter.CompileStatus, out int code);
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
             if (code != (int) All.True)
             {
                 // We can use `GL.GetShaderInfoLog(shader)` to get information about the error.
@@ -86,7 +86,7 @@ namespace LearnOpenGL_TK.Common
             GL.LinkProgram(program);
             
             // Check for linking errors
-            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out int code);
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
             if (code != (int) All.True)
             {
                 // We can use `GL.GetProgramInfoLog(program)` to get information about the error.
@@ -159,7 +159,7 @@ namespace LearnOpenGL_TK.Common
         // This section is dedicated to cleaning up the shader after it's finished.
         // Doing this solely in a finalizer results in a crash because of the Object-Oriented Language Problem
         // ( https://www.khronos.org/opengl/wiki/Common_Mistakes#The_Object_Oriented_Language_Problem )
-        private bool disposedValue = false;
+        private bool disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {

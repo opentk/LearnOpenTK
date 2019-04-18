@@ -78,12 +78,12 @@ namespace LearnOpenGL_TK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            int vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            int texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -100,7 +100,7 @@ namespace LearnOpenGL_TK
             // Note: The matrices we'll use for transformations are all 4x4.
 
             // We start with an identity matrix. This is just a simple matrix that doesn't move the vertices at all.
-            Matrix4 transform = Matrix4.Identity;
+            var transform = Matrix4.Identity;
 
             // The next few steps just show how to use OpenTK's matrix functions, and aren't necessary for the transform matrix to actually work.
             // If you want, you can just pass the identity matrix to the shader, though it won't affect the vertices at all.
@@ -137,7 +137,7 @@ namespace LearnOpenGL_TK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
+            var input = Keyboard.GetState();
 
             if (input.IsKeyDown(Key.Escape))
             {

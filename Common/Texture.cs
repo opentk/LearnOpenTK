@@ -38,7 +38,7 @@ namespace LearnOpenGL_TK.Common
             // Convert ImageSharp's format into a byte array, so we can use it with OpenGL.
             List<byte> pixels = new List<byte>();
 
-            foreach (Rgba32 p in tempPixels)
+            foreach (var p in tempPixels)
             {
                 pixels.Add(p.R);
                 pixels.Add(p.G);
@@ -94,7 +94,7 @@ namespace LearnOpenGL_TK.Common
             GL.BindTexture(TextureTarget.Texture2D, Handle);
         }
 
-        private bool disposedValue = false;
+        private bool disposedValue;
 
         protected virtual void Dispose(bool disposing)
         {
