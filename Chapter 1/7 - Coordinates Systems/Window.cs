@@ -105,7 +105,7 @@ namespace LearnOpenGL_TK
             //   Aspect ratio. This should be set to Width / Height.
             //   Near-clipping. Any vertices closer to the camera than this value will be clipped.
             //   Far-clipping. Any vertices farther away from the camera than this value will be clipped.
-            projection = Matrix4.CreatePerspectiveFieldOfView((float)MathHelper.DegreesToRadians(45.0), Width / (float) Height, 0.1f, 100.0f);
+            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Width / (float) Height, 0.1f, 100.0f);
 
             // Now, head over to OnRenderFrame to see how we setup the model matrix
 

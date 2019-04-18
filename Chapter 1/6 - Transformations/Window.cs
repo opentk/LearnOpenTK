@@ -107,7 +107,7 @@ namespace LearnOpenGL_TK
 
             // To combine two matrices, you multiply them. Here, we combine the transform matrix with another one created by OpenTK to rotate it by 20 degrees.
             // Note that all Matrix4.CreateRotation functions take radians, not degrees. Use MathHelper.DegreesToRadians() to convert to radians, if you want to use degrees.
-            transform *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(20));
+            transform *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(20f));
 
             // Next, we scale the matrix. This will make the rectangle slightly larger.
             transform *= Matrix4.CreateScale(1.1f);
