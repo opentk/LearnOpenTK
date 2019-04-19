@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "8 - Camera", "Chapter 1\8 -
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLControl", "GLControl\GLControl.csproj", "{A797E009-3B93-4361-8EF6-B1039C2BA2C5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
