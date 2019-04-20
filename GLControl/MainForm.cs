@@ -32,6 +32,8 @@ namespace LearnOpenTK.GLControl
             4, 2, 3,
             4, 3, 0
         };
+
+        private bool _loaded;
         
         private int _vertexBufferObject;
         private int _elementBufferObject;
@@ -74,18 +76,25 @@ namespace LearnOpenTK.GLControl
             
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            
+
             UpdateViewMatrix();
+            _loaded = true;
         }
 
         private void GLControl_Resize(object sender, EventArgs e)
         {
+            if (!_loaded)
+                return;
+            
             GL.Viewport(0, 0, glControl.Width, glControl.Height);
             glControl.Invalidate();
         }
 
         private void GLControl_Paint(object sender, PaintEventArgs e)
         {
+            if (!_loaded)
+                return;
+            
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             _shader.Use();
@@ -98,12 +107,14 @@ namespace LearnOpenTK.GLControl
 
         private void UpdateViewMatrix()
         {
+            if (!_loaded)
+                return;
+            
             _shader.Use();
 
-            var m4 = Matrix4.Identity;
-            m4 *= Matrix4.CreateRotationX(_rotationX);
-            m4 *= Matrix4.CreateRotationY(_rotationY);
-            _shader.SetMatrix4("view", m4);
+            var view = Matrix4.CreateRotationX(_rotationX);
+            view *= Matrix4.CreateRotationY(_rotationY);
+            _shader.SetMatrix4("view", view);
         }
 
         private void TrackBarX_Scroll(object sender, EventArgs e)
@@ -122,6 +133,9 @@ namespace LearnOpenTK.GLControl
 
         private void ButtonRandomize_Click(object sender, EventArgs e)
         {
+            if (!_loaded)
+                return;
+            
             for (var i = 3; i < _data.Length; i += 6)
             {
                 _data[i] = _rand.Next(255) / 255f;
@@ -137,6 +151,9 @@ namespace LearnOpenTK.GLControl
 
         private void ButtonChangeColor_Click(object sender, EventArgs e)
         {
+            if (!_loaded)
+                return;
+            
             colorDialog.ShowDialog();
             GL.ClearColor(colorDialog.Color);
             glControl.Invalidate();
