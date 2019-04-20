@@ -15,13 +15,13 @@
 
 // The vertex shader is run once for every vertex. In C# pseudocode, it might look something like:
 // foreach(var vertex in vertices)
-//	 shader(vertex)
+//   shader(vertex)
 
 
 // This defines our input variable, aPosition.
 // It starts with the line "layout(location = 0)". This defines where this input variable will be located, which is needed for GL.VertexAttribPointer
 // However, you can omit it, and replace this with just "in vec3 aPosition". If you do that, you'll have to replace the 0 in GL.VertexAttribPointer with
-//	 a call to GL.GetAttribLocation(shaderHandle, attributeName)
+//   a call to GL.GetAttribLocation(shaderHandle, attributeName)
 // Next, the keyword "in" defines this as an input variable. We'll have an example of the "out" keyword in the next tutorial.
 // Then, the keyword "vec3" means this is a vector with 3 floats inside.
 

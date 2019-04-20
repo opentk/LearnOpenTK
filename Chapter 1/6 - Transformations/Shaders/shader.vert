@@ -11,8 +11,8 @@ uniform mat4 transform;
 
 void main(void)
 {
-	texCoord = aTexCoord;
+    texCoord = aTexCoord;
 
-	// Then all you have to do is multiply the vertices by the transformation matrix, and you'll see your transformation in the scene!
+    // Then all you have to do is multiply the vertices by the transformation matrix, and you'll see your transformation in the scene!
     gl_Position = vec4(aPosition, 1.0) * transform;
 }
