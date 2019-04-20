@@ -3,9 +3,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using LearnOpenGL_TK.Common;
+using LearnOpenTK.Common;
 
-namespace LearnOpenGL_TK
+namespace LearnOpenTK
 {
     // So you can setup OpenGL, you can draw basic shapes without wasting vertices, and you can texture them.
     // There's one big thing left, though: moving the shapes.

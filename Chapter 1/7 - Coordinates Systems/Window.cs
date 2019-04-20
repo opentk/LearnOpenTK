@@ -3,9 +3,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using LearnOpenGL_TK.Common;
+using LearnOpenTK.Common;
 
-namespace LearnOpenGL_TK
+namespace LearnOpenTK
 {
     // We can now move around objects. However, how can we move our "camera", or modify our perspective?
     // In this tutorial, I'll show you how to setup a full projection/view/model (PVM) matrix.

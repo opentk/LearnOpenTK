@@ -3,9 +3,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using LearnOpenGL_TK.Common;
+using LearnOpenTK.Common;
 
-namespace LearnOpenGL_TK
+namespace LearnOpenTK
 {
     // We now have a rotating rectangle but how can we make the view move based on the users input
     // In this tutorial we will take a look at how you could implement a camera class

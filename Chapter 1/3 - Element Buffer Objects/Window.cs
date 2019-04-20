@@ -3,9 +3,9 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
-using LearnOpenGL_TK.Common;
+using LearnOpenTK.Common;
 
-namespace LearnOpenGL_TK
+namespace LearnOpenTK
 {
     // So you've drawn the first triangle. But what about drawing multiple?
     // You may consider just adding more vertices to the array, and that would technically work, but say you're drawing a rectangle.

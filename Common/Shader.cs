@@ -5,7 +5,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
 
-namespace LearnOpenGL_TK.Common
+namespace LearnOpenTK.Common
 {
     // A simple class meant to help create shaders.
     public class Shader : IDisposable

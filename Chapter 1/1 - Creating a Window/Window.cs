@@ -2,7 +2,7 @@
 using OpenTK.Graphics;
 using OpenTK.Input;
 
-namespace LearnOpenGL_TK
+namespace LearnOpenTK
 {
     // This is where all OpenGL code will be written.
     // OpenTK allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
