@@ -1,12 +1,12 @@
 ﻿namespace LearnOpenGL_TK
 {
-    public class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            using (var game = new Game(800, 600, "LearnOpenTK - Textures"))
+            using (var window = new Window(800, 600, "LearnOpenTK - Textures"))
             {
-                game.Run(60.0);
+                window.Run(60.0);
             }
         }
     }
