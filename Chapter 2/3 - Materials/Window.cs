@@ -7,8 +7,17 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
+    //In this chapter we will focus on how to use lighting to make our games and other applications more lifelike
+
+    //In this first part the focus will mainly be on setting up a scene for testing the different coloring options.
+    //We draw two cubes one at 0,0,0 for testing our light shader, the second one is drawn where we have the light.
+    //Furthermore in the shaders we have set up some basic physically based coloring.
     public class Window : GameWindow
     {
+        //The vertices are now used to draw cubes, notice how we dont use the texture coords anymore,
+        //although you could easily use the textures together with the lighting tutorials it isn't
+        //the main focus so we wont have them here, it could however be a fun exercise to
+        //add the textures back and see how that works later down the line.
         private readonly float[] _vertices =
         {
             // Position
@@ -21,6 +30,7 @@ namespace LearnOpenTK
             -0.5f, -0.5f,  0.5f, //right-bottom-backward
             -0.5f, -0.5f, -0.5f  //right-bottom-forward
         };
+        //The indices have also been updated to draw a total of 6 faces that way we have a full cube
         private readonly uint[] _indices =
         {
             0, 1, 2, 1, 2, 3, //left face
@@ -30,13 +40,19 @@ namespace LearnOpenTK
             0, 2, 4, 2, 4, 6, //backward face
             1, 3, 5, 3, 5, 7  //forward face
         };
+        //This is the position of both the light and the place the lamp cube will be drawn in the scene
         private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
 
         private int _elementBufferObject;
         private int _vertexBufferObject;
+        //I renamed the vertex array object since we now want to VAO's one for the model (the big cube for testing light shaders),
+        //and one for the lamp so we can see where the light source comes from.
+        //In an actual application you would probably either dont draw the lamp at all or draw it with a model of a lamp of some sort.
         private int _vaoModel;
         private int _vaoLamp;
 
+        //We also need two shaders, one for the lamp and one for our lighting material.
+        //The lighting shader is where most of this chapter will take place as this is where a lot of the lighting "magic" happens.
         private Shader _lampShader;
         private Shader _lightingShader;
         
@@ -61,9 +77,13 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
+            //Load the two different shaders, they use the same vertex shader program. However they have two different fragment shaders.
+            //This is because the lamp only uses a basic shader to turn it white, it wouldn't make sense to have the lamp lit in other colors.
+            //The lighting shaders uses the lighting.frag shader which is what a large part of this chapter will be about
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
+            //Initialize the vao for the model
             _vaoModel = GL.GenVertexArray();
             GL.BindVertexArray(_vaoModel);
 
@@ -74,10 +94,14 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
+
+            //Initialize the vao for the lamp, this is mostly the same as the code for the model cube
             _vaoLamp = GL.GenVertexArray();
             GL.BindVertexArray(_vaoLamp);
+            // we only need to bind to the VBO, the container's VBO's data already contains the correct data.
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
+            // set the vertex attributes (only position data for our lamp)
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
@@ -94,11 +118,12 @@ namespace LearnOpenTK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            //Draw the model/cube with the lighting shader
             GL.BindVertexArray(_vaoModel);
 
             _lightingShader.Use();
             
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
+            _lightingShader.SetMatrix4("model", Matrix4.Identity); //Matrix4.Identity is used as the matrix, since we just wanna draw it at 0,0,0
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
@@ -107,12 +132,13 @@ namespace LearnOpenTK
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
+            //Draw the lamp, this is mostly the same as for the model cube
             GL.BindVertexArray(_vaoModel);
             
             _lampShader.Use();
 
             Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f);
+            lampMatrix *= Matrix4.CreateScale(0.2f); //We scale the lamp cube down a bit to make it less dominant
             lampMatrix *= Matrix4.CreateTranslation(_lightPos);
             
             _lampShader.SetMatrix4("model", lampMatrix);
