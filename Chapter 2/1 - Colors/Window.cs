@@ -83,7 +83,7 @@ namespace LearnOpenTK
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
 
-        
+
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -106,7 +106,7 @@ namespace LearnOpenTK
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
-            var vertexLocation = _lampShader.GetAttribLocation("aPos");
+            var vertexLocation = _lightingShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 
@@ -114,9 +114,10 @@ namespace LearnOpenTK
             //Initialize the vao for the lamp, this is mostly the same as the code for the model cube
             _vaoLamp = GL.GenVertexArray();
             GL.BindVertexArray(_vaoLamp);
-            // we only need to bind to the VBO, the container's VBO's data already contains the correct data.
+            //We only need to bind to the VBO, the container's VBO's data already contains the correct data.
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            // set the vertex attributes (only position data for our lamp)
+            //Set the vertex attributes (only position data for our lamp)
+            vertexLocation = _lampShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
 

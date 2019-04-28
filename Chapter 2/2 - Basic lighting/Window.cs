@@ -86,16 +86,16 @@ namespace LearnOpenTK
 
             _vaoModel = GL.GenVertexArray();
             GL.BindVertexArray(_vaoModel);
-
+            
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
-            var positionLocation = _lampShader.GetAttribLocation("aPos");
+            var positionLocation = _lightingShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
             //Remember to change the stride as we now have 6 floats per vertex
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
             //We now need to define the layout of the normal so the shader can use it
-            var normalLocation = _lampShader.GetAttribLocation("aNormal");
+            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
@@ -104,6 +104,7 @@ namespace LearnOpenTK
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
+            positionLocation = _lampShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
             //Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
             //this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
@@ -135,6 +136,7 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 0.5f, 0.31f));
             _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
             _lightingShader.SetVector3("lightPos", _lightPos);
+            _lightingShader.SetVector3("viewPos", _camera.Position);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
