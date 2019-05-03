@@ -7,7 +7,7 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this video we take the code from the last tutorial and create some level of abstraction over it allowing more
+    //In this tutorial we take the code from the last tutorial and create some level of abstraction over it allowing more
     //control of the interaction between the light and the material.
     //At the end of the web version of the tutorial we also had a bit of fun creating a disco light that changes
     //color of the cube over time.

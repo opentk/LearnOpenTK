@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <None Include="Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Resources\container2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\container2_specular.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
   <ItemGroup>

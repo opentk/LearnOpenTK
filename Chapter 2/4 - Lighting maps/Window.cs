@@ -7,54 +7,69 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this chapter we will focus on how to use lighting to make our games and other applications more lifelike
-
-    //In this first part the focus will mainly be on setting up a scene for testing the different coloring options.
-    //We draw two cubes one at 0,0,0 for testing our light shader, the second one is drawn where we have the light.
-    //Furthermore in the shaders we have set up some basic physically based coloring.
+    //In this tutorial we take a look at how we can use textures to make the light settings we set up in the last episode
+    //different per fragment instead of making them per object.
+    //Remember to check out the shaders for how we converted to using textures there.
     public class Window : GameWindow
     {
-        //The vertices are now used to draw cubes, notice how we dont use the texture coords anymore,
-        //although you could easily use the textures together with the lighting tutorials it isn't
-        //the main focus so we wont have them here, it could however be a fun exercise to
-        //add the textures back and see how that works later down the line.
-        private readonly float[] _vertices =
-        {
-            // Position
-             0.5f,  0.5f,  0.5f, //left-top-backward
-             0.5f,  0.5f, -0.5f, //left-top-forward
-             0.5f, -0.5f,  0.5f, //left-bottom-backward
-             0.5f, -0.5f, -0.5f, //left-bottom-forward
-            -0.5f,  0.5f,  0.5f, //right-top-backward
-            -0.5f,  0.5f, -0.5f, //right-top-forward
-            -0.5f, -0.5f,  0.5f, //right-bottom-backward
-            -0.5f, -0.5f, -0.5f  //right-bottom-forward
+        //Since we are going to use textures we of course have to include two new floats per vertex, the texture coords.
+        private float[] _vertices = {
+            // positions          // normals           // texture coords
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
+        
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f, 0.0f,
+        
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+        
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+             0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f,
+        
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+             0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 1.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+             0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f, 1.0f,
+        
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 1.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+             0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
-        //The indices have also been updated to draw a total of 6 faces that way we have a full cube
-        private readonly uint[] _indices =
-        {
-            0, 1, 2, 1, 2, 3, //left face
-            4, 5, 6, 5, 6, 7, //right face
-            0, 1, 4, 1, 4, 5, //top face
-            2, 3, 6, 3, 6, 7, //bottom face
-            0, 2, 4, 2, 4, 6, //backward face
-            1, 3, 5, 3, 5, 7  //forward face
-        };
-        //This is the position of both the light and the place the lamp cube will be drawn in the scene
         private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
 
-        private int _elementBufferObject;
         private int _vertexBufferObject;
-        //I renamed the vertex array object since we now want to VAO's one for the model (the big cube for testing light shaders),
-        //and one for the lamp so we can see where the light source comes from.
-        //In an actual application you would probably either dont draw the lamp at all or draw it with a model of a lamp of some sort.
         private int _vaoModel;
         private int _vaoLamp;
 
-        //We also need two shaders, one for the lamp and one for our lighting material.
-        //The lighting shader is where most of this chapter will take place as this is where a lot of the lighting "magic" happens.
         private Shader _lampShader;
         private Shader _lightingShader;
+        //The texture containing information for the diffuse map, this would more commonly
+        //just be called the color/texture of the object.
+        private Texture _diffuseMap;
+        //The specular map is a black/white representation of how specular each part of the texture is.
+        private Texture _specularMap;
         
         private Camera _camera;
         private bool _firstMove = true;
@@ -73,37 +88,43 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _elementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
-
-            //Load the two different shaders, they use the same vertex shader program. However they have two different fragment shaders.
-            //This is because the lamp only uses a basic shader to turn it white, it wouldn't make sense to have the lamp lit in other colors.
-            //The lighting shaders uses the lighting.frag shader which is what a large part of this chapter will be about
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            //Our two textures are loaded in from memory, you should head over and
+            //check them out and compare them to the results.
+            _diffuseMap = new Texture("Resources/container2.png");
+            _specularMap = new Texture("Resources/container2_specular.png");
 
-            //Initialize the vao for the model
             _vaoModel = GL.GenVertexArray();
             GL.BindVertexArray(_vaoModel);
-
+            
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
-            var vertexLocation = _lampShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            //All of the vertex attributes have been updated to now have a stride of 8 float sizes.
+            var positionLocation = _lightingShader.GetAttribLocation("aPos");
+            GL.EnableVertexAttribArray(positionLocation);
+            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
+            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+            GL.EnableVertexAttribArray(normalLocation);
+            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            
+            //The texture coords have now been added too, remember we only have 2 coordinates as the texture is 2d,
+            //so the size parameter should only be 2 for the texture coordinates.
+            var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+            GL.EnableVertexAttribArray(texCoordLocation);
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
 
-            //Initialize the vao for the lamp, this is mostly the same as the code for the model cube
             _vaoLamp = GL.GenVertexArray();
             GL.BindVertexArray(_vaoLamp);
-            // we only need to bind to the VBO, the container's VBO's data already contains the correct data.
+
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            // set the vertex attributes (only position data for our lamp)
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+
+            //The lamp shader should have its stride updated aswell, however we dont actually
+            //use the texture coords for the lamp, so we dont need to add any extra attributes.
+            positionLocation = _lampShader.GetAttribLocation("aPos");
+            GL.EnableVertexAttribArray(positionLocation);
+            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
             _camera = new Camera(Vector3.UnitZ * 3);
             _camera.AspectRatio = Width / (float)Height;
@@ -118,34 +139,46 @@ namespace LearnOpenTK
         {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            //Draw the model/cube with the lighting shader
             GL.BindVertexArray(_vaoModel);
 
+            //The two textures need to be used, in this case we use the diffuse map as our 0th texture
+            //and the specular map as our 1st texture.
+            _diffuseMap.Use(TextureUnit.Texture0);
+            _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
             
-            _lightingShader.SetMatrix4("model", Matrix4.Identity); //Matrix4.Identity is used as the matrix, since we just wanna draw it at 0,0,0
+            _lightingShader.SetMatrix4("model", Matrix4.Identity);
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
-            _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 0.5f, 0.31f));
-            _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
+            _lightingShader.SetVector3("lightPos", _lightPos);
+            _lightingShader.SetVector3("viewPos", _camera.Position);
+            
+            //Here we specify to the shaders what textures they should refer to when we want to get the positions.
+            _lightingShader.SetInt("material.diffuse", 0);
+            _lightingShader.SetInt("material.specular", 1);
+            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
+            _lightingShader.SetFloat("material.shininess", 32.0f);
+            
+            _lightingShader.SetVector3("light.ambient",  new Vector3(0.2f));
+            _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
+            _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-            //Draw the lamp, this is mostly the same as for the model cube
             GL.BindVertexArray(_vaoModel);
             
             _lampShader.Use();
 
             Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f); //We scale the lamp cube down a bit to make it less dominant
+            lampMatrix *= Matrix4.CreateScale(0.2f);
             lampMatrix *= Matrix4.CreateTranslation(_lightPos);
             
             _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
-            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             SwapBuffers();
 
@@ -232,7 +265,6 @@ namespace LearnOpenTK
             GL.UseProgram(0);
 
             GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteBuffer(_elementBufferObject);
             GL.DeleteVertexArray(_vaoModel);
             GL.DeleteVertexArray(_vaoLamp);
 
