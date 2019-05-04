@@ -151,7 +151,6 @@ namespace LearnOpenTK
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
-            _lightingShader.SetVector3("lightPos", _lightPos);
             _lightingShader.SetVector3("viewPos", _camera.Position);
             
             //Here we specify to the shaders what textures they should refer to when we want to get the positions.
@@ -160,6 +159,7 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
             
+            _lightingShader.SetVector3("light.position", _lightPos);
             _lightingShader.SetVector3("light.ambient",  new Vector3(0.2f));
             _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f));

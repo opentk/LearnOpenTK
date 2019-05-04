@@ -129,7 +129,6 @@ namespace LearnOpenTK
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
-            _lightingShader.SetVector3("lightPos", _lightPos);
             _lightingShader.SetVector3("viewPos", _camera.Position);
             
             //Here we set the material values of the cube, the material struct is just a container so to access
@@ -150,6 +149,7 @@ namespace LearnOpenTK
             Vector3 ambientColor = lightColor * new Vector3(0.2f);
             Vector3 diffuseColor = lightColor * new Vector3(0.5f);
             
+            _lightingShader.SetVector3("light.position", _lightPos);
             _lightingShader.SetVector3("light.ambient",  ambientColor);
             _lightingShader.SetVector3("light.diffuse",  diffuseColor);
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f, 1.0f, 1.0f));
