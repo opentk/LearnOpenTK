@@ -7,8 +7,9 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we focus on how to set up a scene with multiple lights, both of different types but also
-    //with several point lights
+    //This tutorial is split up into multiple different bits, one for each type of light.
+    
+    //The following is the code for the directional light, a light that has a direction but no position.
     public class Window : GameWindow
     {
         private float[] _vertices = {
@@ -55,7 +56,8 @@ namespace LearnOpenTK
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
-        
+        //We draw multiple different cubes and it helps to store all
+        //their positions in an array for later when we want to draw them
         private readonly Vector3[] _cubePositions =
         {
             new Vector3(0.0f, 0.0f, 0.0f),
@@ -68,14 +70,6 @@ namespace LearnOpenTK
             new Vector3(1.5f, 2.0f, -2.5f),
             new Vector3(1.5f, 0.2f, -1.5f),
             new Vector3(-1.3f, 1.0f, -1.5f)
-        };
-        //We need the point lights' positions to draw the lamps and to get light the materials properly
-        private readonly Vector3[] _pointLightPositions =
-        {
-            new Vector3(0.7f, 0.2f, 2.0f),
-            new Vector3(2.3f, -3.3f, -4.0f),
-            new Vector3(-4.0f, 2.0f, -12.0f),
-            new Vector3(0.0f, 0.0f, -3.0f)
         };
         
         private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
@@ -165,50 +159,27 @@ namespace LearnOpenTK
             _lightingShader.SetInt("material.specular", 1);
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
-            /*
-               Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index 
-               the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
-               by defining light types as classes and set their values in there, or by using a more efficient uniform approach
-               by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
-            */
-            //Directional light
-            _lightingShader.SetVector3("dirLight.direction", new Vector3(-0.2f, -1.0f, -0.3f));
-            _lightingShader.SetVector3("dirLight.ambient", new Vector3(0.05f, 0.05f, 0.05f));
-            _lightingShader.SetVector3("dirLight.diffuse", new Vector3(0.4f, 0.4f, 0.4f));
-            _lightingShader.SetVector3("dirLight.specular", new Vector3(0.5f, 0.5f, 0.5f));
             
-            //Point lights
-            for (int i = 0; i < _pointLightPositions.Length; i++)
-            {
-                _lightingShader.SetVector3($"pointLights[{i}].position", _pointLightPositions[i]);
-                _lightingShader.SetVector3($"pointLights[{i}].ambient", new Vector3(0.05f, 0.05f, 0.05f));
-                _lightingShader.SetVector3($"pointLights[{i}].diffuse", new Vector3(0.8f, 0.8f, 0.8f));
-                _lightingShader.SetVector3($"pointLights[{i}].specular", new Vector3(1.0f, 1.0f, 1.0f));
-                _lightingShader.SetFloat($"pointLights[{i}].constant", 1.0f);
-                _lightingShader.SetFloat($"pointLights[{i}].linear", 0.09f);
-                _lightingShader.SetFloat($"pointLights[{i}].quadratic", 0.032f);
-            }
-            
-            //Spot light
-            _lightingShader.SetVector3("spotLight.position", _camera.Position);
-            _lightingShader.SetVector3("spotLight.direction", _camera.Front);
-            _lightingShader.SetVector3("spotLight.ambient",  new Vector3(0.0f, 0.0f, 0.0f));
-            _lightingShader.SetVector3("spotLight.diffuse",  new Vector3(1.0f, 1.0f, 1.0f));
-            _lightingShader.SetVector3("spotLight.specular",  new Vector3(1.0f, 1.0f, 1.0f));
-            _lightingShader.SetFloat("spotLight.constant", 1.0f);
-            _lightingShader.SetFloat("spotLight.linear", 0.09f);
-            _lightingShader.SetFloat("spotLight.quadratic", 0.032f);
-            _lightingShader.SetFloat("spotLight.cutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5f)));
-            _lightingShader.SetFloat("spotLight.outerCutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5f))); 
+            //Directional light needs a direction, in this example we just use (-0.2, -1.0, -0.3f) as the lights direction
+            _lightingShader.SetVector3("light.direction", new Vector3(-0.2f, -1.0f, -0.3f));
+            _lightingShader.SetVector3("light.ambient",  new Vector3(0.2f));
+            _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
+            _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
+            //We want to draw all the cubes at their respective positions
             for (int i = 0; i < _cubePositions.Length; i++)
             {
+                //First we create a model from an identity matrix
                 Matrix4 model = Matrix4.Identity;
+                //Then we translate said matrix by the cube position
                 model *= Matrix4.CreateTranslation(_cubePositions[i]);
+                //We then calculate the angle and rotate the model around an axis
                 float angle = 20.0f * i;
                 model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
+                //Remember to set the model at last so it can be used by opentk
                 _lightingShader.SetMatrix4("model", model);
                 
+                //At last we draw all our cubes
                  GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
             }
 
@@ -216,19 +187,15 @@ namespace LearnOpenTK
             
             _lampShader.Use();
 
+            Matrix4 lampMatrix = Matrix4.Identity;
+            lampMatrix *= Matrix4.CreateScale(0.2f);
+            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            
+            _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-            //We use a loop to draw all the lights at the proper position
-            for (int i = 0; i < _pointLightPositions.Length; i++)
-            {
-                Matrix4 lampMatrix = Matrix4.Identity;
-                lampMatrix *= Matrix4.CreateScale(0.2f);
-                lampMatrix *= Matrix4.CreateTranslation(_pointLightPositions[i]);
-                
-                _lampShader.SetMatrix4("model", lampMatrix);
-                
-                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
-            }
+            
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             SwapBuffers();
 

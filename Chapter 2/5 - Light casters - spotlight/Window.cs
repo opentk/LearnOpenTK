@@ -7,12 +7,13 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we take a look at how we can use textures to make the light settings we set up in the last episode
-    //different per fragment instead of making them per object.
-    //Remember to check out the shaders for how we converted to using textures there.
+    //This tutorial is split up into multiple different bits, one for each type of light.
+    
+    //The following is the code for the spotlight, the functionality is much the same as the point light except it
+    //only shines in one direction, for this we need the angle between the spotlight direction and the lightDir
+    //then we can check if that angle is within the cutoff of the spotlight, if it is we light it accordingly
     public class Window : GameWindow
     {
-        //Since we are going to use textures we of course have to include two new floats per vertex, the texture coords.
         private float[] _vertices = {
             // positions          // normals           // texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
@@ -57,6 +58,22 @@ namespace LearnOpenTK
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
+        //We draw multiple different cubes and it helps to store all
+        //their positions in an array for later when we want to draw them
+        private readonly Vector3[] _cubePositions =
+        {
+            new Vector3(0.0f, 0.0f, 0.0f),
+            new Vector3(2.0f, 5.0f, -15.0f),
+            new Vector3(-1.5f, -2.2f, -2.5f),
+            new Vector3(-3.8f, -2.0f, -12.3f),
+            new Vector3(2.4f, -0.4f, -3.5f),
+            new Vector3(-1.7f, 3.0f, -7.5f),
+            new Vector3(1.3f, -2.0f, -2.5f),
+            new Vector3(1.5f, 2.0f, -2.5f),
+            new Vector3(1.5f, 0.2f, -1.5f),
+            new Vector3(-1.3f, 1.0f, -1.5f)
+        };
+        
         private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
 
         private int _vertexBufferObject;
@@ -135,7 +152,6 @@ namespace LearnOpenTK
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
             
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             
@@ -146,12 +162,33 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
             
-            _lightingShader.SetVector3("light.direction", new Vector3(-0.2f, -1.0f, -0.3f));
+            _lightingShader.SetVector3("light.position",  _camera.Position);
+            _lightingShader.SetVector3("light.direction", _camera.Front);
+            _lightingShader.SetFloat("light.cutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5)));
+            _lightingShader.SetFloat("light.outerCutOff", (float)Math.Cos(MathHelper.DegreesToRadians(17.5)));
+            _lightingShader.SetFloat("light.constant",  1.0f);
+            _lightingShader.SetFloat("light.linear", 0.09f);
+            _lightingShader.SetFloat("light.quadratic", 0.032f);
             _lightingShader.SetVector3("light.ambient",  new Vector3(0.2f));
             _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
-            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
+            //We want to draw all the cubes at their respective positions
+            for (int i = 0; i < _cubePositions.Length; i++)
+            {
+                //First we create a model from an identity matrix
+                Matrix4 model = Matrix4.Identity;
+                //Then we translate said matrix by the cube position
+                model *= Matrix4.CreateTranslation(_cubePositions[i]);
+                //We then calculate the angle and rotate the model around an axis
+                float angle = 20.0f * i;
+                model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
+                //Remember to set the model at last so it can be used by opentk
+                _lightingShader.SetMatrix4("model", model);
+                
+                //At last we draw all our cubes
+                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
+            }
 
             GL.BindVertexArray(_vaoModel);
             
