@@ -14,10 +14,9 @@ namespace LearnOpenTK
     //Furthermore in the shaders we have set up some basic physically based coloring.
     public class Window : GameWindow
     {
-        //The vertices are now used to draw cubes, notice how we dont use the texture coords anymore,
-        //although you could easily use the textures together with the lighting tutorials it isn't
-        //the main focus so we wont have them here, it could however be a fun exercise to
-        //add the textures back and see how that works later down the line.
+        //The vertices are now used to draw cubes.
+        //For this example, we aren't using texture coordinates.
+        //You can use textures with lighting (and we will get onto this), but for simplicity's sake, we'll just use a solid color here
         private readonly float[] _vertices = {
              //Position           Normal
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, //Front face
