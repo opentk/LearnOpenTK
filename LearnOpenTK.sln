@@ -40,6 +40,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Light casters - point lights", "Chapter 2\5 - Light casters - point lights\5 - Light casters - point lights.csproj", "{3531934C-7535-4A18-B598-C21359004324}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Light casters - spotlight", "Chapter 2\5 - Light casters - spotlight\5 - Light casters - spotlight.csproj", "{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLControl", "GLControl\GLControl.csproj", "{A797E009-3B93-4361-8EF6-B1039C2BA2C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +116,10 @@ Global
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A797E009-3B93-4361-8EF6-B1039C2BA2C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
