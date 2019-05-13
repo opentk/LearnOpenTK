@@ -139,6 +139,18 @@ namespace LearnOpenTK.Common
             var location = GL.GetUniformLocation(_handle, name);
             GL.Uniform1(location, data);
         }
+        
+        /// <summary>
+        /// Set a uniform float on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetFloat(string name, float data)
+        {
+            GL.UseProgram(_handle);
+            var location = GL.GetUniformLocation(_handle, name);
+            GL.Uniform1(location, data);
+        }
 
         /// <summary>
         /// Set a uniform Matrix4 on this shader
@@ -155,6 +167,18 @@ namespace LearnOpenTK.Common
             GL.UseProgram(_handle);
             var location = GL.GetUniformLocation(_handle, name);
             GL.UniformMatrix4(location, true, ref data);
+        }
+
+        /// <summary>
+        /// Set a uniform Vector3 on this shader.
+        /// </summary>
+        /// <param name="name">The name of the uniform</param>
+        /// <param name="data">The data to set</param>
+        public void SetVector3(string name, Vector3 data)
+        {
+            GL.UseProgram(_handle);
+            var location = GL.GetUniformLocation(_handle, name);
+            GL.Uniform3(location, data);
         }
 
 
