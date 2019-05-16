@@ -87,6 +87,9 @@ namespace LearnOpenTK.GLControl
 
             UpdateViewMatrix();
             _loaded = true;
+            
+            // We have to force a draw or the window will stay blank until we invalidate the control somewhere else.
+            glControl.Invalidate();
         }
 
         // Gets invoked when the Control changes size.
