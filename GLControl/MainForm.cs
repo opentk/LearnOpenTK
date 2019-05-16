@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using LearnOpenGL_TK.Common;
+using LearnOpenTK.Common;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
