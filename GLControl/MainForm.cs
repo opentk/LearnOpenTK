@@ -112,13 +112,16 @@ namespace LearnOpenTK.GLControl
             if (!_loaded)
                 return;
             
+            // Clears the control using the background color
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             _shader.Use();
             
+            // Draws the object
             GL.BindVertexArray(_vertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
             
+            // Swaps front frame with back frame
             glControl.SwapBuffers();
         }
 
