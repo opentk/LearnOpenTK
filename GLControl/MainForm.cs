@@ -160,9 +160,9 @@ namespace LearnOpenTK.GLControl
             
             for (var i = 3; i < _data.Length; i += 6)
             {
-                _data[i] = _rand.Next(255) / 255f;
-                _data[i + 1] = _rand.Next(255) / 255f;
-                _data[i + 2] = _rand.Next(255) / 255f;
+                _data[i] = _rand.Next(256) / 255f;
+                _data[i + 1] = _rand.Next(256) / 255f;
+                _data[i + 2] = _rand.Next(256) / 255f;
             }
             
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
