@@ -8,7 +8,7 @@ namespace LearnOpenTK.GLControl
 {
     public partial class MainForm : Form
     {
-        private readonly Random _rand = new Random();
+        private static readonly Random Random = new Random();
         
         private readonly float[] _data =
         {
@@ -160,9 +160,9 @@ namespace LearnOpenTK.GLControl
             
             for (var i = 3; i < _data.Length; i += 6)
             {
-                _data[i] = _rand.Next(256) / 255f;
-                _data[i + 1] = _rand.Next(256) / 255f;
-                _data[i + 2] = _rand.Next(256) / 255f;
+                _data[i] = Random.Next(256) / 255f;
+                _data[i + 1] = Random.Next(256) / 255f;
+                _data[i + 2] = Random.Next(256) / 255f;
             }
             
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
