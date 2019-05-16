@@ -43,7 +43,8 @@ namespace LearnOpenTK.GLControl
 
         private Shader _shader;
 
-        // We use two TrackBars to rotate the object, those fields store the rotation values in radians
+        // We use two TrackBars to rotate the object,
+        // these two fields store the rotation values in radians
         private float _rotationX;
         private float _rotationY;
         
@@ -149,7 +150,7 @@ namespace LearnOpenTK.GLControl
             // We send the rotated matrix to the graphics card
             UpdateViewMatrix();
             
-            // and we invalidate the form to redraw our object with our rotation
+            // and then we invalidate the form to redraw our object with our rotation
             glControl.Invalidate();
         }
 
@@ -161,7 +162,7 @@ namespace LearnOpenTK.GLControl
             // We send the rotated matrix to the graphics card
             UpdateViewMatrix();
             
-            // and we invalidate the form to redraw our object with our rotation
+            // and then we invalidate the form to redraw our object with our rotation
             glControl.Invalidate();
         }
 
