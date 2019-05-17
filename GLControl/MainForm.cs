@@ -147,7 +147,7 @@ namespace LearnOpenTK.GLControl
             // Gets the rotation around the X axis in radians
             _rotationX = MathHelper.DegreesToRadians(trackBarX.Value);
             
-            // We send the rotated matrix to the graphics card
+            // We send the updated view matrix to the graphics card
             UpdateViewMatrix();
             
             // and then we invalidate the form to redraw our object with our rotation
@@ -159,14 +159,14 @@ namespace LearnOpenTK.GLControl
             // Gets the rotation around the Y axis in radians
             _rotationY = MathHelper.DegreesToRadians(trackBarY.Value);
             
-            // We send the rotated matrix to the graphics card
+            // We send the updated view matrix matrix to the graphics card
             UpdateViewMatrix();
             
             // and then we invalidate the form to redraw our object with our rotation
             glControl.Invalidate();
         }
 
-        // Bound to the "Randomize Colors" button
+        // Invoked when the "Randomize Colors" button is clicked
         private void ButtonRandomize_Click(object sender, EventArgs e)
         {
             if (!_loaded)
@@ -188,7 +188,7 @@ namespace LearnOpenTK.GLControl
             glControl.Invalidate();
         }
 
-        // Bound to the "Change Background" button
+        // Invoked when the "Change Background" button is clicked
         private void ButtonChangeColor_Click(object sender, EventArgs e)
         {
             if (!_loaded)
