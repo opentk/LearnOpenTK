@@ -133,7 +133,7 @@ namespace LearnOpenTK
 
             GL.DeleteProgram(_shader.Handle);
             // Don't forget to dispose of the texture too!
-            _texture.Dispose();
+            GL.DeleteTexture(_texture.Handle);
             base.OnUnload(e);
         }
     }
