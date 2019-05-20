@@ -69,7 +69,7 @@ namespace LearnOpenTK.Common
             GL.DeleteShader(vertexShader);
             
             // The shader is now ready to go, but first, we're going to cache all the shader uniform locations.
-            // Querrying this from the shader is very slow, so we do it once on initialization and reuse those values
+            // Querying this from the shader is very slow, so we do it once on initialization and reuse those values
             // later.
             
             // First, we have to get the number of active uniforms in the shader.
