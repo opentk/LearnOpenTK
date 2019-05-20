@@ -132,7 +132,7 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteBuffer(_elementBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
-            _shader.Dispose();
+            GL.DeleteProgram(_shader.Handle);
 
             base.OnUnload(e);
         }

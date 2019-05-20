@@ -8,9 +8,9 @@ using OpenTK.Graphics.OpenGL4;
 namespace LearnOpenTK.Common
 {
     // A simple class meant to help create shaders.
-    public class Shader : IDisposable
+    public class Shader
     {
-        private readonly int _handle;
+        public int Handle;
 
         
         // This is how you create a simple shader.
@@ -48,19 +48,19 @@ namespace LearnOpenTK.Common
 
             // These two shaders must then be merged into a shader program, which can then be used by OpenGL.
             // To do this, create a program...
-            _handle = GL.CreateProgram();
+            Handle = GL.CreateProgram();
 
             // Attach both shaders...
-            GL.AttachShader(_handle, vertexShader);
-            GL.AttachShader(_handle, fragmentShader);
+            GL.AttachShader(Handle, vertexShader);
+            GL.AttachShader(Handle, fragmentShader);
 
             // And then link them together.
-            LinkProgram(_handle);
+            LinkProgram(Handle);
 
             // When the shader program is linked, it no longer needs the individual shaders attacked to it; the compiled code is copied into the shader program.
             // Detach them, and then delete them.
-            GL.DetachShader(_handle, vertexShader);
-            GL.DetachShader(_handle, fragmentShader);
+            GL.DetachShader(Handle, vertexShader);
+            GL.DetachShader(Handle, fragmentShader);
             GL.DeleteShader(fragmentShader);
             GL.DeleteShader(vertexShader);
         }
@@ -98,7 +98,7 @@ namespace LearnOpenTK.Common
         // A wrapper function that enables the shader program.
         public void Use()
         {
-            GL.UseProgram(_handle);
+            GL.UseProgram(Handle);
         }
 
 
@@ -106,7 +106,7 @@ namespace LearnOpenTK.Common
         // you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
         public int GetAttribLocation(string attribName)
         {
-            return GL.GetAttribLocation(_handle, attribName);
+            return GL.GetAttribLocation(Handle, attribName);
         }
 
 
@@ -135,8 +135,8 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetInt(string name, int data)
         {
-            GL.UseProgram(_handle);
-            var location = GL.GetUniformLocation(_handle, name);
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
             GL.Uniform1(location, data);
         }
         
@@ -147,8 +147,8 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetFloat(string name, float data)
         {
-            GL.UseProgram(_handle);
-            var location = GL.GetUniformLocation(_handle, name);
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
             GL.Uniform1(location, data);
         }
 
@@ -164,8 +164,8 @@ namespace LearnOpenTK.Common
         /// </remarks>
         public void SetMatrix4(string name, Matrix4 data)
         {
-            GL.UseProgram(_handle);
-            var location = GL.GetUniformLocation(_handle, name);
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
             GL.UniformMatrix4(location, true, ref data);
         }
 
@@ -176,42 +176,9 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetVector3(string name, Vector3 data)
         {
-            GL.UseProgram(_handle);
-            var location = GL.GetUniformLocation(_handle, name);
+            GL.UseProgram(Handle);
+            var location = GL.GetUniformLocation(Handle, name);
             GL.Uniform3(location, data);
-        }
-
-
-        // This section is dedicated to cleaning up the shader after it's finished.
-        // Doing this solely in a finalizer results in a crash because of the Object-Oriented Language Problem
-        // ( https://www.khronos.org/opengl/wiki/Common_Mistakes#The_Object_Oriented_Language_Problem )
-        private bool disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                GL.DeleteProgram(_handle);
-
-                disposedValue = true;
-            }
-        }
-
-        ~Shader()
-        {
-            Dispose(false);
-        }
-
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

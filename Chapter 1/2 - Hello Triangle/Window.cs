@@ -201,7 +201,7 @@ namespace LearnOpenTK
         }
 
 
-        // Now, for cleanup. This isn't technically necessary since C# will clean up all resources automatically when
+        // Now, for cleanup. This isn't technically necessary since C# and OpenGL will clean up all resources automatically when
         // the program closes, but it's very important to know how anyway.
         protected override void OnUnload(EventArgs e)
         {
@@ -214,7 +214,7 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            _shader.Dispose();
+            GL.DeleteProgram(_shader.Handle);
             base.OnUnload(e);
         }
     }
