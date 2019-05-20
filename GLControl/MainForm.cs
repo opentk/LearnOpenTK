@@ -33,8 +33,8 @@ namespace LearnOpenTK.GLControl
             4, 3, 0
         };
 
-        // We store the loaded state in a boolean to prevent GL specific instructions
-        // to be called by Windows Form events before creating the GL context.
+        // We store the loaded state in a boolean to prevent GL-specific instructions
+        // being called before the GL context is created
         private bool _loaded;
         
         private int _vertexBufferObject;
@@ -43,8 +43,8 @@ namespace LearnOpenTK.GLControl
 
         private Shader _shader;
 
-        // We use two TrackBars to rotate the object,
-        // these two fields store the rotation values in radians
+        // We use two TrackBars to rotate the object.
+        // These two fields store the rotation in radians along the X and Y axis.
         private float _rotationX;
         private float _rotationY;
         
