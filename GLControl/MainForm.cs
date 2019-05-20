@@ -8,7 +8,7 @@ namespace LearnOpenTK.GLControl
 {
     public partial class MainForm : Form
     {
-        private readonly Random _rand = new Random();
+        private static readonly Random Random = new Random();
         
         private readonly float[] _data =
         {
@@ -33,7 +33,8 @@ namespace LearnOpenTK.GLControl
             4, 3, 0
         };
 
-        // We store the loaded state in a boolean to prevent GL specific instructions to be called by WinForms events.
+        // We store the loaded state in a boolean to prevent GL-specific instructions
+        // being called before the GL context is created
         private bool _loaded;
         
         private int _vertexBufferObject;
@@ -42,7 +43,8 @@ namespace LearnOpenTK.GLControl
 
         private Shader _shader;
 
-        // We use two TrackBars to rotate the object, those fields store the rotation values in radians
+        // We use two TrackBars to rotate the object.
+        // These two fields store the rotation in radians along the X and Y axis.
         private float _rotationX;
         private float _rotationY;
         
@@ -71,11 +73,13 @@ namespace LearnOpenTK.GLControl
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
             
+            // Because there's now 6 floats (vertex + color data) between the start of the first vertex
+            // and the start of the second we specify a stride of 6 * sizeof(float)
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
             
-            // Because there's now 6 floats (vertex + color data) between the start of the first vertex and the start of the second
-            // we specify a stride of 6 * sizeof(float) 
+            // Here we specify an offset of 3 * sizeof(float) as we want to point to the first color
+            // which is after the first coordinate (x, y, z: 3 floats)
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             GL.EnableVertexAttribArray(1);
             
@@ -84,14 +88,17 @@ namespace LearnOpenTK.GLControl
 
             UpdateViewMatrix();
             _loaded = true;
+            
+            // We have to force a draw or the window will stay blank until we invalidate the control somewhere else.
+            glControl.Invalidate();
         }
 
-        // Calls when the Control changes size.
-        // As the object is firstly created with an empty constructor and then all the properties are changed
-        // it's likely that this event gets fired once or twice before the Load event gets fired.
-        // Is important to include the loaded check. 
+        // Gets invoked when the Control changes size.
         private void GLControl_Resize(object sender, EventArgs e)
         {
+            // As the object is firstly created with an empty constructor and all the properties are set afterwards
+            // it's likely that this event gets fired once or twice before OpenGL initialization (Load event)
+            // hence it's important to include the loaded check.
             if (!_loaded)
                 return;
             
@@ -109,13 +116,16 @@ namespace LearnOpenTK.GLControl
             if (!_loaded)
                 return;
             
+            // Clears the control using the background color
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             _shader.Use();
             
+            // Draws the object
             GL.BindVertexArray(_vertexArrayObject);
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
             
+            // Swaps front frame with back frame
             glControl.SwapBuffers();
         }
 
@@ -134,37 +144,43 @@ namespace LearnOpenTK.GLControl
 
         private void TrackBarX_Scroll(object sender, EventArgs e)
         {
-            // Rotates around the X axis
+            // Gets the rotation around the X axis in radians
             _rotationX = MathHelper.DegreesToRadians(trackBarX.Value);
+            
+            // We send the updated view matrix to the graphics card
             UpdateViewMatrix();
             
-            // We invalidate the control to apply the rotation changes
+            // and then we invalidate the form to redraw our object with our rotation
             glControl.Invalidate();
         }
 
         private void TrackBarY_Scroll(object sender, EventArgs e)
         {
-            // Rotates around the Y axis
+            // Gets the rotation around the Y axis in radians
             _rotationY = MathHelper.DegreesToRadians(trackBarY.Value);
+            
+            // We send the updated view matrix matrix to the graphics card
             UpdateViewMatrix();
             
-            // We invalidate the control to apply the rotation changes
+            // and then we invalidate the form to redraw our object with our rotation
             glControl.Invalidate();
         }
 
-        // Randomizes the colors of the object we are drawing
+        // Invoked when the "Randomize Colors" button is clicked
         private void ButtonRandomize_Click(object sender, EventArgs e)
         {
             if (!_loaded)
                 return;
             
+            // Randomizes the colors of the object we are drawing
             for (var i = 3; i < _data.Length; i += 6)
             {
-                _data[i] = _rand.Next(255) / 255f;
-                _data[i + 1] = _rand.Next(255) / 255f;
-                _data[i + 2] = _rand.Next(255) / 255f;
+                _data[i] = Random.Next(256) / 255f;
+                _data[i + 1] = Random.Next(256) / 255f;
+                _data[i + 2] = Random.Next(256) / 255f;
             }
             
+            // We update the data we sent to the graphics card with our new colors
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _data.Length * sizeof(float), _data, BufferUsageHint.DynamicDraw);
             
@@ -172,7 +188,7 @@ namespace LearnOpenTK.GLControl
             glControl.Invalidate();
         }
 
-        // Changes the GL background color
+        // Invoked when the "Change Background" button is clicked
         private void ButtonChangeColor_Click(object sender, EventArgs e)
         {
             if (!_loaded)
@@ -180,6 +196,8 @@ namespace LearnOpenTK.GLControl
             
             // Shows a Dialog in which you can choose a color.
             colorDialog.ShowDialog();
+            
+            // Changes the control background color
             GL.ClearColor(colorDialog.Color);
             
             // We invalidate the control to apply the background changes.
