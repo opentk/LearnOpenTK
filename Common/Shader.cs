@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 
@@ -11,6 +13,8 @@ namespace LearnOpenTK.Common
     public class Shader
     {
         public int Handle;
+
+        private Dictionary<string, int> uniformLocations;
 
         
         // This is how you create a simple shader.
@@ -63,6 +67,26 @@ namespace LearnOpenTK.Common
             GL.DetachShader(Handle, fragmentShader);
             GL.DeleteShader(fragmentShader);
             GL.DeleteShader(vertexShader);
+            
+            // The shader is now ready to go, but first, we're going to cache all the shader uniform locations.
+            // Querrying this from the shader is very slow, so we do it once on initialization and reuse those values
+            // later.
+            
+            // First, we have to get the number of active uniforms in the shader.
+            GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
+            
+            // Next, allocate the dictionary to hold the locations.
+            uniformLocations = new Dictionary<string, int>();
+
+            // Loop over all the uniforms,
+            for (var i = 0; i < numberOfUniforms; i++)
+            {
+                // get the name of this uniform,
+                var key = GL.GetActiveUniform(Handle, i, out _, out _);
+                
+                // and then add it to the dictionary.
+                uniformLocations.Add(key, i);
+            }
         }
 
 
@@ -136,8 +160,7 @@ namespace LearnOpenTK.Common
         public void SetInt(string name, int data)
         {
             GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
-            GL.Uniform1(location, data);
+            GL.Uniform1(uniformLocations[name], data);
         }
         
         /// <summary>
@@ -148,8 +171,7 @@ namespace LearnOpenTK.Common
         public void SetFloat(string name, float data)
         {
             GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
-            GL.Uniform1(location, data);
+            GL.Uniform1(uniformLocations[name], data);
         }
 
         /// <summary>
@@ -165,8 +187,7 @@ namespace LearnOpenTK.Common
         public void SetMatrix4(string name, Matrix4 data)
         {
             GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
-            GL.UniformMatrix4(location, true, ref data);
+            GL.UniformMatrix4(uniformLocations[name], true, ref data);
         }
 
         /// <summary>
@@ -177,8 +198,7 @@ namespace LearnOpenTK.Common
         public void SetVector3(string name, Vector3 data)
         {
             GL.UseProgram(Handle);
-            var location = GL.GetUniformLocation(Handle, name);
-            GL.Uniform3(location, data);
+            GL.Uniform3(uniformLocations[name], data);
         }
     }
 }
