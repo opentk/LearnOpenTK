@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4 - Lighting maps", "Chapte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "6 - Multiple lights", "Chapter 2\6 - Multiple lights\6 - Multiple lights.csproj", "{519EDF78-AA47-4A55-8953-5DF0CD408679}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Ligh casters - directional lights", "Chapter 2\5 - Light casters - directional lights\5 - Ligh casters - directional lights.csproj", "{0E05843C-001E-4773-A1E3-1E48EC18BA36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Light casters - directional lights", "Chapter 2\5 - Light casters - directional lights\5 - Light casters - directional lights.csproj", "{0E05843C-001E-4773-A1E3-1E48EC18BA36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "5 - Light casters - point lights", "Chapter 2\5 - Light casters - point lights\5 - Light casters - point lights.csproj", "{3531934C-7535-4A18-B598-C21359004324}"
 EndProject
