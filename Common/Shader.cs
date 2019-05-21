@@ -82,9 +82,12 @@ namespace LearnOpenTK.Common
             {
                 // get the name of this uniform,
                 var key = GL.GetActiveUniform(Handle, i, out _, out _);
+
+                // get the location,
+                var location = GL.GetUniformLocation(Handle, key);
                 
                 // and then add it to the dictionary.
-                uniformLocations.Add(key, i);
+                uniformLocations.Add(key, location);
             }
         }
 
