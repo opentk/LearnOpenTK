@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Advanced;
@@ -20,33 +18,31 @@ namespace LearnOpenTK.Common
             // Generate handle
             Handle = GL.GenTexture();
 
-
             // Bind the handle
             Use();
 
-
             // Load the image
-            Image<Rgba32> image = Image.Load(path);
-
-            // ImageSharp loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
-            // This will correct that, making the texture display properly.
-            image.Mutate(x => x.Flip(FlipMode.Vertical));
-
-            // Get an array of the pixels, in ImageSharp's internal format.
-            Rgba32[] tempPixels = image.GetPixelSpan().ToArray();
-
-            // Convert ImageSharp's format into a byte array, so we can use it with OpenGL.
-            List<byte> pixels = new List<byte>();
-
-            foreach (var p in tempPixels)
+            using (Image<Rgba32> image = Image.Load(path))
             {
-                pixels.Add(p.R);
-                pixels.Add(p.G);
-                pixels.Add(p.B);
-                pixels.Add(p.A);
-            }
+                // ImageSharp loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the
+                // texture to be flipped vertically. This will correct that, making the texture display properly.
+                image.Mutate(x => x.Flip(FlipMode.Vertical));
 
-            // Now that have our pixels, we need to set a few settings.
+                // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D
+                // Arguments:
+                //   The type of texture we're generating. There are various different types of textures, but the only one we need right now is Texture2D.
+                //   Level of detail. We can use this to start from a smaller mipmap (if we want), but we don't need to do that, so leave it at 0.
+                //   Target format of the pixels.
+                //   Width of the image
+                //   Height of the image.
+                //   Border of the image. This must always be 0; it's a legacy parameter that Khronos never got rid of.
+                //   The format of the pixels, explained above.
+                //   Data type of the pixels.
+                //   And finally, the actual pixels.
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.GetPixelSpan().ToArray());
+            }
+            
+            // Now that our texture is loaded, we need to set a few settings.
             // If you don't include these settings, OpenTK will refuse to draw the texture.
 
             // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
@@ -60,21 +56,6 @@ namespace LearnOpenTK.Common
             // We set this to Repeat so that textures will repeat when wrapped. Not demonstrated here since the texture coordinates exactly match
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-
-
-            // Now that our pixels have been loaded and our settings are prepared, it's time to generate a texture. We do this with GL.TexImage2D
-            // Arguments:
-            //   The type of texture we're generating. There are various different types of textures, but the only one we need right now is Texture2D.
-            //   Level of detail. We can use this to start from a smaller mipmap (if we want), but we don't need to do that, so leave it at 0.
-            //   Target format of the pixels.
-            //   Width of the image
-            //   Height of the image.
-            //   Border of the image. This must always be 0; it's a legacy parameter that Khronos never got rid of.
-            //   The format of the pixels, explained above.
-            //   Data type of the pixels.
-            //   And finally, the actual pixels.
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels.ToArray());
-
 
             // Next, generate mipmaps.
             // Mipmaps are smaller copies of the texture, scaled down. Each mipmap level is half the size of the previous one
@@ -95,3 +76,4 @@ namespace LearnOpenTK.Common
         }
     }
 }
+
