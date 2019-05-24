@@ -7,14 +7,14 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //This tutorial is split up into multiple different bits, one for each type of light.
+    // This tutorial is split up into multiple different bits, one for each type of light.
     
-    //The following is the code for the directional light, a light that has a direction but no position.
+    // The following is the code for the directional light, a light that has a direction but no position.
     public class Window : GameWindow
     {
         private readonly float[] _vertices =
         {
-            // positions          // normals           // texture coords
+            // Positions          Normals              Texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
@@ -57,8 +57,9 @@ namespace LearnOpenTK
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
-        //We draw multiple different cubes and it helps to store all
-        //their positions in an array for later when we want to draw them
+        
+        // We draw multiple different cubes and it helps to store all
+        // their positions in an array for later when we want to draw them
         private readonly Vector3[] _cubePositions =
         {
             new Vector3(0.0f, 0.0f, 0.0f),
@@ -161,27 +162,27 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
             
-            //Directional light needs a direction, in this example we just use (-0.2, -1.0, -0.3f) as the lights direction
+            // Directional light needs a direction, in this example we just use (-0.2, -1.0, -0.3f) as the lights direction
             _lightingShader.SetVector3("light.direction", new Vector3(-0.2f, -1.0f, -0.3f));
             _lightingShader.SetVector3("light.ambient",  new Vector3(0.2f));
             _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
-            //We want to draw all the cubes at their respective positions
+            // We want to draw all the cubes at their respective positions
             for (int i = 0; i < _cubePositions.Length; i++)
             {
-                //First we create a model from an identity matrix
+                // First we create a model from an identity matrix
                 Matrix4 model = Matrix4.Identity;
-                //Then we translate said matrix by the cube position
+                // Then we translate said matrix by the cube position
                 model *= Matrix4.CreateTranslation(_cubePositions[i]);
-                //We then calculate the angle and rotate the model around an axis
+                // We then calculate the angle and rotate the model around an axis
                 float angle = 20.0f * i;
                 model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
-                //Remember to set the model at last so it can be used by opentk
+                // Remember to set the model at last so it can be used by opentk
                 _lightingShader.SetMatrix4("model", model);
                 
-                //At last we draw all our cubes
-                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
+                // At last we draw all our cubes
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
             }
 
             GL.BindVertexArray(_vaoModel);

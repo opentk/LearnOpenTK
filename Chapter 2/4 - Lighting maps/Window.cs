@@ -7,15 +7,15 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we take a look at how we can use textures to make the light settings we set up in the last episode
-    //different per fragment instead of making them per object.
-    //Remember to check out the shaders for how we converted to using textures there.
+    // In this tutorial we take a look at how we can use textures to make the light settings we set up in the last episode
+    // different per fragment instead of making them per object.
+    // Remember to check out the shaders for how we converted to using textures there.
     public class Window : GameWindow
     {
-        //Since we are going to use textures we of course have to include two new floats per vertex, the texture coords.
+        // Since we are going to use textures we of course have to include two new floats per vertex, the texture coords.
         private readonly float[] _vertices =
         {
-            // positions          // normals           // texture coords
+            // Positions          Normals              Texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
@@ -66,10 +66,10 @@ namespace LearnOpenTK
 
         private Shader _lampShader;
         private Shader _lightingShader;
-        //The texture containing information for the diffuse map, this would more commonly
-        //just be called the color/texture of the object.
+        // The texture containing information for the diffuse map, this would more commonly
+        // just be called the color/texture of the object.
         private Texture _diffuseMap;
-        //The specular map is a black/white representation of how specular each part of the texture is.
+        // The specular map is a black/white representation of how specular each part of the texture is.
         private Texture _specularMap;
         
         private Camera _camera;
@@ -91,8 +91,8 @@ namespace LearnOpenTK
 
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            //Our two textures are loaded in from memory, you should head over and
-            //check them out and compare them to the results.
+            // Our two textures are loaded in from memory, you should head over and
+            // check them out and compare them to the results.
             _diffuseMap = new Texture("Resources/container2.png");
             _specularMap = new Texture("Resources/container2_specular.png");
 
@@ -101,7 +101,7 @@ namespace LearnOpenTK
             
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
-            //All of the vertex attributes have been updated to now have a stride of 8 float sizes.
+            // All of the vertex attributes have been updated to now have a stride of 8 float sizes.
             var positionLocation = _lightingShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
@@ -110,8 +110,8 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
             
-            //The texture coords have now been added too, remember we only have 2 coordinates as the texture is 2d,
-            //so the size parameter should only be 2 for the texture coordinates.
+            // The texture coords have now been added too, remember we only have 2 coordinates as the texture is 2d,
+            // so the size parameter should only be 2 for the texture coordinates.
             var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
@@ -121,8 +121,8 @@ namespace LearnOpenTK
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
-            //The lamp shader should have its stride updated aswell, however we dont actually
-            //use the texture coords for the lamp, so we dont need to add any extra attributes.
+            // The lamp shader should have its stride updated aswell, however we dont actually
+            // use the texture coords for the lamp, so we dont need to add any extra attributes.
             positionLocation = _lampShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
@@ -142,8 +142,8 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            //The two textures need to be used, in this case we use the diffuse map as our 0th texture
-            //and the specular map as our 1st texture.
+            // The two textures need to be used, in this case we use the diffuse map as our 0th texture
+            // and the specular map as our 1st texture.
             _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
@@ -154,7 +154,7 @@ namespace LearnOpenTK
             
             _lightingShader.SetVector3("viewPos", _camera.Position);
             
-            //Here we specify to the shaders what textures they should refer to when we want to get the positions.
+            // Here we specify to the shaders what textures they should refer to when we want to get the positions.
             _lightingShader.SetInt("material.diffuse", 0);
             _lightingShader.SetInt("material.specular", 1);
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));

@@ -7,53 +7,53 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we set up some basic lighting and look at how the phong model works
-    //For more insight into how it all works look at the web version. If you are just here for the source,
-    //most of the changes are in the shaders, specifically most of the changes are in the fragment shader as this is
-    //where the lighting calculations happens.
+    // In this tutorial we set up some basic lighting and look at how the phong model works
+    // For more insight into how it all works look at the web version. If you are just here for the source,
+    // most of the changes are in the shaders, specifically most of the changes are in the fragment shader as this is
+    // where the lighting calculations happens.
     public class Window : GameWindow
     {
-        //Here we now have added the normals of the vertices
-        //Remember to define the layouts to the VAO's
+        // Here we now have added the normals of the vertices
+        // Remember to define the layouts to the VAO's
         private readonly float[] _vertices =
         {
-             //Position           Normal
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, //Front face
+             // Position          Normal
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
             -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, //Back face
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
              0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
             -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
             -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, //Left face
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, // Left face
             -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, //Right face
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, // Right face
              0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, //Bottom face
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
              0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, //Top face
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
              0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
@@ -96,10 +96,10 @@ namespace LearnOpenTK
 
             var positionLocation = _lightingShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
-            //Remember to change the stride as we now have 6 floats per vertex
+            // Remember to change the stride as we now have 6 floats per vertex
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            //We now need to define the layout of the normal so the shader can use it
+            // We now need to define the layout of the normal so the shader can use it
             var normalLocation = _lightingShader.GetAttribLocation("aNormal");
             GL.EnableVertexAttribArray(normalLocation);
             GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
@@ -111,10 +111,10 @@ namespace LearnOpenTK
 
             positionLocation = _lampShader.GetAttribLocation("aPos");
             GL.EnableVertexAttribArray(positionLocation);
-            //Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
-            //this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
-            //The two cubes still use the same position, and since the position is already in the graphics memory it is actually
-            //better to do it this way. Look through the web version for a much better understanding of this.
+            // Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
+            // this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
+            // The two cubes still use the same position, and since the position is already in the graphics memory it is actually
+            // better to do it this way. Look through the web version for a much better understanding of this.
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
             _camera = new Camera(Vector3.UnitZ * 3);

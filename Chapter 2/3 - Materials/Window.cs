@@ -7,51 +7,51 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we take the code from the last tutorial and create some level of abstraction over it allowing more
-    //control of the interaction between the light and the material.
-    //At the end of the web version of the tutorial we also had a bit of fun creating a disco light that changes
-    //color of the cube over time.
+    // In this tutorial we take the code from the last tutorial and create some level of abstraction over it allowing more
+    // control of the interaction between the light and the material.
+    // At the end of the web version of the tutorial we also had a bit of fun creating a disco light that changes
+    // color of the cube over time.
     public class Window : GameWindow
     {
         private readonly float[] _vertices = 
         {
-             //Position           Normal
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, //Front face
+             // Position          Normal
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
             -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
 
-            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, //Back face
+            -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
              0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
             -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
             -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, //Left face
+            -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, // Left face
             -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
             -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, //Right face
+             0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, // Right face
              0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, //Bottom face
+            -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, // Bottom face
              0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
              0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
             -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, //Top face
+            -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, // Top face
              0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
              0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
@@ -132,21 +132,21 @@ namespace LearnOpenTK
             
             _lightingShader.SetVector3("viewPos", _camera.Position);
             
-            //Here we set the material values of the cube, the material struct is just a container so to access
-            //the underlying values we simply type "material.value" to get the location of the uniform
+            // Here we set the material values of the cube, the material struct is just a container so to access
+            // the underlying values we simply type "material.value" to get the location of the uniform
             _lightingShader.SetVector3("material.ambient", new Vector3(1.0f, 0.5f, 0.31f));
             _lightingShader.SetVector3("material.diffuse", new Vector3(1.0f, 0.5f, 0.31f));
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
 
-            //This is where we change the lights color over time using the sin function
+            // This is where we change the lights color over time using the sin function
             Vector3 lightColor;
             float time = DateTime.Now.Second + DateTime.Now.Millisecond / 1000f;
             lightColor.X = (float)Math.Sin(time * 2.0f);
             lightColor.Y = (float)Math.Sin(time * 0.7f);
             lightColor.Z = (float)Math.Sin(time * 1.3f);
 
-            //The ambient light is less intensive than the diffuse light in order to make it less dominant
+            // The ambient light is less intensive than the diffuse light in order to make it less dominant
             Vector3 ambientColor = lightColor * new Vector3(0.2f);
             Vector3 diffuseColor = lightColor * new Vector3(0.5f);
             
