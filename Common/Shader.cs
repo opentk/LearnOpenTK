@@ -11,7 +11,7 @@ namespace LearnOpenTK.Common
     // A simple class meant to help create shaders.
     public class Shader
     {
-        public int Handle;
+        public readonly int Handle;
 
         private readonly Dictionary<string, int> _uniformLocations;
 
