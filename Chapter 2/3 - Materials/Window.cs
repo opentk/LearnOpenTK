@@ -13,7 +13,8 @@ namespace LearnOpenTK
     //color of the cube over time.
     public class Window : GameWindow
     {
-        private readonly float[] _vertices = {
+        private readonly float[] _vertices = 
+        {
              //Position           Normal
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, //Front face
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 

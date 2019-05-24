@@ -17,7 +17,8 @@ namespace LearnOpenTK
         //The vertices are now used to draw cubes.
         //For this example, we aren't using texture coordinates.
         //You can use textures with lighting (and we will get onto this), but for simplicity's sake, we'll just use a solid color here
-        private readonly float[] _vertices = {
+        private readonly float[] _vertices =
+        {
              //Position
             -0.5f, -0.5f, -0.5f, //Front face
              0.5f, -0.5f, -0.5f, 

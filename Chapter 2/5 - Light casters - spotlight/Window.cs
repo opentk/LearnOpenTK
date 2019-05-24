@@ -14,7 +14,8 @@ namespace LearnOpenTK
     //then we can check if that angle is within the cutoff of the spotlight, if it is we light it accordingly
     public class Window : GameWindow
     {
-        private float[] _vertices = {
+        private float[] _vertices =
+        {
             // positions          // normals           // texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,

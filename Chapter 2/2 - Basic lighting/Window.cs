@@ -15,7 +15,8 @@ namespace LearnOpenTK
     {
         //Here we now have added the normals of the vertices
         //Remember to define the layouts to the VAO's
-        private readonly float[] _vertices = {
+        private readonly float[] _vertices =
+        {
              //Position           Normal
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, //Front face
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
