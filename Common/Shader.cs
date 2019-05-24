@@ -13,7 +13,7 @@ namespace LearnOpenTK.Common
     {
         public int Handle;
 
-        private readonly Dictionary<string, int> uniformLocations;
+        private readonly Dictionary<string, int> _uniformLocations;
 
         
         // This is how you create a simple shader.
@@ -75,7 +75,7 @@ namespace LearnOpenTK.Common
             GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
             
             // Next, allocate the dictionary to hold the locations.
-            uniformLocations = new Dictionary<string, int>();
+            _uniformLocations = new Dictionary<string, int>();
 
             // Loop over all the uniforms,
             for (var i = 0; i < numberOfUniforms; i++)
@@ -87,7 +87,7 @@ namespace LearnOpenTK.Common
                 var location = GL.GetUniformLocation(Handle, key);
                 
                 // and then add it to the dictionary.
-                uniformLocations.Add(key, location);
+                _uniformLocations.Add(key, location);
             }
         }
 
@@ -162,7 +162,7 @@ namespace LearnOpenTK.Common
         public void SetInt(string name, int data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform1(uniformLocations[name], data);
+            GL.Uniform1(_uniformLocations[name], data);
         }
         
         /// <summary>
@@ -173,7 +173,7 @@ namespace LearnOpenTK.Common
         public void SetFloat(string name, float data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform1(uniformLocations[name], data);
+            GL.Uniform1(_uniformLocations[name], data);
         }
 
         /// <summary>
@@ -189,7 +189,7 @@ namespace LearnOpenTK.Common
         public void SetMatrix4(string name, Matrix4 data)
         {
             GL.UseProgram(Handle);
-            GL.UniformMatrix4(uniformLocations[name], true, ref data);
+            GL.UniformMatrix4(_uniformLocations[name], true, ref data);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace LearnOpenTK.Common
         public void SetVector3(string name, Vector3 data)
         {
             GL.UseProgram(Handle);
-            GL.Uniform3(uniformLocations[name], data);
+            GL.Uniform3(_uniformLocations[name], data);
         }
     }
 }

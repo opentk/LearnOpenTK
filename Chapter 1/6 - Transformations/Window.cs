@@ -18,7 +18,7 @@ namespace LearnOpenTK
     // Head down to RenderFrame to see how we can apply transformations to our shape.
     public class Window : GameWindow
     {
-        private readonly float[] vertices =
+        private readonly float[] _vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -27,7 +27,7 @@ namespace LearnOpenTK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        private readonly uint[] indices =
+        private readonly uint[] _indices =
         {
             0, 1, 3,
             1, 2, 3
@@ -37,9 +37,9 @@ namespace LearnOpenTK
         private int _vertexBufferObject;
         private int _vertexArrayObject;
 
-        private Shader shader;
-        private Texture texture;
-        private Texture texture2;
+        private Shader _shader;
+        private Texture _texture;
+        private Texture _texture2;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -51,25 +51,25 @@ namespace LearnOpenTK
 
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
 
             // shader.frag has been modified yet again, take a look at it as well.
-            shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            shader.Use();
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
-            texture = new Texture("Resources/container.png");
-            texture.Use(TextureUnit.Texture0);
+            _texture = new Texture("Resources/container.png");
+            _texture.Use(TextureUnit.Texture0);
 
-            texture2 = new Texture("Resources/awesomeface.png");
-            texture2.Use(TextureUnit.Texture1);
+            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2.Use(TextureUnit.Texture1);
 
-            shader.SetInt("texture0", 0);
-            shader.SetInt("texture1", 1);
+            _shader.SetInt("texture0", 0);
+            _shader.SetInt("texture1", 1);
 
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
@@ -78,12 +78,12 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            var vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -117,17 +117,17 @@ namespace LearnOpenTK
             // The next tutorial will be about how to set one up so we can use more human-readable numbers.
             transform *= Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
 
-            texture.Use(TextureUnit.Texture0);
-            texture2.Use(TextureUnit.Texture1);
-            shader.Use();
+            _texture.Use(TextureUnit.Texture0);
+            _texture2.Use(TextureUnit.Texture1);
+            _shader.Use();
 
             // Now that the matrix is finished, pass it to the vertex shader.
             // Go over to shader.vert to see how we finally apply this to the vertices
-            shader.SetMatrix4("transform", transform);
+            _shader.SetMatrix4("transform", transform);
 
             // And that's it for now! In the next tutorial, I'll show you how to setup a full coordinates system.
 
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
 
@@ -164,9 +164,9 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            GL.DeleteProgram(shader.Handle);
-            GL.DeleteTexture(texture.Handle);
-            GL.DeleteTexture(texture2.Handle);
+            GL.DeleteProgram(_shader.Handle);
+            GL.DeleteTexture(_texture.Handle);
+            GL.DeleteTexture(_texture2.Handle);
 
             base.OnUnload(e);
         }
