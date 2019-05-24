@@ -13,7 +13,7 @@ namespace LearnOpenTK
     public class Window : GameWindow
     {
         //Since we are going to use textures we of course have to include two new floats per vertex, the texture coords.
-        private float[] _vertices =
+        private readonly float[] _vertices =
         {
             // positions          // normals           // texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,

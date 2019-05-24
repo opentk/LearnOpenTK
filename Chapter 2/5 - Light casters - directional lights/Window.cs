@@ -12,7 +12,7 @@ namespace LearnOpenTK
     //The following is the code for the directional light, a light that has a direction but no position.
     public class Window : GameWindow
     {
-        private float[] _vertices =
+        private readonly float[] _vertices =
         {
             // positions          // normals           // texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,

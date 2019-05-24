@@ -13,7 +13,7 @@ namespace LearnOpenTK
     //except it diminishes over distance (attenuation)
     public class Window : GameWindow
     {
-        private float[] _vertices = 
+        private readonly float[] _vertices = 
         {
             // positions          // normals           // texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,

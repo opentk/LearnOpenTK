@@ -13,7 +13,7 @@ namespace LearnOpenTK.Common
     {
         public int Handle;
 
-        private Dictionary<string, int> uniformLocations;
+        private readonly Dictionary<string, int> uniformLocations;
 
         
         // This is how you create a simple shader.
