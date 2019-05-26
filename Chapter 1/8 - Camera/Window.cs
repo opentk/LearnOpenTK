@@ -18,7 +18,7 @@ namespace LearnOpenTK
     // as if i could move the view
     public class Window : GameWindow
     {
-        private readonly float[] vertices =
+        private readonly float[] _vertices =
         {
             // Position         Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -27,7 +27,7 @@ namespace LearnOpenTK
             -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
         };
 
-        private readonly uint[] indices =
+        private readonly uint[] _indices =
         {
             0, 1, 3,
             1, 2, 3
@@ -37,9 +37,9 @@ namespace LearnOpenTK
         private int _vertexBufferObject;
         private int _vertexArrayObject;
 
-        private Shader shader;
-        private Texture texture;
-        private Texture texture2;
+        private Shader _shader;
+        private Texture _texture;
+        private Texture _texture2;
         
         // I have removed the view and projection matrices as we dont need them here anymore
         // They can now be found in the new camera class
@@ -47,11 +47,11 @@ namespace LearnOpenTK
         // We need an instance of the new camera class so it can manage the view and projection matrix code
         // We also need a boolean set to true to detect whether or not the mouse has been moved for the first time
         // Finally we add the last position of the mouse so we can calculate the mouse offset easily
-        private Camera camera;
-        private bool firstMove = true;
-        private Vector2 lastPos;
+        private Camera _camera;
+        private bool _firstMove = true;
+        private Vector2 _lastPos;
 
-        private double time;
+        private double _time;
 
 
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
@@ -65,23 +65,23 @@ namespace LearnOpenTK
 
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * sizeof(float), vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            shader.Use();
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
-            texture = new Texture("Resources/container.png");
-            texture.Use(TextureUnit.Texture0);
+            _texture = new Texture("Resources/container.png");
+            _texture.Use(TextureUnit.Texture0);
 
-            texture2 = new Texture("Resources/awesomeface.png");
-            texture2.Use(TextureUnit.Texture1);
+            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2.Use(TextureUnit.Texture1);
 
-            shader.SetInt("texture0", 0);
-            shader.SetInt("texture1", 1);
+            _shader.SetInt("texture0", 0);
+            _shader.SetInt("texture1", 1);
 
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
@@ -90,19 +90,19 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            var vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             // We initialize the camera so that it is 3 units back from where the rectangle is
             // and give it the proper aspect ratio
-            camera = new Camera(Vector3.UnitZ * 3);
-            camera.AspectRatio = Width / (float)Height;
+            _camera = new Camera(Vector3.UnitZ * 3);
+            _camera.AspectRatio = Width / (float)Height;
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
             CursorVisible = false;
             
@@ -112,22 +112,22 @@ namespace LearnOpenTK
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            time += 4.0 * e.Time;
+            _time += 4.0 * e.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            texture.Use(TextureUnit.Texture0);
-            texture2.Use(TextureUnit.Texture1);
-            shader.Use();
+            _texture.Use(TextureUnit.Texture0);
+            _texture2.Use(TextureUnit.Texture1);
+            _shader.Use();
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(time));
-            shader.SetMatrix4("model", model);
-            shader.SetMatrix4("view", camera.GetViewMatrix());
-            shader.SetMatrix4("projection", camera.GetProjectionMatrix());
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            _shader.SetMatrix4("model", model);
+            _shader.SetMatrix4("view", _camera.GetViewMatrix());
+            _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
 
-            GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
+            GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
 
@@ -150,36 +150,36 @@ namespace LearnOpenTK
             }
             
             if (input.IsKeyDown(Key.W))
-                camera.Position += camera.Front * camera.Speed * (float)e.Time; // Forward 
+                _camera.Position += _camera.Front * _camera.Speed * (float)e.Time; // Forward 
             if (input.IsKeyDown(Key.S))
-                camera.Position -= camera.Front * camera.Speed * (float)e.Time; // Backwards
+                _camera.Position -= _camera.Front * _camera.Speed * (float)e.Time; // Backwards
             if (input.IsKeyDown(Key.A))
-                camera.Position -= camera.Right * camera.Speed * (float)e.Time; // Left
+                _camera.Position -= _camera.Right * _camera.Speed * (float)e.Time; // Left
             if (input.IsKeyDown(Key.D))
-                camera.Position += camera.Right * camera.Speed * (float)e.Time; // Right
+                _camera.Position += _camera.Right * _camera.Speed * (float)e.Time; // Right
             if (input.IsKeyDown(Key.Space))
-                camera.Position += camera.Up * camera.Speed * (float)e.Time; // Up 
+                _camera.Position += _camera.Up * _camera.Speed * (float)e.Time; // Up 
             if (input.IsKeyDown(Key.LShift))
-                camera.Position -= camera.Up * camera.Speed * (float)e.Time; // Down
+                _camera.Position -= _camera.Up * _camera.Speed * (float)e.Time; // Down
 
             // Get the mouse state
             var mouse = Mouse.GetState();
 
-            if (firstMove) // this bool variable is initially set to true
+            if (_firstMove) // this bool variable is initially set to true
             {
-                lastPos = new Vector2(mouse.X, mouse.Y);
-                firstMove = false;
+                _lastPos = new Vector2(mouse.X, mouse.Y);
+                _firstMove = false;
             }
             else
             {
                 // Calculate the offset of the mouse position
-                var deltaX = mouse.X - lastPos.X;
-                var deltaY = mouse.Y - lastPos.Y;
-                lastPos = new Vector2(mouse.X, mouse.Y);
+                var deltaX = mouse.X - _lastPos.X;
+                var deltaY = mouse.Y - _lastPos.Y;
+                _lastPos = new Vector2(mouse.X, mouse.Y);
                 
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
-                camera.Yaw += deltaX * camera.Sensitivity;
-                camera.Pitch -= deltaY * camera.Sensitivity; // reversed since y-coordinates range from bottom to top
+                _camera.Yaw += deltaX * _camera.Sensitivity;
+                _camera.Pitch -= deltaY * _camera.Sensitivity; // reversed since y-coordinates range from bottom to top
             }
             
             base.OnUpdateFrame(e);
@@ -204,7 +204,7 @@ namespace LearnOpenTK
         // this is simply done by changing the FOV of the camera
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            camera.Fov -= e.DeltaPrecise;
+            _camera.Fov -= e.DeltaPrecise;
             base.OnMouseWheel(e);
         }
 
@@ -213,7 +213,7 @@ namespace LearnOpenTK
         {
             GL.Viewport(0, 0, Width, Height);
             // We need to update the aspect ratio once the window has been resized
-            camera.AspectRatio = Width / (float)Height;
+            _camera.AspectRatio = Width / (float)Height;
             base.OnResize(e);
         }
 
@@ -227,9 +227,9 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            GL.DeleteProgram(shader.Handle);
-            GL.DeleteTexture(texture.Handle);
-            GL.DeleteTexture(texture2.Handle);
+            GL.DeleteProgram(_shader.Handle);
+            GL.DeleteTexture(_texture.Handle);
+            GL.DeleteTexture(_texture2.Handle);
 
             base.OnUnload(e);
         }

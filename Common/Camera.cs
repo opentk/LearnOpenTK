@@ -16,12 +16,12 @@ namespace LearnOpenTK.Common
         // The position is simply the position of the camera
         // the other vectors are directions pointing outwards from the camera to define how it is rotated
         public Vector3 Position;
-        private Vector3 front = -Vector3.UnitZ;
-        public Vector3 Front => front;
-        private Vector3 up = Vector3.UnitY;
-        public Vector3 Up => up;
-        private Vector3 right = Vector3.UnitX;
-        public Vector3 Right => right;
+        private Vector3 _front = -Vector3.UnitZ;
+        public Vector3 Front => _front;
+        private Vector3 _up = Vector3.UnitY;
+        public Vector3 Up => _up;
+        private Vector3 _right = Vector3.UnitX;
+        public Vector3 Right => _right;
 
         // Pitch is the rotation around the x axis, and it is explained more specifically in the tutorial how we can use this
         private float _pitch;
@@ -48,13 +48,13 @@ namespace LearnOpenTK.Common
             }
         }
         // Yaw is the rotation around the y axis, and it is explained more specifically in the tutorial how we can use this
-        private float yaw;
+        private float _yaw;
         public float Yaw
         {
-            get => yaw;
+            get => _yaw;
             set
             {
-                yaw = value;
+                _yaw = value;
                 UpdateVectors();
             }
         }
@@ -66,23 +66,23 @@ namespace LearnOpenTK.Common
 
         // The fov (field of view) is the vertical angle of the camera view, this has been discussed more in depth in a
         // previous tutorial, but in this tutorial you have also learned how we can use this to simulate a zoom feature.
-        private float fov = 45.0f;
+        private float _fov = 45.0f;
         public float Fov
         {
-            get => fov;
+            get => _fov;
             set
             {
                 if (value >= 45.0f)
                 {
-                    fov = 45.0f;
+                    _fov = 45.0f;
                 }
                 else if (value <= 1.0f)
                 {
-                    fov = 1.0f;
+                    _fov = 1.0f;
                 }
                 else
                 {
-                    fov = value;
+                    _fov = value;
                 }
             }
         }
@@ -93,7 +93,7 @@ namespace LearnOpenTK.Common
         public Camera(Vector3 position)
         {
             Position = position;
-            yaw = -90;
+            _yaw = -90;
         }
         
         // Get the view matrix using the amazing LookAt function described more in depth on the web version of the tutorial
@@ -107,17 +107,17 @@ namespace LearnOpenTK.Common
         private void UpdateVectors()
         {
             // First the front matrix is calculated using some basic trigonometry
-            front.X = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(Yaw));
-            front.Y = (float)Math.Sin(MathHelper.DegreesToRadians(Pitch));
-            front.Z = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Sin(MathHelper.DegreesToRadians(Yaw));
+            _front.X = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(Yaw));
+            _front.Y = (float)Math.Sin(MathHelper.DegreesToRadians(Pitch));
+            _front.Z = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Sin(MathHelper.DegreesToRadians(Yaw));
             // We need to make sure the vectors are all normalized, as otherwise we would get some funky results
-            front = Vector3.Normalize(front);
+            _front = Vector3.Normalize(_front);
             
             // Calculate both the right and the up vector using the cross product
             // Note that we are calculating the right from the global up, this behaviour might
             // not be what you need for all cameras so keep this in mind if you do not want a FPS camera
-            right = Vector3.Normalize(Vector3.Cross(Front, Vector3.UnitY));
-            up = Vector3.Normalize(Vector3.Cross(Right, Front));
+            _right = Vector3.Normalize(Vector3.Cross(Front, Vector3.UnitY));
+            _up = Vector3.Normalize(Vector3.Cross(Right, Front));
         }
     }
 }
