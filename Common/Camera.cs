@@ -44,7 +44,7 @@ namespace LearnOpenTK.Common
                 {
                     _pitch = value;
                 }
-                UpdateVertices();
+                UpdateVectors();
             }
         }
         // Yaw is the rotation around the y axis, and it is explained more specifically in the tutorial how we can use this
@@ -55,7 +55,7 @@ namespace LearnOpenTK.Common
             set
             {
                 yaw = value;
-                UpdateVertices();
+                UpdateVectors();
             }
         }
 
@@ -64,7 +64,7 @@ namespace LearnOpenTK.Common
         public float Speed = 1.5f;
         public float Sensitivity = 0.2f;
 
-        // The fov (field of view) is how wide the camera is viewing, this has been discussed more in depth in a
+        // The fov (field of view) is the vertical angle of the camera view, this has been discussed more in depth in a
         // previous tutorial, but in this tutorial you have also learned how we can use this to simulate a zoom feature.
         private float fov = 45.0f;
         public float Fov
@@ -104,7 +104,7 @@ namespace LearnOpenTK.Common
             Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(Fov), AspectRatio, 0.01f, 100f);
 
         // This function is going to update the direction vertices using some of the math learned in the web tutorials
-        private void UpdateVertices()
+        private void UpdateVectors()
         {
             // First the front matrix is calculated using some basic trigonometry
             front.X = (float)Math.Cos(MathHelper.DegreesToRadians(Pitch)) * (float)Math.Cos(MathHelper.DegreesToRadians(Yaw));
