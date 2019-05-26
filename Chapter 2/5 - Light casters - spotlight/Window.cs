@@ -7,15 +7,16 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //This tutorial is split up into multiple different bits, one for each type of light.
+    // This tutorial is split up into multiple different bits, one for each type of light.
     
-    //The following is the code for the spotlight, the functionality is much the same as the point light except it
-    //only shines in one direction, for this we need the angle between the spotlight direction and the lightDir
-    //then we can check if that angle is within the cutoff of the spotlight, if it is we light it accordingly
+    // The following is the code for the spotlight, the functionality is much the same as the point light except it
+    // only shines in one direction, for this we need the angle between the spotlight direction and the lightDir
+    // then we can check if that angle is within the cutoff of the spotlight, if it is we light it accordingly
     public class Window : GameWindow
     {
-        private float[] _vertices = {
-            // positions          // normals           // texture coords
+        private readonly float[] _vertices =
+        {
+            // Positions          Normals              Texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
@@ -58,8 +59,9 @@ namespace LearnOpenTK
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f, 1.0f
         };
-        //We draw multiple different cubes and it helps to store all
-        //their positions in an array for later when we want to draw them
+        
+        // We draw multiple different cubes and it helps to store all
+        // their positions in an array for later when we want to draw them
         private readonly Vector3[] _cubePositions =
         {
             new Vector3(0.0f, 0.0f, 0.0f),
@@ -173,21 +175,21 @@ namespace LearnOpenTK
             _lightingShader.SetVector3("light.diffuse",  new Vector3(0.5f));
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
 
-            //We want to draw all the cubes at their respective positions
+            // We want to draw all the cubes at their respective positions
             for (int i = 0; i < _cubePositions.Length; i++)
             {
-                //First we create a model from an identity matrix
+                // First we create a model from an identity matrix
                 Matrix4 model = Matrix4.Identity;
-                //Then we translate said matrix by the cube position
+                // Then we translate said matrix by the cube position
                 model *= Matrix4.CreateTranslation(_cubePositions[i]);
-                //We then calculate the angle and rotate the model around an axis
+                // We then calculate the angle and rotate the model around an axis
                 float angle = 20.0f * i;
                 model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
-                //Remember to set the model at last so it can be used by opentk
+                // Remember to set the model at last so it can be used by opentk
                 _lightingShader.SetMatrix4("model", model);
                 
-                //At last we draw all our cubes
-                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
+                // At last we draw all our cubes
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
             }
 
             GL.BindVertexArray(_vaoModel);

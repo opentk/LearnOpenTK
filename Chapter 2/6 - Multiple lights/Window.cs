@@ -7,12 +7,13 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    //In this tutorial we focus on how to set up a scene with multiple lights, both of different types but also
-    //with several point lights
+    // In this tutorial we focus on how to set up a scene with multiple lights, both of different types but also
+    // with several point lights
     public class Window : GameWindow
     {
-        private float[] _vertices = {
-            // positions          // normals           // texture coords
+        private readonly float[] _vertices =
+        {
+            // Positions          Normals              Texture coords
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f, 0.0f,
              0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 0.0f,
              0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f, 1.0f,
@@ -69,7 +70,8 @@ namespace LearnOpenTK
             new Vector3(1.5f, 0.2f, -1.5f),
             new Vector3(-1.3f, 1.0f, -1.5f)
         };
-        //We need the point lights' positions to draw the lamps and to get light the materials properly
+        
+        // We need the point lights' positions to draw the lamps and to get light the materials properly
         private readonly Vector3[] _pointLightPositions =
         {
             new Vector3(0.7f, 0.2f, 2.0f),
@@ -165,19 +167,20 @@ namespace LearnOpenTK
             _lightingShader.SetInt("material.specular", 1);
             _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
             _lightingShader.SetFloat("material.shininess", 32.0f);
+            
             /*
                Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index 
                the proper PointLight struct in the array to set each uniform variable. This can be done more code-friendly
                by defining light types as classes and set their values in there, or by using a more efficient uniform approach
                by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
             */
-            //Directional light
+            // Directional light
             _lightingShader.SetVector3("dirLight.direction", new Vector3(-0.2f, -1.0f, -0.3f));
             _lightingShader.SetVector3("dirLight.ambient", new Vector3(0.05f, 0.05f, 0.05f));
             _lightingShader.SetVector3("dirLight.diffuse", new Vector3(0.4f, 0.4f, 0.4f));
             _lightingShader.SetVector3("dirLight.specular", new Vector3(0.5f, 0.5f, 0.5f));
             
-            //Point lights
+            // Point lights
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
                 _lightingShader.SetVector3($"pointLights[{i}].position", _pointLightPositions[i]);
@@ -189,7 +192,7 @@ namespace LearnOpenTK
                 _lightingShader.SetFloat($"pointLights[{i}].quadratic", 0.032f);
             }
             
-            //Spot light
+            // Spot light
             _lightingShader.SetVector3("spotLight.position", _camera.Position);
             _lightingShader.SetVector3("spotLight.direction", _camera.Front);
             _lightingShader.SetVector3("spotLight.ambient",  new Vector3(0.0f, 0.0f, 0.0f));
@@ -209,7 +212,7 @@ namespace LearnOpenTK
                 model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
                 _lightingShader.SetMatrix4("model", model);
                 
-                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 36);                
             }
 
             GL.BindVertexArray(_vaoModel);
@@ -218,7 +221,7 @@ namespace LearnOpenTK
 
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-            //We use a loop to draw all the lights at the proper position
+            // We use a loop to draw all the lights at the proper position
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
                 Matrix4 lampMatrix = Matrix4.Identity;

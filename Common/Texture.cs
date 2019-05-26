@@ -10,7 +10,7 @@ namespace LearnOpenTK.Common
     // A helper class, much like Shader, meant to simplify loading textures.
     public class Texture
     {
-        public int Handle;
+        public readonly int Handle;
 
         // Create texture from path.
         public Texture(string path)

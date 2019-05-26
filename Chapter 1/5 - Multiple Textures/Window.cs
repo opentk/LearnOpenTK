@@ -28,9 +28,9 @@ namespace LearnOpenTK
         private int _vertexBufferObject;
         private int _vertexArrayObject;
 
-        private Shader shader;
-        private Texture texture;
-        private Texture texture2;
+        private Shader _shader;
+        private Texture _texture;
+        private Texture _texture2;
 
         
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
@@ -53,25 +53,25 @@ namespace LearnOpenTK
 
 
             // shader.frag has been modified yet again, take a look at it as well.
-            shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            shader.Use();
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
 
-            texture = new Texture("Resources/container.png");
+            _texture = new Texture("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
             // Use will implicitly fill in Texture0 if you pass it in empty, but I'm just doing the full thing to give you a better idea of how it works.
             // First texture goes in texture unit 0.
-            texture.Use(TextureUnit.Texture0);
+            _texture.Use(TextureUnit.Texture0);
 
             // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
-            texture2 = new Texture("Resources/awesomeface.png");
+            _texture2 = new Texture("Resources/awesomeface.png");
             // Then, the second goes in texture unit 1.
-            texture2.Use(TextureUnit.Texture1);
+            _texture2.Use(TextureUnit.Texture1);
 
             // Next, we must setup the samplers in the shaders to use the right textures.
             // The int we send to the uniform is which texture unit the sampler should use.
-            shader.SetInt("texture0", 0);
-            shader.SetInt("texture1", 1);
+            _shader.SetInt("texture0", 0);
+            _shader.SetInt("texture1", 1);
 
 
             _vertexArrayObject = GL.GenVertexArray();
@@ -81,12 +81,12 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
 
-            var vertexLocation = shader.GetAttribLocation("aPosition");
+            var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
 
-            var texCoordLocation = shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -100,9 +100,9 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            texture.Use(TextureUnit.Texture0);
-            texture2.Use(TextureUnit.Texture1);
-            shader.Use();
+            _texture.Use(TextureUnit.Texture0);
+            _texture2.Use(TextureUnit.Texture1);
+            _shader.Use();
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
@@ -141,9 +141,9 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            GL.DeleteProgram(shader.Handle);
-            GL.DeleteTexture(texture.Handle);
-            GL.DeleteTexture(texture2.Handle);
+            GL.DeleteProgram(_shader.Handle);
+            GL.DeleteTexture(_texture.Handle);
+            GL.DeleteTexture(_texture2.Handle);
             base.OnUnload(e);
         }
     }
