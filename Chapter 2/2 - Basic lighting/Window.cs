@@ -182,7 +182,7 @@ namespace LearnOpenTK
             const float sensitivity = 0.2f;
             
             if (input.IsKeyDown(Key.W))
-                _camera.Position += _camera.Front * 1 * (float)e.Time; // Forward 
+                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward 
             if (input.IsKeyDown(Key.S))
                 _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
             if (input.IsKeyDown(Key.A))
