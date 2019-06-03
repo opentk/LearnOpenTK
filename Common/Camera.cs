@@ -1,6 +1,5 @@
 using System;
 using OpenTK;
-using OpenTK.Platform.Windows;
 
 namespace LearnOpenTK.Common
 {
@@ -21,22 +20,20 @@ namespace LearnOpenTK.Common
         // Rotation around the X axis (radians)
         private float _pitch;
         // Rotation around the Y axis (radians)
-        private float _yaw;
+        private float _yaw = -MathHelper.PiOver2; // Without this you would be started rotated 90 degrees right
         // The field of view of the camera (radians)
         private float _fov = MathHelper.PiOver2;
 
-        // In the constructor we take in a position
-        // We also set the yaw to -90, the code would work without this, but you would be started rotated 90 degrees away from the rectangle
-        public Camera(Vector3 position)
+        public Camera(Vector3 position, float aspectRatio)
         {
             Position = position;
-            _yaw = -90;
+            AspectRatio = aspectRatio;
         }
         
         // The position of the camera
         public Vector3 Position { get; set; }
         // This is simply the aspect ratio of the viewport, used for the projection matrix
-        public float AspectRatio { get; set; }
+        public float AspectRatio { private get; set; }
         
         public Vector3 Front => _front;
         public Vector3 Up => _up;

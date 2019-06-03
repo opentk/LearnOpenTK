@@ -101,8 +101,8 @@ namespace LearnOpenTK
 
             // We initialize the camera so that it is 3 units back from where the rectangle is
             // and give it the proper aspect ratio
-            _camera = new Camera(Vector3.UnitZ * 3);
-            _camera.AspectRatio = Width / (float)Height;
+            _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
+            
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
             CursorVisible = false;
             

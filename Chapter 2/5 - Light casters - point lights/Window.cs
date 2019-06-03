@@ -133,8 +133,7 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(positionLocation);
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-            _camera = new Camera(Vector3.UnitZ * 3);
-            _camera.AspectRatio = Width / (float)Height;
+            _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
             
             CursorVisible = false;
             
