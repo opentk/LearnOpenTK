@@ -101,8 +101,8 @@ namespace LearnOpenTK
 
             // We initialize the camera so that it is 3 units back from where the rectangle is
             // and give it the proper aspect ratio
-            _camera = new Camera(Vector3.UnitZ * 3);
-            _camera.AspectRatio = Width / (float)Height;
+            _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
+            
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
             CursorVisible = false;
             
@@ -143,24 +143,27 @@ namespace LearnOpenTK
             }
 
             var input = Keyboard.GetState();
-
+            
             if (input.IsKeyDown(Key.Escape))
             {
                 Exit();
             }
             
+            const float cameraSpeed = 1.5f;
+            const float sensitivity = 0.2f;
+
             if (input.IsKeyDown(Key.W))
-                _camera.Position += _camera.Front * _camera.Speed * (float)e.Time; // Forward 
+                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward 
             if (input.IsKeyDown(Key.S))
-                _camera.Position -= _camera.Front * _camera.Speed * (float)e.Time; // Backwards
+                _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
             if (input.IsKeyDown(Key.A))
-                _camera.Position -= _camera.Right * _camera.Speed * (float)e.Time; // Left
+                _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
             if (input.IsKeyDown(Key.D))
-                _camera.Position += _camera.Right * _camera.Speed * (float)e.Time; // Right
+                _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
             if (input.IsKeyDown(Key.Space))
-                _camera.Position += _camera.Up * _camera.Speed * (float)e.Time; // Up 
+                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up 
             if (input.IsKeyDown(Key.LShift))
-                _camera.Position -= _camera.Up * _camera.Speed * (float)e.Time; // Down
+                _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
 
             // Get the mouse state
             var mouse = Mouse.GetState();
@@ -176,10 +179,10 @@ namespace LearnOpenTK
                 var deltaX = mouse.X - _lastPos.X;
                 var deltaY = mouse.Y - _lastPos.Y;
                 _lastPos = new Vector2(mouse.X, mouse.Y);
-                
+
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
-                _camera.Yaw += deltaX * _camera.Sensitivity;
-                _camera.Pitch -= deltaY * _camera.Sensitivity; // reversed since y-coordinates range from bottom to top
+                _camera.Yaw += deltaX * sensitivity;
+                _camera.Pitch -= deltaY * sensitivity; // reversed since y-coordinates range from bottom to top
             }
             
             base.OnUpdateFrame(e);
