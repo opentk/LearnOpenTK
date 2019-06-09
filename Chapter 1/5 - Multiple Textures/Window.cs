@@ -59,9 +59,9 @@ namespace LearnOpenTK
 
             _texture = new Texture("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
-            // Use will implicitly fill in Texture0 if you pass it in empty, but I'm just doing the full thing to give you a better idea of how it works.
+            // Texture.Use will implicitly fill in Texture0 if you pass no arguments.
             // First texture goes in texture unit 0.
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
 
             // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
             _texture2 = new Texture("Resources/awesomeface.png");
@@ -100,7 +100,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 

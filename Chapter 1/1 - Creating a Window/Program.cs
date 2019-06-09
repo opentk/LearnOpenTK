@@ -2,7 +2,7 @@
 {
     public static class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             // To create a new window, create a class that extends GameWindow, then call Run() on it.
             // Run takes a double, which is how many frames per second it should strive to reach.

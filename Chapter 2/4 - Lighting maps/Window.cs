@@ -143,7 +143,7 @@ namespace LearnOpenTK
 
             // The two textures need to be used, in this case we use the diffuse map as our 0th texture
             // and the specular map as our 1st texture.
-            _diffuseMap.Use(TextureUnit.Texture0);
+            _diffuseMap.Use();
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
             

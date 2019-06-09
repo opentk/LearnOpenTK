@@ -149,7 +149,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _diffuseMap.Use(TextureUnit.Texture0);
+            _diffuseMap.Use();
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
             

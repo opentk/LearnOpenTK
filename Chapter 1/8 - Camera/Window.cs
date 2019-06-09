@@ -75,7 +75,7 @@ namespace LearnOpenTK
             _shader.Use();
 
             _texture = new Texture("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
 
             _texture2 = new Texture("Resources/awesomeface.png");
             _texture2.Use(TextureUnit.Texture1);
@@ -118,7 +118,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 

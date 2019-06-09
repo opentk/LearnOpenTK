@@ -63,7 +63,7 @@ namespace LearnOpenTK
             _shader.Use();
 
             _texture = new Texture("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
 
             _texture2 = new Texture("Resources/awesomeface.png");
             _texture2.Use(TextureUnit.Texture1);
@@ -117,7 +117,7 @@ namespace LearnOpenTK
             // The next tutorial will be about how to set one up so we can use more human-readable numbers.
             transform *= Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
 
-            _texture.Use(TextureUnit.Texture0);
+            _texture.Use();
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
