@@ -3,7 +3,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>LearnOpenTK</RootNamespace>
     <AssemblyName>LearnOpenTK</AssemblyName>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
