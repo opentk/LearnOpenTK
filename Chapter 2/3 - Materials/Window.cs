@@ -13,15 +13,15 @@ namespace LearnOpenTK
     // color of the cube over time.
     public class Window : GameWindow
     {
-        private readonly float[] _vertices = 
+        private readonly float[] _vertices =
         {
              // Position          Normal
             -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, // Front face
-             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
+             0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+             0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
             -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, // Back face
              0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
@@ -58,22 +58,30 @@ namespace LearnOpenTK
             -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
         };
+
         private readonly Vector3 _lightPos = new Vector3(1.2f, 1.0f, 2.0f);
 
         private int _vertexBufferObject;
+
         private int _vaoModel;
+
         private int _vaoLamp;
 
         private Shader _lampShader;
+
         private Shader _lightingShader;
-        
+
         private Camera _camera;
+
         private bool _firstMove = true;
+
         private Vector2 _lastPos;
 
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
+        public Window(int width, int height, string title)
+            : base(width, height, GraphicsMode.Default, title)
+        {
+        }
 
-        
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -89,7 +97,7 @@ namespace LearnOpenTK
 
             _vaoModel = GL.GenVertexArray();
             GL.BindVertexArray(_vaoModel);
-            
+
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
             var positionLocation = _lightingShader.GetAttribLocation("aPos");
@@ -109,13 +117,12 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(positionLocation);
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
-            
+            _camera = new Camera(Vector3.UnitZ * 3, Width / (float)Height);
+
             CursorVisible = false;
-            
+
             base.OnLoad(e);
         }
-
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -124,13 +131,13 @@ namespace LearnOpenTK
             GL.BindVertexArray(_vaoModel);
 
             _lightingShader.Use();
-            
+
             _lightingShader.SetMatrix4("model", Matrix4.Identity);
             _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-            
+
             _lightingShader.SetVector3("viewPos", _camera.Position);
-            
+
             // Here we set the material values of the cube, the material struct is just a container so to access
             // the underlying values we simply type "material.value" to get the location of the uniform
             _lightingShader.SetVector3("material.ambient", new Vector3(1.0f, 0.5f, 0.31f));
@@ -148,26 +155,26 @@ namespace LearnOpenTK
             // The ambient light is less intensive than the diffuse light in order to make it less dominant
             Vector3 ambientColor = lightColor * new Vector3(0.2f);
             Vector3 diffuseColor = lightColor * new Vector3(0.5f);
-            
+
             _lightingShader.SetVector3("light.position", _lightPos);
-            _lightingShader.SetVector3("light.ambient",  ambientColor);
-            _lightingShader.SetVector3("light.diffuse",  diffuseColor);
+            _lightingShader.SetVector3("light.ambient", ambientColor);
+            _lightingShader.SetVector3("light.diffuse", diffuseColor);
             _lightingShader.SetVector3("light.specular", new Vector3(1.0f, 1.0f, 1.0f));
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             GL.BindVertexArray(_vaoModel);
-            
+
             _lampShader.Use();
 
             Matrix4 lampMatrix = Matrix4.Identity;
             lampMatrix *= Matrix4.CreateScale(0.2f);
             lampMatrix *= Matrix4.CreateTranslation(_lightPos);
-            
+
             _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
             _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
-            
+
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             SwapBuffers();
@@ -175,7 +182,6 @@ namespace LearnOpenTK
             base.OnRenderFrame(e);
         }
 
-        
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             if (!Focused)
@@ -189,22 +195,34 @@ namespace LearnOpenTK
             {
                 Exit();
             }
-            
+
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
-            
+
             if (input.IsKeyDown(Key.W))
-                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward 
+            {
+                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+            }
             if (input.IsKeyDown(Key.S))
+            {
                 _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+            }
             if (input.IsKeyDown(Key.A))
+            {
                 _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
+            }
             if (input.IsKeyDown(Key.D))
+            {
                 _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
+            }
             if (input.IsKeyDown(Key.Space))
-                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up 
+            {
+                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+            }
             if (input.IsKeyDown(Key.LShift))
+            {
                 _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+            }
 
             var mouse = Mouse.GetState();
 
@@ -218,11 +236,11 @@ namespace LearnOpenTK
                 var deltaX = mouse.X - _lastPos.X;
                 var deltaY = mouse.Y - _lastPos.Y;
                 _lastPos = new Vector2(mouse.X, mouse.Y);
-                
+
                 _camera.Yaw += deltaX * sensitivity;
                 _camera.Pitch -= deltaY * sensitivity;
             }
-            
+
             base.OnUpdateFrame(e);
         }
 
@@ -230,26 +248,24 @@ namespace LearnOpenTK
         {
             if (Focused)
             {
-                Mouse.SetPosition(X + Width/2f, Y + Height/2f);
+                Mouse.SetPosition(X + Width / 2f, Y + Height / 2f);
             }
-            
+
             base.OnMouseMove(e);
         }
-        
+
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             _camera.Fov -= e.DeltaPrecise;
             base.OnMouseWheel(e);
         }
 
-        
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
             _camera.AspectRatio = Width / (float)Height;
             base.OnResize(e);
         }
-
 
         protected override void OnUnload(EventArgs e)
         {

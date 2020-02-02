@@ -9,9 +9,9 @@ namespace LearnOpenTK
     public class Window : GameWindow
     {
         // A simple constructor to let us set the width/height/title of the window.
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
+        public Window(int width, int height, string title)
+            : base(width, height, GraphicsMode.Default, title)
         {
-            
         }
 
         // This function runs on every update frame.

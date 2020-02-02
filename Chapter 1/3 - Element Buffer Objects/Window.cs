@@ -23,7 +23,7 @@ namespace LearnOpenTK
              0.5f,  0.5f, 0.0f, // top right
              0.5f, -0.5f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, // top left 
+            -0.5f,  0.5f, 0.0f, // top left
         };
 
         // Then, we create a new array: indices.
@@ -36,15 +36,16 @@ namespace LearnOpenTK
         };
 
         private int _vertexBufferObject;
+
         private int _vertexArrayObject;
+
         private Shader _shader;
 
         // Add a handle for the EBO
         private int _elementBufferObject;
 
-
         public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
-        
+
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -67,19 +68,18 @@ namespace LearnOpenTK
             GL.BindVertexArray(_vertexArrayObject);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            
+
             // We bind the EBO here too, just like with the VBO in the previous tutorial.
             // Now, the EBO will be bound when we bind the VAO.
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            
+
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
-            
+
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
             base.OnLoad(e);
         }
-
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -102,7 +102,6 @@ namespace LearnOpenTK
             base.OnRenderFrame(e);
         }
 
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             var input = Keyboard.GetState();
@@ -114,7 +113,6 @@ namespace LearnOpenTK
 
             base.OnUpdateFrame(e);
         }
-
 
         protected override void OnResize(EventArgs e)
         {

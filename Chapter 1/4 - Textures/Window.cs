@@ -18,7 +18,7 @@ namespace LearnOpenTK
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
         };
 
         private readonly uint[] _indices =
@@ -28,17 +28,21 @@ namespace LearnOpenTK
         };
 
         private int _elementBufferObject;
+
         private int _vertexBufferObject;
+
         private int _vertexArrayObject;
+
         private Shader _shader;
 
         // For documentation on this, check Texture.cs
         private Texture _texture;
 
+        public Window(int width, int height, string title)
+            : base(width, height, GraphicsMode.Default, title)
+        {
+        }
 
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title) { }
-
-        
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -51,15 +55,12 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
-
             _texture = new Texture("Resources/container.png");
             _texture.Use();
-
 
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
@@ -84,7 +85,6 @@ namespace LearnOpenTK
             base.OnLoad(e);
         }
 
-
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
@@ -101,7 +101,6 @@ namespace LearnOpenTK
             base.OnRenderFrame(e);
         }
 
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             var input = Keyboard.GetState();
@@ -114,13 +113,11 @@ namespace LearnOpenTK
             base.OnUpdateFrame(e);
         }
 
-
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
             base.OnResize(e);
         }
-
 
         protected override void OnUnload(EventArgs e)
         {

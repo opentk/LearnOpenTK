@@ -22,7 +22,8 @@ namespace LearnOpenTK.Common
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
             // Load the image
-            using (var image = new Bitmap(path)) {
+            using (var image = new Bitmap(path))
+            {
                 // First, we get our pixels from the bitmap we loaded.
                 // Arguments:
                 //   The pixel area we want. Typically, you want to leave it as (0,0) to (width,height), but you can
@@ -57,7 +58,7 @@ namespace LearnOpenTK.Common
                     PixelType.UnsignedByte,
                     data.Scan0);
             }
-            
+
             // Now that our texture is loaded, we can set a few settings to affect how the image appears on rendering.
 
             // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.
@@ -67,7 +68,6 @@ namespace LearnOpenTK.Common
             // your image will fail to render at all (usually resulting in pure black instead).
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
 
             // Now, set the wrapping mode. S is for the X axis, and T is for the Y axis.
             // We set this to Repeat so that textures will repeat when wrapped. Not demonstrated here since the texture coordinates exactly match
@@ -93,4 +93,3 @@ namespace LearnOpenTK.Common
         }
     }
 }
-

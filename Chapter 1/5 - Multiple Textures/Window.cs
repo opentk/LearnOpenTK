@@ -15,7 +15,7 @@ namespace LearnOpenTK
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
              0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left 
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
         };
 
         private readonly uint[] _indices =
@@ -25,20 +25,22 @@ namespace LearnOpenTK
         };
 
         private int _elementBufferObject;
+
         private int _vertexBufferObject;
+
         private int _vertexArrayObject;
 
         private Shader _shader;
+
         private Texture _texture;
+
         private Texture _texture2;
 
-        
-        public Window(int width, int height, string title) : base(width, height, GraphicsMode.Default, title)
+        public Window(int width, int height, string title)
+            : base(width, height, GraphicsMode.Default, title)
         {
-            
         }
-        
-        
+
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -51,11 +53,9 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-
             // shader.frag has been modified yet again, take a look at it as well.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
-
 
             _texture = new Texture("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
@@ -73,18 +73,15 @@ namespace LearnOpenTK
             _shader.SetInt("texture0", 0);
             _shader.SetInt("texture1", 1);
 
-
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
-
             var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
-
 
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
@@ -92,7 +89,6 @@ namespace LearnOpenTK
 
             base.OnLoad(e);
         }
-
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -111,7 +107,6 @@ namespace LearnOpenTK
             base.OnRenderFrame(e);
         }
 
-
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
             var input = Keyboard.GetState();
@@ -124,13 +119,11 @@ namespace LearnOpenTK
             base.OnUpdateFrame(e);
         }
 
-
         protected override void OnResize(EventArgs e)
         {
             GL.Viewport(0, 0, Width, Height);
             base.OnResize(e);
         }
-
 
         protected override void OnUnload(EventArgs e)
         {
