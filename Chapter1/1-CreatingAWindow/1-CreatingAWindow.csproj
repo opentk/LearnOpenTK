@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <RootNamespace>LearnOpenTK.Common</RootNamespace>
-    <AssemblyName>LearnOpenTK.Common</AssemblyName>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LearnOpenTK</RootNamespace>
+    <AssemblyName>LearnOpenTK</AssemblyName>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
