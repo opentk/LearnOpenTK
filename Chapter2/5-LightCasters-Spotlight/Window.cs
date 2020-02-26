@@ -313,8 +313,8 @@ namespace LearnOpenTK
             GL.DeleteVertexArray(_vaoModel);
             GL.DeleteVertexArray(_vaoLamp);
 
-            GL.DeleteProgram(_lampShader.Handle);
-            GL.DeleteProgram(_lightingShader.Handle);
+            _lampShader.Dispose();
+            _lightingShader.Dispose();
 
             base.OnUnload(e);
         }

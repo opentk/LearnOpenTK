@@ -21,10 +21,10 @@ namespace LearnOpenTK
         private readonly float[] _vertices =
         {
             // Position         Texture coordinates
-             0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
-             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
+            0.5f, 0.5f, 0.0f, 1.0f, 1.0f, // top right
+            0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // bottom right
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
-            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // top left
+            -0.5f, 0.5f, 0.0f, 0.0f, 1.0f // top left
         };
 
         private readonly uint[] _indices =
@@ -72,11 +72,13 @@ namespace LearnOpenTK
 
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
+                BufferUsageHint.StaticDraw);
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices,
+                BufferUsageHint.StaticDraw);
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
@@ -102,11 +104,12 @@ namespace LearnOpenTK
 
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float),
+                3 * sizeof(float));
 
             // We initialize the camera so that it is 3 units back from where the rectangle is
             // and give it the proper aspect ratio
-            _camera = new Camera(Vector3.UnitZ * 3, Width / (float)Height);
+            _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
 
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
             CursorVisible = false;
@@ -126,7 +129,7 @@ namespace LearnOpenTK
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float) MathHelper.DegreesToRadians(_time));
             _shader.SetMatrix4("model", model);
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
             _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
@@ -157,28 +160,32 @@ namespace LearnOpenTK
 
             if (input.IsKeyDown(Key.W))
             {
-                _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
+                _camera.Position += _camera.Front * cameraSpeed * (float) e.Time; // Forward
             }
 
             if (input.IsKeyDown(Key.S))
             {
-                _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
+                _camera.Position -= _camera.Front * cameraSpeed * (float) e.Time; // Backwards
             }
+
             if (input.IsKeyDown(Key.A))
             {
-                _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
+                _camera.Position -= _camera.Right * cameraSpeed * (float) e.Time; // Left
             }
+
             if (input.IsKeyDown(Key.D))
             {
-                _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
+                _camera.Position += _camera.Right * cameraSpeed * (float) e.Time; // Right
             }
+
             if (input.IsKeyDown(Key.Space))
             {
-                _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
+                _camera.Position += _camera.Up * cameraSpeed * (float) e.Time; // Up
             }
+
             if (input.IsKeyDown(Key.LShift))
             {
-                _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
+                _camera.Position -= _camera.Up * cameraSpeed * (float) e.Time; // Down
             }
 
             // Get the mouse state
@@ -229,7 +236,7 @@ namespace LearnOpenTK
         {
             GL.Viewport(0, 0, Width, Height);
             // We need to update the aspect ratio once the window has been resized
-            _camera.AspectRatio = Width / (float)Height;
+            _camera.AspectRatio = Width / (float) Height;
             base.OnResize(e);
         }
 
@@ -242,9 +249,9 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            GL.DeleteProgram(_shader.Handle);
-            GL.DeleteTexture(_texture.Handle);
-            GL.DeleteTexture(_texture2.Handle);
+            _shader.Dispose();
+            _texture.Dispose();
+            _texture2.Dispose();
 
             base.OnUnload(e);
         }
