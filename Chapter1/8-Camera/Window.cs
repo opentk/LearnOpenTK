@@ -72,8 +72,7 @@ namespace LearnOpenTK
 
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices,
-                BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
@@ -107,8 +106,7 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float),
                 3 * sizeof(float));
 
-            // We initialize the camera so that it is 3 units back from where the rectangle is
-            // and give it the proper aspect ratio
+            // We initialize the camera so that it is 3 units back from where the rectangle is and give it the proper aspect ratio
             _camera = new Camera(Vector3.UnitZ * 3, Width / (float) Height);
 
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
