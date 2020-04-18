@@ -1,12 +1,20 @@
-﻿namespace LearnOpenTK
+﻿using OpenToolkit.Windowing.Desktop;
+
+namespace LearnOpenTK
 {
     public static class Program
     {
         private static void Main()
         {
-            using (var window = new Window(800, 600, "LearnOpenTK - Light caster - directional"))
+            var nativeWindowSettings = new NativeWindowSettings()
             {
-                window.Run(60.0);
+                Size = new OpenToolkit.Mathematics.Vector2i(800, 600),
+                Title = "LearnOpenTK - Light caster - directional",
+            };
+
+            using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
+            {
+                window.Run();
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using LearnOpenTK.Common;
+﻿using LearnOpenTK.Common;
 using OpenToolkit.Graphics.OpenGL;
 using OpenToolkit.Windowing.Common;
 using OpenToolkit.Windowing.Common.Input;
@@ -46,8 +45,8 @@ namespace LearnOpenTK
         // Now, we start initializing OpenGL.
         protected override void OnLoad()
         {
-			// TODO: Explain this
-			GL.LoadBindings(new GLFWBindingsContext());
+            // TODO: Explain this
+            GL.LoadBindings(new GLFWBindingsContext());
 
             // This will be the color of the background after we clear it, in normalized colors.
             // Normalized colors are mapped on a range of 0.0 to 1.0, with 0.0 representing black, and 1.0 representing
@@ -174,7 +173,7 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-			var input = KeyboardState;
+            var input = KeyboardState;
 
             if (input.IsKeyDown(Key.Escape))
             {
@@ -184,8 +183,8 @@ namespace LearnOpenTK
             base.OnUpdateFrame(e);
         }
 
-		protected override void OnResize(ResizeEventArgs e)
-		{
+        protected override void OnResize(ResizeEventArgs e)
+        {
             // When the window gets resized, we have to call GL.Viewport to resize OpenGL's viewport to match the new size.
             // If we don't, the NDC will no longer be correct.
             GL.Viewport(0, 0, Size.X, Size.Y);

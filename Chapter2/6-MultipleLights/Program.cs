@@ -1,12 +1,21 @@
-﻿namespace LearnOpenTK
+﻿using OpenToolkit.Mathematics;
+using OpenToolkit.Windowing.Desktop;
+
+namespace LearnOpenTK
 {
     public static class Program
     {
         private static void Main()
         {
-            using (var window = new Window(800, 600, "LearnOpenTK - Multiple lights"))
+            var nativeWindowSettings = new NativeWindowSettings()
             {
-                window.Run(60.0);
+                Size = new Vector2i(800, 600),
+                Title = "LearnOpenTK - Multiple lights",
+            };
+
+            using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
+            {
+                window.Run();
             }
         }
     }

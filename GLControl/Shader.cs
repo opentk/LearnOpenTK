@@ -2,8 +2,8 @@
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using OpenToolkit.Graphics.OpenGL;
-using OpenToolkit.Mathematics;
+using OpenTK.Graphics.OpenGL;
+using OpenTK;
 
 namespace LearnOpenTK.Common
 {

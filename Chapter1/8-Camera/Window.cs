@@ -1,9 +1,11 @@
 ﻿using System;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
 using LearnOpenTK.Common;
+using OpenToolkit.Graphics.OpenGL;
+using OpenToolkit.Mathematics;
+using OpenToolkit.Windowing.Common;
+using OpenToolkit.Windowing.Common.Input;
+using OpenToolkit.Windowing.Desktop;
+using OpenToolkit.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -59,13 +61,16 @@ namespace LearnOpenTK
 
         private double _time;
 
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
+            // TODO: Explain this
+            GL.LoadBindings(new GLFWBindingsContext());
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
@@ -106,12 +111,12 @@ namespace LearnOpenTK
 
             // We initialize the camera so that it is 3 units back from where the rectangle is
             // and give it the proper aspect ratio
-            _camera = new Camera(Vector3.UnitZ * 3, Width / (float)Height);
+            _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
             CursorVisible = false;
 
-            base.OnLoad(e);
+            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -126,7 +131,7 @@ namespace LearnOpenTK
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time / 100));
             _shader.SetMatrix4("model", model);
             _shader.SetMatrix4("view", _camera.GetViewMatrix());
             _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
@@ -140,16 +145,18 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (!Focused) // check to see if the window is focused
+            _time += 4.0 * e.Time;
+
+            if (!IsFocused) // check to see if the window is focused
             {
                 return;
             }
 
-            var input = Keyboard.GetState();
+            var input = KeyboardState;
 
             if (input.IsKeyDown(Key.Escape))
             {
-                Exit();
+                Close();
             }
 
             const float cameraSpeed = 1.5f;
@@ -182,7 +189,7 @@ namespace LearnOpenTK
             }
 
             // Get the mouse state
-            var mouse = Mouse.GetState();
+            var mouse = MouseState;
 
             if (_firstMove) // this bool variable is initially set to true
             {
@@ -209,9 +216,9 @@ namespace LearnOpenTK
         // further out
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
-            if (Focused) // check to see if the window is focused
+            if (IsFocused) // check to see if the window is focused
             {
-                Mouse.SetPosition(X + Width / 2f, Y + Height / 2f);
+                MousePosition = (Size.X / 2f, Size.Y / 2f);
             }
 
             base.OnMouseMove(e);
@@ -221,19 +228,19 @@ namespace LearnOpenTK
         // this is simply done by changing the FOV of the camera
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            _camera.Fov -= e.DeltaPrecise;
+            _camera.Fov -= e.OffsetY;
             base.OnMouseWheel(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
+            GL.Viewport(0, 0, Size.X, Size.Y);
             // We need to update the aspect ratio once the window has been resized
-            _camera.AspectRatio = Width / (float)Height;
+            _camera.AspectRatio = Size.X / (float)Size.Y;
             base.OnResize(e);
         }
 
-        protected override void OnUnload(EventArgs e)
+        protected override void OnUnload()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -246,7 +253,7 @@ namespace LearnOpenTK
             GL.DeleteTexture(_texture.Handle);
             GL.DeleteTexture(_texture2.Handle);
 
-            base.OnUnload(e);
+            base.OnUnload();
         }
     }
 }

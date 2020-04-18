@@ -1,9 +1,11 @@
 ﻿using System;
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
 using LearnOpenTK.Common;
+using OpenToolkit.Graphics.OpenGL;
+using OpenToolkit.Mathematics;
+using OpenToolkit.Windowing.Common;
+using OpenToolkit.Windowing.Common.Input;
+using OpenToolkit.Windowing.Desktop;
+using OpenToolkit.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -50,13 +52,16 @@ namespace LearnOpenTK
         // so check out the web version for a good demonstration of what this does.
         private Matrix4 _projection;
 
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
+            // TODO: Explain this
+            GL.LoadBindings(new GLFWBindingsContext());
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             // We enable depth testing here. If you try to draw something more complex than one plane without this,
@@ -108,15 +113,16 @@ namespace LearnOpenTK
             //   Aspect ratio. This should be set to Width / Height.
             //   Near-clipping. Any vertices closer to the camera than this value will be clipped.
             //   Far-clipping. Any vertices farther away from the camera than this value will be clipped.
-            _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Width / (float) Height, 0.1f, 100.0f);
+            _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float) Size.Y, 0.1f, 100.0f);
 
             // Now, head over to OnRenderFrame to see how we setup the model matrix
 
-            base.OnLoad(e);
+            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            // TODO: explain why this must be added to both OnUpdateFrame and OnRenderFrame
             // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
             _time += 4.0 * e.Time;
 
@@ -129,8 +135,9 @@ namespace LearnOpenTK
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
+            // TODO: explain why we're dividing by 100
             // Finally, we have the model matrix. This determines the position of the model.
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time / 100));
 
             // Then, we pass all of these matrices to the vertex shader.
             // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects
@@ -152,23 +159,27 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            var input = Keyboard.GetState();
+            // TODO: explain why this must be added to both OnUpdateFrame and OnRenderFrame
+            // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
+            _time += 4.0 * e.Time;
+
+            var input = KeyboardState;
 
             if (input.IsKeyDown(Key.Escape))
             {
-                Exit();
+                Close();
             }
 
             base.OnUpdateFrame(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
+            GL.Viewport(0, 0, Size.X, Size.Y);
             base.OnResize(e);
         }
 
-        protected override void OnUnload(EventArgs e)
+        protected override void OnUnload()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -181,7 +192,7 @@ namespace LearnOpenTK
             GL.DeleteTexture(_texture.Handle);
             GL.DeleteTexture(_texture2.Handle);
 
-            base.OnUnload(e);
+            base.OnUnload();
         }
     }
 }
