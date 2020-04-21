@@ -108,8 +108,9 @@ namespace LearnOpenTK
             // and give it the proper aspect ratio
             _camera = new Camera(Vector3.UnitZ * 3, Width / (float)Height);
 
-            // We make the mouse cursor invisible so we can have proper FPS-camera movement
+            // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement
             CursorVisible = false;
+            CursorGrabbed = true;
 
             base.OnLoad(e);
         }
