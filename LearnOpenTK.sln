@@ -7,17 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-CreatingAWindow", "Chapte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2-HelloTriangle", "Chapter1\2-HelloTriangle\2-HelloTriangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Textures", "Chapter1\4-Textures\4-Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-Textures", "Chapter1\4-Textures\5-Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3-ElementBufferObjects", "Chapter1\3-ElementBufferObjects\3-ElementBufferObjects.csproj", "{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-MultipleTextures", "Chapter1\5-MultipleTextures\5-MultipleTextures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "6-MultipleTextures", "Chapter1\5-MultipleTextures\6-MultipleTextures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "6-Transformations", "Chapter1\6-Transformations\6-Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7-Transformations", "Chapter1\6-Transformations\7-Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7-CoordinatesSystems", "Chapter1\7-CoordinatesSystems\7-CoordinatesSystems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8-CoordinatesSystems", "Chapter1\7-CoordinatesSystems\8-CoordinatesSystems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8-Camera", "Chapter1\8-Camera\8-Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "9-Camera", "Chapter1\8-Camera\9-Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}"
 EndProject
