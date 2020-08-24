@@ -10,6 +10,7 @@ namespace LearnOpenTK
     public class Window : GameWindow
     {
 
+        // In the 
         private readonly float[] _vertices =
         {
              // positions        // colors
@@ -39,19 +40,10 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            // We've got the vertices done, but how exactly should this be converted to pixels for the final image?
-            // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
-            // The drawback is that we actually need two more programs for this! These are called "shaders".
-            // Shaders are tiny programs that live on the GPU. OpenGL uses them to handle the vertex-to-pixel pipeline.
-            // Check out the Shader class in Common to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
-            // shader.vert and shader.frag contain the actual shader code.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
-            // Now, enable the shader.
-            // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
             _shader.Use();
 
-            // Ignore this for now, it will be explained later.
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
