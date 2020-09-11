@@ -2,7 +2,12 @@
 
 out vec4 outputColor;
 
-uniform vec4 ourColor; // the input variable from the vertex shader (same name and same type)
+
+// The Uniform keyword allows you to access a shader variable at any stage
+// Of the shader chain. Whatever you set this variable to it keeps it 
+// Until you either reset the value or updated it
+
+uniform vec4 ourColor; 
 
 void main()
 {

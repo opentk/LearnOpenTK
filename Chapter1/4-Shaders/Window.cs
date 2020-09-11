@@ -6,7 +6,11 @@ using OpenTK.Input;
 using LearnOpenTK.Common;
 
 namespace LearnOpenTK
-{
+
+{   // Here we'll be elaborating on what shaders can do from the Hello World project we worked on before
+    // specifically we'll be showing how shaders deal with input and output from the main program 
+    // and between each other
+
     public class Window : GameWindow
     {
 
@@ -50,6 +54,9 @@ namespace LearnOpenTK
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
+            // Vertex attributes are the we send input into the vertex shader from the main program 
+            // So here we're checking to see how many vertex attributes our hardware can handle
+            // OpenGL at minimum supports 16 vertex attributes
             int nrAttributes = 0;
             GL.GetInteger(GetPName.MaxVertexAttribs, out nrAttributes);
             Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
