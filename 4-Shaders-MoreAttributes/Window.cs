@@ -7,7 +7,7 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    // Despite the fact we only assign 3 color values in this project, the output will be a mixture
+    // In this project we will be assigning 3 colors to the triangle, one for vertex, but the output will be a mixture
     // Of the three depending on how far away from the assignment point the color pixel is
     // This comes down to something called fragment interpolation in the fragment shader
     // When rendering a triangle the rasterization stage usually results in a lot more fragments than vertices originally specified. 
@@ -61,7 +61,7 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(0);
 
 
-            // We crate a new pointer for the color values much like the previous pointer we assign 6 
+            // We create a new pointer for the color values much like the previous pointer we assign 6 
             // In the stride value on top of which need to correctly set the offset to get the color values 
             // we do by giving the amount of values there which is 3 and multiple them by their size
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
@@ -78,14 +78,12 @@ namespace LearnOpenTK
             base.OnLoad(e);
         }
 
-        // Now that initialization is done, let's create our render loop.
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _shader.Use();
 
-            // Bind the VAO
             GL.BindVertexArray(_vertexArrayObject);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
@@ -115,12 +113,10 @@ namespace LearnOpenTK
 
         protected override void OnUnload(EventArgs e)
         {
-            // Unbind all the resources by binding the targets to 0/null.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
             GL.UseProgram(0);
 
-            // Delete all the resources.
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 

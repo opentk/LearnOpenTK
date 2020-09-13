@@ -8,9 +8,8 @@ using LearnOpenTK.Common;
 namespace LearnOpenTK
 
 {   // Here we'll be elaborating on what shaders can do from the Hello World project we worked on before
-    // specifically we'll be showing how shaders deal with input and output from the main program 
-    // and between each other
-
+    // Specifically we'll be showing how shaders deal with input and output from the main program 
+    // And between each other
     public class Window : GameWindow
     {
 
@@ -32,7 +31,6 @@ namespace LearnOpenTK
         {
         }
 
-        // Now, we start initializing OpenGL.
         protected override void OnLoad(EventArgs e)
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);

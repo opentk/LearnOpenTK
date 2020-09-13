@@ -8,6 +8,8 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
+    // This project will explore how to use uniform variable type which allows you to assign values
+    // To Shaders at any point during the project
     public class Window : GameWindow
     {
 
