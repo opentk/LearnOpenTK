@@ -54,7 +54,8 @@ namespace LearnOpenTK
 
             // Vertex attributes are the we send input into the vertex shader from the main program 
             // So here we're checking to see how many vertex attributes our hardware can handle
-            // OpenGL at minimum supports 16 vertex attributes
+            // OpenGL at minimum supports 16 vertex attributes, This only needs to be called 
+            // When your intensive attribute work and need to know exactly how many are available to you
             int nrAttributes = 0;
             GL.GetInteger(GetPName.MaxVertexAttribs, out nrAttributes);
             Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);

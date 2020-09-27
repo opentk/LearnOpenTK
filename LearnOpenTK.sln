@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2042
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-CreatingAWindow", "Chapter1\1-CreatingAWindow\1-CreatingAWindow.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
 EndProject
@@ -45,9 +45,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GLControl", "GLControl\GLCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-InsAndOuts", "Chapter1\4-Shaders\4-Shaders-InsAndOuts.csproj", "{1234CBB6-22C1-42D0-828B-1D1E7085EF33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-Uniforms", "4-Shaders-Uniforms\4-Shaders-Uniforms.csproj", "{E8DA696D-F948-4967-BF75-1570A2957C3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-Uniforms", "Chapter1\4-Shaders-Uniforms\4-Shaders-Uniforms.csproj", "{E8DA696D-F948-4967-BF75-1570A2957C3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-MoreAttributes", "4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-MoreAttributes", "Chapter1\4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

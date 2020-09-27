@@ -75,7 +75,7 @@ namespace LearnOpenTK
 
             _shader.Use();
 
-            // So here we get the total seconds that have elapsed since the last time this method has been called
+            // So here we get the total seconds that have elapsed since the last time this method has reset
             // And we assign it to the timeValue variable so it can be used for the pulsating color 
             double timeValue = _timer.Elapsed.TotalSeconds;
 

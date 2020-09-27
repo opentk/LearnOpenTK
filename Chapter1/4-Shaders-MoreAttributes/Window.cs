@@ -7,12 +7,11 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    // In this project we will be assigning 3 colors to the triangle, one for vertex, but the output will be a mixture
-    // Of the three depending on how far away from the assignment point the color pixel is
-    // This comes down to something called fragment interpolation in the fragment shader
-    // When rendering a triangle the rasterization stage usually results in a lot more fragments than vertices originally specified. 
-    // The rasterizer then determines the positions of each of those fragments based on where they reside on the triangle shape
-    // Based on these positions, it interpolates all the fragment shader's input variables
+    // In this project we will be assigning 3 colors to the triangle, 
+    // Instead of what you probably expecting three sections of the triangle having a single color 
+    // instead there will be a mixture of the three colors depending on how far away the pixel is from 
+    // The origin point of the where the color was assigned, this is down to how fragment shader deals with colors
+    // It mixes them base off it distance from the originating point 
     public class Window : GameWindow
     {
 
@@ -56,7 +55,7 @@ namespace LearnOpenTK
 
 
             // We now need to account for 3 color values in the stride variable, so it has 
-            // Gone from 3 to 6
+            // Gone from 3 floats to 6 floats
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
@@ -66,7 +65,7 @@ namespace LearnOpenTK
             // we do by giving the amount of values there which is 3 and multiple them by their size
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
 
-            // We then enable vertex 1 so it is availble to the shader
+            // We then enable color attribute (location=1) so it is availble to the shader
             GL.EnableVertexAttribArray(1);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
