@@ -1,9 +1,9 @@
 ﻿using LearnOpenTK.Common;
-using OpenToolkit.Graphics.OpenGL;
-using OpenToolkit.Windowing.Common;
-using OpenToolkit.Windowing.Common.Input;
-using OpenToolkit.Windowing.Desktop;
-using OpenToolkit.Windowing.GraphicsLibraryFramework;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -45,9 +45,6 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
-            // TODO: Explain this
-            GL.LoadBindings(new GLFWBindingsContext());
-
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             _vertexBufferObject = GL.GenBuffer();
@@ -108,7 +105,7 @@ namespace LearnOpenTK
         {
             var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }

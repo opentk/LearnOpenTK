@@ -1,7 +1,7 @@
-﻿using OpenToolkit.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using System.Drawing.Imaging;
-using PixelFormat = OpenToolkit.Graphics.OpenGL.PixelFormat;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
 
 namespace LearnOpenTK.Common
 {

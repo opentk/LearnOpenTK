@@ -1,5 +1,5 @@
-﻿using OpenToolkit.Mathematics;
-using OpenToolkit.Windowing.Desktop;
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {

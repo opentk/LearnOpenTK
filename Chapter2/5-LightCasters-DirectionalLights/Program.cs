@@ -1,4 +1,4 @@
-﻿using OpenToolkit.Windowing.Desktop;
+﻿using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
@@ -8,7 +8,7 @@ namespace LearnOpenTK
         {
             var nativeWindowSettings = new NativeWindowSettings()
             {
-                Size = new OpenToolkit.Mathematics.Vector2i(800, 600),
+                Size = new OpenTK.Mathematics.Vector2i(800, 600),
                 Title = "LearnOpenTK - Light caster - directional",
             };
 

@@ -1,11 +1,11 @@
 ﻿using System;
 using LearnOpenTK.Common;
-using OpenToolkit.Graphics.OpenGL;
-using OpenToolkit.Mathematics;
-using OpenToolkit.Windowing.Common;
-using OpenToolkit.Windowing.Common.Input;
-using OpenToolkit.Windowing.Desktop;
-using OpenToolkit.Windowing.GraphicsLibraryFramework;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -109,9 +109,6 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
-            // TODO: Explain this
-            GL.LoadBindings(new GLFWBindingsContext());
-
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
@@ -257,7 +254,7 @@ namespace LearnOpenTK
 
             var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
@@ -265,27 +262,27 @@ namespace LearnOpenTK
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
 
-            if (input.IsKeyDown(Key.W))
+            if (input.IsKeyDown(Keys.W))
             {
                 _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
             }
-            if (input.IsKeyDown(Key.S))
+            if (input.IsKeyDown(Keys.S))
             {
                 _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
             }
-            if (input.IsKeyDown(Key.A))
+            if (input.IsKeyDown(Keys.A))
             {
                 _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
             }
-            if (input.IsKeyDown(Key.D))
+            if (input.IsKeyDown(Keys.D))
             {
                 _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
             }
-            if (input.IsKeyDown(Key.Space))
+            if (input.IsKeyDown(Keys.Space))
             {
                 _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
             }
-            if (input.IsKeyDown(Key.LShift))
+            if (input.IsKeyDown(Keys.LeftShift))
             {
                 _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
             }

@@ -1,11 +1,11 @@
 ﻿using System;
 using LearnOpenTK.Common;
-using OpenToolkit.Graphics.OpenGL;
-using OpenToolkit.Mathematics;
-using OpenToolkit.Windowing.Common;
-using OpenToolkit.Windowing.Common.Input;
-using OpenToolkit.Windowing.Desktop;
-using OpenToolkit.Windowing.GraphicsLibraryFramework;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -59,9 +59,6 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
-            // TODO: Explain this
-            GL.LoadBindings(new GLFWBindingsContext());
-
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             // We enable depth testing here. If you try to draw something more complex than one plane without this,
@@ -135,9 +132,8 @@ namespace LearnOpenTK
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
-            // TODO: explain why we're dividing by 100
             // Finally, we have the model matrix. This determines the position of the model.
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time / 100));
+            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
 
             // Then, we pass all of these matrices to the vertex shader.
             // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects
@@ -165,7 +161,7 @@ namespace LearnOpenTK
 
             var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }

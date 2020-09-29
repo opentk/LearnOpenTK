@@ -1,4 +1,4 @@
-using OpenToolkit.Mathematics;
+using OpenTK.Mathematics;
 using System;
 
 namespace LearnOpenTK.Common

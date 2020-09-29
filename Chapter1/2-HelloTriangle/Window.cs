@@ -1,9 +1,9 @@
 ﻿using LearnOpenTK.Common;
-using OpenToolkit.Graphics.OpenGL;
-using OpenToolkit.Windowing.Common;
-using OpenToolkit.Windowing.Common.Input;
-using OpenToolkit.Windowing.Desktop;
-using OpenToolkit.Windowing.GraphicsLibraryFramework;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -45,9 +45,6 @@ namespace LearnOpenTK
         // Now, we start initializing OpenGL.
         protected override void OnLoad()
         {
-            // TODO: Explain this
-            GL.LoadBindings(new GLFWBindingsContext());
-
             // This will be the color of the background after we clear it, in normalized colors.
             // Normalized colors are mapped on a range of 0.0 to 1.0, with 0.0 representing black, and 1.0 representing
             // the largest possible value for that channel.
@@ -175,7 +172,7 @@ namespace LearnOpenTK
         {
             var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
