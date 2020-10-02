@@ -5,7 +5,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -119,7 +118,6 @@ namespace LearnOpenTK
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
-            // TODO: explain why this must be added to both OnUpdateFrame and OnRenderFrame
             // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
             _time += 4.0 * e.Time;
 
@@ -155,10 +153,6 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // TODO: explain why this must be added to both OnUpdateFrame and OnRenderFrame
-            // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
-            _time += 4.0 * e.Time;
-
             var input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))

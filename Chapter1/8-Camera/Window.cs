@@ -5,7 +5,6 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -142,8 +141,6 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            _time += 4.0 * e.Time;
-
             if (!IsFocused) // check to see if the window is focused
             {
                 return;
