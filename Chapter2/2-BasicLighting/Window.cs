@@ -129,7 +129,7 @@ namespace LearnOpenTK
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
-            CursorVisible = false;
+            CursorGrabbed = true;
 
             base.OnLoad();
         }
@@ -232,16 +232,6 @@ namespace LearnOpenTK
             }
 
             base.OnUpdateFrame(e);
-        }
-
-        protected override void OnMouseMove(MouseMoveEventArgs e)
-        {
-            if (IsFocused)
-            {
-                MousePosition = (Size.X / 2f, Size.Y / 2f);
-            }
-
-            base.OnMouseMove(e);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)

@@ -111,7 +111,7 @@ namespace LearnOpenTK
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             // We make the mouse cursor invisible so we can have proper FPS-camera movement
-            CursorVisible = false;
+            CursorGrabbed = true;
 
             base.OnLoad();
         }
@@ -206,19 +206,6 @@ namespace LearnOpenTK
             }
 
             base.OnUpdateFrame(e);
-        }
-
-        // This function's main purpose is to set the mouse position back to the center of the window
-        // every time the mouse has moved. So the cursor doesn't end up at the edge of the window where it cannot move
-        // further out
-        protected override void OnMouseMove(MouseMoveEventArgs e)
-        {
-            if (IsFocused) // check to see if the window is focused
-            {
-                MousePosition = (Size.X / 2f, Size.Y / 2f);
-            }
-
-            base.OnMouseMove(e);
         }
 
         // In the mouse wheel function we manage all the zooming of the camera
