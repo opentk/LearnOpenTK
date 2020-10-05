@@ -7,11 +7,9 @@ using LearnOpenTK.Common;
 
 namespace LearnOpenTK
 {
-    // In this project we will be assigning 3 colors to the triangle, 
-    // Instead of what you probably expecting three sections of the triangle having a single color 
-    // instead there will be a mixture of the three colors depending on how far away the pixel is from 
-    // The origin point of the where the color was assigned, this is down to how fragment shader deals with colors
-    // It mixes them base off it distance from the originating point 
+    // In this project we will be assigning 3 colors to the triangle, one for vertex.
+    // The output will be an interpolated value based on the distance from each vertex.
+    // If you want to look more into it the in-between step is called a Rasterizer.
     public class Window : GameWindow
     {
 

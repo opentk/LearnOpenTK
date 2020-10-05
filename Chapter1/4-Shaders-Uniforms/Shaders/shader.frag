@@ -3,10 +3,9 @@
 out vec4 outputColor;
 
 
-// The Uniform keyword allows you to access a shader variable at any stage
-// Of the shader chain as well as being accessible across all of the main the main program.
-// Whatever you set this variable to it keeps it 
-// Until you either reset the value or updated it
+// The Uniform keyword allows you to access a shader variable at any stage of the shader chain
+// It's also being accessible across all of the main program.
+// Whatever you set this variable to it keeps it until you either reset the value or updated it
 
 uniform vec4 ourColor; 
 
