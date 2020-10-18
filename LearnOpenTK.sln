@@ -7,17 +7,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-CreatingAWindow", "Chapte
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2-HelloTriangle", "Chapter1\2-HelloTriangle\2-HelloTriangle.csproj", "{6E4EC91D-F0D3-42BC-8306-09671FA9E332}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Textures", "Chapter1\4-Textures\4-Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-Textures", "Chapter1\5-Textures\5-Textures.csproj", "{63476AD1-106A-4086-8B0E-E295567BC526}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3-ElementBufferObjects", "Chapter1\3-ElementBufferObjects\3-ElementBufferObjects.csproj", "{BC7E1E6C-30F4-4D37-BEAD-44571FCD4ECD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-MultipleTextures", "Chapter1\5-MultipleTextures\5-MultipleTextures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "6-MultipleTextures", "Chapter1\6-MultipleTextures\6-MultipleTextures.csproj", "{1A16223E-7FC4-41A4-9487-71B1782BC98D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "6-Transformations", "Chapter1\6-Transformations\6-Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7-Transformations", "Chapter1\7-Transformations\7-Transformations.csproj", "{3E11B0DB-76CD-4B23-84D3-0976C38B1A20}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "7-CoordinatesSystems", "Chapter1\7-CoordinatesSystems\7-CoordinatesSystems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8-CoordinatesSystems", "Chapter1\8-CoordinatesSystems\8-CoordinatesSystems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8-Camera", "Chapter1\8-Camera\8-Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "9-Camera", "Chapter1\9-Camera\9-Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}"
 EndProject
@@ -40,6 +40,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-LightCasters-PointLights", "Chapter2\5-LightCasters-PointLights\5-LightCasters-PointLights.csproj", "{3531934C-7535-4A18-B598-C21359004324}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-LightCasters-Spotlight", "Chapter2\5-LightCasters-Spotlight\5-LightCasters-Spotlight.csproj", "{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-InsAndOuts", "Chapter1\4-Shaders-InsAndOuts\4-Shaders-InsAndOuts.csproj", "{1234CBB6-22C1-42D0-828B-1D1E7085EF33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-Uniforms", "Chapter1\4-Shaders-Uniforms\4-Shaders-Uniforms.csproj", "{E8DA696D-F948-4967-BF75-1570A2957C3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-MoreAttributes", "Chapter1\4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +121,18 @@ Global
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1234CBB6-22C1-42D0-828B-1D1E7085EF33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1234CBB6-22C1-42D0-828B-1D1E7085EF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1234CBB6-22C1-42D0-828B-1D1E7085EF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1234CBB6-22C1-42D0-828B-1D1E7085EF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8DA696D-F948-4967-BF75-1570A2957C3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8DA696D-F948-4967-BF75-1570A2957C3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8DA696D-F948-4967-BF75-1570A2957C3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8DA696D-F948-4967-BF75-1570A2957C3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +154,12 @@ Global
 		{0E05843C-001E-4773-A1E3-1E48EC18BA36} = {F66727D5-726B-41DF-8318-6E12733B278F}
 		{3531934C-7535-4A18-B598-C21359004324} = {F66727D5-726B-41DF-8318-6E12733B278F}
 		{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E} = {F66727D5-726B-41DF-8318-6E12733B278F}
+		{1234CBB6-22C1-42D0-828B-1D1E7085EF33} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
+		{E8DA696D-F948-4967-BF75-1570A2957C3B} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
+		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}
