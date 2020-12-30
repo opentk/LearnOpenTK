@@ -20,7 +20,6 @@ namespace LearnOpenTK
              0.0f,  0.5f, 0.0f  // Top vertex
         };
 
-
         // So we're going make the triangle pulsate between a color range
         // And in order to do that we'll need a constantly changing value
         // The stopwatch is perfect for this as it's a constantly going up
@@ -46,21 +45,17 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-
-            _shader.Use();
-
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            int nrAttributes = 0;
-            GL.GetInteger(GetPName.MaxVertexAttribs, out nrAttributes);
+            GL.GetInteger(GetPName.MaxVertexAttribs, out int nrAttributes);
             Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
+
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
             // We start the stop watch here as this method is only called once 
             _timer = new Stopwatch();
@@ -92,6 +87,8 @@ namespace LearnOpenTK
             // Via the OpenGL Uniform method which takes in the value as the individual vec values (which total 4 in this instance)
             GL.Uniform4(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
+            // You can alternatively use this overload of the same function
+            // GL.Uniform4(vertexColorLocation, new OpenTK.Mathematics.Color4(0f, greenValue, 0f, 0f));
 
             // Bind the VAO
             GL.BindVertexArray(_vertexArrayObject);

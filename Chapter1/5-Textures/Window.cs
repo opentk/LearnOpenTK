@@ -46,6 +46,9 @@ namespace LearnOpenTK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
@@ -57,15 +60,6 @@ namespace LearnOpenTK
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
-
-            _texture = new Texture("Resources/container.png");
-            _texture.Use();
-
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
 
             // Because there's now 5 floats between the start of the first vertex and the start of the second,
             // we modify this from 3 * sizeof(float) to 5 * sizeof(float).
@@ -80,6 +74,9 @@ namespace LearnOpenTK
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+            _texture = new Texture("Resources/container.png");
+            _texture.Use(TextureUnit.Texture0);
 
             base.OnLoad();
         }

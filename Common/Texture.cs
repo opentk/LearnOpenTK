@@ -17,7 +17,7 @@ namespace LearnOpenTK.Common
             Handle = GL.GenTexture();
 
             // Bind the handle
-            Use();
+            Use(TextureUnit.Texture0);
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
@@ -78,7 +78,7 @@ namespace LearnOpenTK.Common
             // Mipmaps are smaller copies of the texture, scaled down. Each mipmap level is half the size of the previous one
             // Generated mipmaps go all the way down to just one pixel.
             // OpenGL will automatically switch between mipmaps when an object gets sufficiently far away.
-            // This prevents distant objects from having their colors become muddy, as well as saving on memory.
+            // This prevents moiré effects (google them), as well as saving on texture bandwidth.
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
         }
 
@@ -86,7 +86,7 @@ namespace LearnOpenTK.Common
         // Multiple textures can be bound, if your shader needs more than just one.
         // If you want to do that, use GL.ActiveTexture to set which slot GL.BindTexture binds to.
         // The OpenGL standard requires that there be at least 16, but there can be more depending on your graphics card.
-        public void Use(TextureUnit unit = TextureUnit.Texture0)
+        public void Use(TextureUnit unit)
         {
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Handle);

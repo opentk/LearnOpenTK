@@ -44,33 +44,26 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-
-            _shader.Use();
-
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
-
 
             // We now need to account for 3 color values in the stride variable, so it has 
             // Gone from 3 floats to 6 floats
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-
             // We create a new pointer for the color values much like the previous pointer we assign 6 
             // In the stride value on top of which need to correctly set the offset to get the color values 
             // we do by giving the amount of values there which is 3 and multiple them by their size
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-
             // We then enable color attribute (location=1) so it is availble to the shader
             GL.EnableVertexAttribArray(1);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            int nrAttributes = 0;
-            GL.GetInteger(GetPName.MaxVertexAttribs, out nrAttributes);
+            GL.GetInteger(GetPName.MaxVertexAttribs, out int nrAttributes);
             Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
+
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader.Use();
 
             base.OnLoad();
         }
