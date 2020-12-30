@@ -91,7 +91,8 @@ namespace LearnOpenTK
             // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
             _shader.Use();
 
-            // Ignore this for now, it will be explained later.
+            // Here we create and bind a VertexArrayObject (VAO) which is an object that contains information about how the GPU should
+            // interpret the data we just uploaded to the VBO. 
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
