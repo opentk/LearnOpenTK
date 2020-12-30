@@ -87,7 +87,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use();
+            _texture.Use(TextureUnit.Texture0);
             _shader.Use();
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
@@ -122,6 +122,7 @@ namespace LearnOpenTK
             GL.UseProgram(0);
 
             GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteBuffer(_elementBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);

@@ -64,6 +64,9 @@ namespace LearnOpenTK
             // Obviously, we don't want this, so we enable depth testing. We also clear the depth buffer in GL.Clear over in OnRenderFrame.
             GL.Enable(EnableCap.DepthTest);
 
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
@@ -76,21 +79,6 @@ namespace LearnOpenTK
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
-            _texture = new Texture("Resources/container.png");
-            _texture.Use();
-
-            _texture2 = new Texture("Resources/awesomeface.png");
-            _texture2.Use(TextureUnit.Texture1);
-
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
-
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-
             var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
@@ -98,6 +86,15 @@ namespace LearnOpenTK
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+            _texture = new Texture("Resources/container.png");
+            _texture.Use(TextureUnit.Texture0);
+
+            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2.Use(TextureUnit.Texture1);
+
+            _shader.SetInt("texture0", 0);
+            _shader.SetInt("texture1", 1);
 
             // For the view, we don't do too much here. Next tutorial will be all about a Camera class that will make it much easier to manipulate the view.
             // For now, we move it backwards three units on the Z axis.
@@ -125,7 +122,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use();
+            _texture.Use(TextureUnit.Texture0);
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
@@ -136,9 +133,11 @@ namespace LearnOpenTK
             // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects
 
             // IMPORTANT: OpenTK's matrix types are transposed from what OpenGL would expect - rows and columns are reversed.
-            // They are then transposed properly when passed to the shader.
-            // If you pass the individual matrices to the shader and multiply there, you have to do in the order "model, view, projection",
-            // but if you do it here and then pass it to the vertex, you have to do it in order "projection, view, model".
+            // They are then transposed properly when passed to the shader. 
+            // This means that we retain the same multiplication order in both opentk c# code and glsl shader code.
+            // If you pass the individual matrices to the shader and multiply there, you have to do in the order "model * view * projection".
+            // You can think like this: first apply the modelToWorld (aka model) matrix, then apply the worldToView (aka view) matrix, 
+            // and finally apply the viewToProjectedSpace (aka projection) matrix.
             _shader.SetMatrix4("model", model);
             _shader.SetMatrix4("view", _view);
             _shader.SetMatrix4("projection", _projection);
@@ -175,6 +174,7 @@ namespace LearnOpenTK
             GL.UseProgram(0);
 
             GL.DeleteBuffer(_vertexBufferObject);
+            GL.DeleteBuffer(_elementBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);

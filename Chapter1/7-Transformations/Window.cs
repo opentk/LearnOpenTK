@@ -54,6 +54,9 @@ namespace LearnOpenTK
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
+            _vertexArrayObject = GL.GenVertexArray();
+            GL.BindVertexArray(_vertexArrayObject);
+
             _vertexBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
@@ -66,21 +69,6 @@ namespace LearnOpenTK
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
-            _texture = new Texture("Resources/container.png");
-            _texture.Use();
-
-            _texture2 = new Texture("Resources/awesomeface.png");
-            _texture2.Use(TextureUnit.Texture1);
-
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
-
-            _vertexArrayObject = GL.GenVertexArray();
-            GL.BindVertexArray(_vertexArrayObject);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexArrayObject);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-
             var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
@@ -88,6 +76,15 @@ namespace LearnOpenTK
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
+
+            _texture = new Texture("Resources/container.png");
+            _texture.Use(TextureUnit.Texture0);
+
+            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2.Use(TextureUnit.Texture1);
+
+            _shader.SetInt("texture0", 0);
+            _shader.SetInt("texture1", 1);
 
             base.OnLoad();
         }
@@ -106,19 +103,25 @@ namespace LearnOpenTK
             // The next few steps just show how to use OpenTK's matrix functions, and aren't necessary for the transform matrix to actually work.
             // If you want, you can just pass the identity matrix to the shader, though it won't affect the vertices at all.
 
+            // A fact to note about matrices is that the order of multiplications matter. "matrixA * matrixB" and "matrixB * matrixA" mean different things.
+            // A VERY important thing to know is that opentk matrices are so called row-major. We won't go into the full details here, but here is a good place to read more about it
+            // https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector
+            // What it means for us is that we can think of matrix multiplication as going left to right.
+            // So "rotate * translate" means rotate (around the origin) first and then translate, as opposed to "translate * rotate" which means translate and then rotate (around the origin).
+
             // To combine two matrices, you multiply them. Here, we combine the transform matrix with another one created by OpenTK to rotate it by 20 degrees.
             // Note that all Matrix4.CreateRotation functions take radians, not degrees. Use MathHelper.DegreesToRadians() to convert to radians, if you want to use degrees.
-            transform *= Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(20f));
+            transform = transform * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(20f));
 
             // Next, we scale the matrix. This will make the rectangle slightly larger.
-            transform *= Matrix4.CreateScale(1.1f);
+            transform = transform * Matrix4.CreateScale(1.1f);
 
             // Then, we translate the matrix, which will move it slightly towards the top-right.
             // Note that we aren't using a full coordinate system yet, so the translation is in normalized device coordinates.
             // The next tutorial will be about how to set one up so we can use more human-readable numbers.
-            transform *= Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
+            transform = transform * Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
 
-            _texture.Use();
+            _texture.Use(TextureUnit.Texture0);
             _texture2.Use(TextureUnit.Texture1);
             _shader.Use();
 
