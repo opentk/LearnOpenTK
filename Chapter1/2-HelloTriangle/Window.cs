@@ -1,9 +1,8 @@
-﻿using System;
-using OpenTK;
-using OpenTK.Graphics;
+﻿using LearnOpenTK.Common;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
-using LearnOpenTK.Common;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
@@ -37,13 +36,13 @@ namespace LearnOpenTK
         // What shaders are and what they're used for will be explained later in this tutorial.
         private Shader _shader;
 
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
         // Now, we start initializing OpenGL.
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // This will be the color of the background after we clear it, in normalized colors.
             // Normalized colors are mapped on a range of 0.0 to 1.0, with 0.0 representing black, and 1.0 representing
@@ -125,7 +124,7 @@ namespace LearnOpenTK
 
             // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
 
-            base.OnLoad(e);
+            base.OnLoad();
         }
 
         // Now that initialization is done, let's create our render loop.
@@ -170,27 +169,27 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            var input = Keyboard.GetState();
+            var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
-                Exit();
+                Close();
             }
 
             base.OnUpdateFrame(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
             // When the window gets resized, we have to call GL.Viewport to resize OpenGL's viewport to match the new size.
             // If we don't, the NDC will no longer be correct.
-            GL.Viewport(0, 0, Width, Height);
+            GL.Viewport(0, 0, Size.X, Size.Y);
             base.OnResize(e);
         }
 
         // Now, for cleanup. This isn't technically necessary since C# and OpenGL will clean up all resources automatically when
         // the program closes, but it's very important to know how anyway.
-        protected override void OnUnload(EventArgs e)
+        protected override void OnUnload()
         {
             // Unbind all the resources by binding the targets to 0/null.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
@@ -202,7 +201,7 @@ namespace LearnOpenTK
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);
-            base.OnUnload(e);
+            base.OnUnload();
         }
     }
 }

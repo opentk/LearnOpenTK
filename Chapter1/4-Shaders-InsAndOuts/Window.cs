@@ -6,21 +6,18 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
-{
-    // In this project we will be assigning 3 colors to the triangle, one for vertex.
-    // The output will be an interpolated value based on the distance from each vertex.
-    // If you want to look more into it the in-between step is called a Rasterizer.
+
+{   // Here we'll be elaborating on what shaders can do from the Hello World project we worked on before
+    // Specifically we'll be showing how shaders deal with input and output from the main program 
+    // And between each other
     public class Window : GameWindow
     {
 
-        // We're assigning three different colors at the asscoiate vertex position
-        // Blue for the top, green for the bottom left and red for the bottom right
         private readonly float[] _vertices =
         {
-             // positions        // colors
-             0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
-             0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top 
+            -0.5f, -0.5f, 0.0f, // Bottom-left vertex
+             0.5f, -0.5f, 0.0f, // Bottom-right vertex
+             0.0f,  0.5f, 0.0f  // Top vertex
         };
 
         private int _vertexBufferObject;
@@ -34,7 +31,6 @@ namespace LearnOpenTK
         {
         }
 
-        // Now, we start initializing OpenGL.
         protected override void OnLoad()
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -51,23 +47,15 @@ namespace LearnOpenTK
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
-
-            // We now need to account for 3 color values in the stride variable, so it has 
-            // Gone from 3 floats to 6 floats
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
-
-
-            // We create a new pointer for the color values much like the previous pointer we assign 6 
-            // In the stride value on top of which need to correctly set the offset to get the color values 
-            // we do by giving the amount of values there which is 3 and multiple them by their size
-            GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-
-            // We then enable color attribute (location=1) so it is availble to the shader
-            GL.EnableVertexAttribArray(1);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
+            // Vertex attributes are the we send input into the vertex shader from the main program 
+            // So here we're checking to see how many vertex attributes our hardware can handle
+            // OpenGL at minimum supports 16 vertex attributes, This only needs to be called 
+            // When your intensive attribute work and need to know exactly how many are available to you
             int nrAttributes = 0;
             GL.GetInteger(GetPName.MaxVertexAttribs, out nrAttributes);
             Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);

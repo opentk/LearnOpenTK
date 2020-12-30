@@ -10,7 +10,7 @@ namespace LearnOpenTK
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
-                Title = "LearnOpenTK - Multiple lights",
+                Title = "LearnOpenTK - Camera",
             };
 
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))

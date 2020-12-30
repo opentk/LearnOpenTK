@@ -1,5 +1,5 @@
+using OpenTK.Mathematics;
 using System;
-using OpenTK;
 
 namespace LearnOpenTK.Common
 {

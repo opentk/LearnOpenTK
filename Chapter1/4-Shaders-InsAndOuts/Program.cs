@@ -3,14 +3,14 @@ using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
-    public static class Program
+    class Program
     {
         private static void Main()
         {
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
-                Title = "LearnOpenTK - Multiple lights",
+                Title = "LearnOpenTK - Shaders In and Outs!",
             };
 
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))

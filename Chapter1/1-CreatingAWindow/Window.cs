@@ -1,30 +1,28 @@
-﻿using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Input;
+﻿
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
     // This is where all OpenGL code will be written.
-    // OpenTK allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
+    // OpenToolkit allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
     public class Window : GameWindow
     {
-        // A simple constructor to let us set the width/height/title of the window.
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        // A simple constructor to let us set properties like window size, title, FPS, etc. on the window
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
         // This function runs on every update frame.
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            // Gets the KeyboardState for this frame. KeyboardState allows us to check the status of keys.
-            var input = Keyboard.GetState();
-
             // Check if the Escape button is currently being pressed.
-            if (input.IsKeyDown(Key.Escape))
+            if (KeyboardState.IsKeyDown(Keys.Escape))
             {
-                // If it is, exit the window.
-                Exit();
+                // If it is, close the window.
+                Close();
             }
 
             base.OnUpdateFrame(e);

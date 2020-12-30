@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
-using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
 using LearnOpenTK.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
@@ -32,12 +32,12 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -66,7 +66,7 @@ namespace LearnOpenTK
             _timer = new Stopwatch();
             _timer.Start();
 
-            base.OnLoad(e);
+            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -105,23 +105,23 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            var input = Keyboard.GetState();
+            var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
-                Exit();
+                Close();
             }
 
             base.OnUpdateFrame(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
+            GL.Viewport(0, 0, Size.X, Size.Y);
             base.OnResize(e);
         }
 
-        protected override void OnUnload(EventArgs e)
+        protected override void OnUnload()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -131,7 +131,7 @@ namespace LearnOpenTK
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);
-            base.OnUnload(e);
+            base.OnUnload();
         }
     }
 }

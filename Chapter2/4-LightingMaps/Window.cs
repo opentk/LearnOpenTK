@@ -1,9 +1,9 @@
-﻿using System;
-using OpenTK;
-using OpenTK.Graphics;
+﻿using LearnOpenTK.Common;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
-using LearnOpenTK.Common;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
@@ -84,12 +84,12 @@ namespace LearnOpenTK
 
         private Vector2 _lastPos;
 
-        public Window(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title)
+        public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
+            : base(gameWindowSettings, nativeWindowSettings)
         {
         }
 
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -137,11 +137,11 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(positionLocation);
             GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-            _camera = new Camera(Vector3.UnitZ * 3, Width / (float)Height);
+            _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
-            CursorVisible = false;
+            CursorGrabbed = true;
 
-            base.OnLoad(e);
+            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -196,47 +196,47 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (!Focused)
+            if (!IsFocused)
             {
                 return;
             }
 
-            var input = Keyboard.GetState();
+            var input = KeyboardState;
 
-            if (input.IsKeyDown(Key.Escape))
+            if (input.IsKeyDown(Keys.Escape))
             {
-                Exit();
+                Close();
             }
 
             const float cameraSpeed = 1.5f;
             const float sensitivity = 0.2f;
 
-            if (input.IsKeyDown(Key.W))
+            if (input.IsKeyDown(Keys.W))
             {
                 _camera.Position += _camera.Front * cameraSpeed * (float)e.Time; // Forward
             }
-            if (input.IsKeyDown(Key.S))
+            if (input.IsKeyDown(Keys.S))
             {
                 _camera.Position -= _camera.Front * cameraSpeed * (float)e.Time; // Backwards
             }
-            if (input.IsKeyDown(Key.A))
+            if (input.IsKeyDown(Keys.A))
             {
                 _camera.Position -= _camera.Right * cameraSpeed * (float)e.Time; // Left
             }
-            if (input.IsKeyDown(Key.D))
+            if (input.IsKeyDown(Keys.D))
             {
                 _camera.Position += _camera.Right * cameraSpeed * (float)e.Time; // Right
             }
-            if (input.IsKeyDown(Key.Space))
+            if (input.IsKeyDown(Keys.Space))
             {
                 _camera.Position += _camera.Up * cameraSpeed * (float)e.Time; // Up
             }
-            if (input.IsKeyDown(Key.LShift))
+            if (input.IsKeyDown(Keys.LeftShift))
             {
                 _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
             }
 
-            var mouse = Mouse.GetState();
+            var mouse = MouseState;
 
             if (_firstMove)
             {
@@ -256,30 +256,20 @@ namespace LearnOpenTK
             base.OnUpdateFrame(e);
         }
 
-        protected override void OnMouseMove(MouseMoveEventArgs e)
-        {
-            if (Focused)
-            {
-                Mouse.SetPosition(X + Width / 2f, Y + Height / 2f);
-            }
-
-            base.OnMouseMove(e);
-        }
-
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            _camera.Fov -= e.DeltaPrecise;
+            _camera.Fov -= e.OffsetY;
             base.OnMouseWheel(e);
         }
 
-        protected override void OnResize(EventArgs e)
+        protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Width, Height);
-            _camera.AspectRatio = Width / (float)Height;
+            GL.Viewport(0, 0, Size.X, Size.Y);
+            _camera.AspectRatio = Size.X / (float)Size.Y;
             base.OnResize(e);
         }
 
-        protected override void OnUnload(EventArgs e)
+        protected override void OnUnload()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -292,7 +282,7 @@ namespace LearnOpenTK
             GL.DeleteProgram(_lampShader.Handle);
             GL.DeleteProgram(_lightingShader.Handle);
 
-            base.OnUnload(e);
+            base.OnUnload();
         }
     }
 }

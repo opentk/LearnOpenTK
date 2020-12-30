@@ -1,12 +1,21 @@
-﻿namespace LearnOpenTK
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Desktop;
+
+namespace LearnOpenTK
 {
     class Program
     {
         private static void Main()
         {
-            using (var window = new Window(800, 600, "LearnOpenTK - Shaders Uniforms !"))
+            var nativeWindowSettings = new NativeWindowSettings()
             {
-                window.Run(60.0);
+                Size = new Vector2i(800, 600),
+                Title = "LearnOpenTK - Shaders Uniforms!",
+            };
+
+            using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
+            {
+                window.Run();
             }
         }
     }
