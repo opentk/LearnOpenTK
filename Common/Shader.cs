@@ -27,8 +27,8 @@ namespace LearnOpenTK.Common
             //   The fragment shader is what we'll be using the most here.
 
             // Load vertex shader and compile
-            // LoadSource is a simple function that just loads all text from the file whose path is given.
-            var shaderSource = LoadSource(vertPath);
+            // File.ReadAllText just loads all text from the file whose path is given.
+            var shaderSource = File.ReadAllText(vertPath);
 
             // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.
             var vertexShader = GL.CreateShader(ShaderType.VertexShader);
@@ -40,7 +40,7 @@ namespace LearnOpenTK.Common
             CompileShader(vertexShader);
 
             // We do the same for the fragment shader
-            shaderSource = LoadSource(fragPath);
+            shaderSource = File.ReadAllText(fragPath);
             var fragmentShader = GL.CreateShader(ShaderType.FragmentShader);
             GL.ShaderSource(fragmentShader, shaderSource);
             CompileShader(fragmentShader);
@@ -127,15 +127,6 @@ namespace LearnOpenTK.Common
         public int GetAttribLocation(string attribName)
         {
             return GL.GetAttribLocation(Handle, attribName);
-        }
-
-        // Just loads the entire file into a string.
-        private static string LoadSource(string path)
-        {
-            using (var sr = new StreamReader(path, Encoding.UTF8))
-            {
-                return sr.ReadToEnd();
-            }
         }
 
         // Uniform setters
