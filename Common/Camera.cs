@@ -101,9 +101,9 @@ namespace LearnOpenTK.Common
         private void UpdateVectors()
         {
             // First the front matrix is calculated using some basic trigonometry
-            _front.X = (float)Math.Cos(_pitch) * (float)Math.Cos(_yaw);
-            _front.Y = (float)Math.Sin(_pitch);
-            _front.Z = (float)Math.Cos(_pitch) * (float)Math.Sin(_yaw);
+            _front.X = MathF.Cos(_pitch) * MathF.Cos(_yaw);
+            _front.Y = MathF.Sin(_pitch);
+            _front.Z = MathF.Cos(_pitch) * MathF.Sin(_yaw);
 
             // We need to make sure the vectors are all normalized, as otherwise we would get some funky results
             _front = Vector3.Normalize(_front);

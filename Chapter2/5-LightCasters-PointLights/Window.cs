@@ -114,34 +114,35 @@ namespace LearnOpenTK
 
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            
+            {
+                _vaoModel = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoModel);
+
+                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+
+                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                GL.EnableVertexAttribArray(normalLocation);
+                GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+
+                var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+                GL.EnableVertexAttribArray(texCoordLocation);
+                GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            }
+
+            {
+                _vaoLamp = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoLamp);
+
+                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            }
+
             _diffuseMap = new Texture("Resources/container2.png");
             _specularMap = new Texture("Resources/container2_specular.png");
-
-            _vaoModel = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoModel);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            var positionLocation = _lightingShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
-
-            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
-
-            var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
-            GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
-
-            _vaoLamp = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoLamp);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            positionLocation = _lampShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -156,7 +157,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _diffuseMap.Use();
+            _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
 
@@ -182,12 +183,11 @@ namespace LearnOpenTK
             for (int i = 0; i < _cubePositions.Length; i++)
             {
                 // First we create a model from an identity matrix
-                Matrix4 model = Matrix4.Identity;
                 // Then we translate said matrix by the cube position
-                model *= Matrix4.CreateTranslation(_cubePositions[i]);
+                Matrix4 model = Matrix4.CreateTranslation(_cubePositions[i]);
                 // We then calculate the angle and rotate the model around an axis
                 float angle = 20.0f * i;
-                model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
+                model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
                 // Remember to set the model at last so it can be used by opentk
                 _lightingShader.SetMatrix4("model", model);
 
@@ -199,9 +199,8 @@ namespace LearnOpenTK
 
             _lampShader.Use();
 
-            Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f);
-            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
+            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
 
             _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());

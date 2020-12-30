@@ -97,33 +97,33 @@ namespace LearnOpenTK
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
-            _vaoModel = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoModel);
+            {
+                _vaoModel = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoModel);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                // Remember to change the stride as we now have 6 floats per vertex
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-            var positionLocation = _lightingShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            // Remember to change the stride as we now have 6 floats per vertex
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+                // We now need to define the layout of the normal so the shader can use it
+                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                GL.EnableVertexAttribArray(normalLocation);
+                GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            }
 
-            // We now need to define the layout of the normal so the shader can use it
-            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
+            {
+                _vaoLamp = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoLamp);
 
-            _vaoLamp = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoLamp);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            positionLocation = _lampShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            // Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
-            // this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
-            // The two cubes still use the same position, and since the position is already in the graphics memory it is actually
-            // better to do it this way. Look through the web version for a much better understanding of this.
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                // Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
+                // this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
+                // The two cubes still use the same position, and since the position is already in the graphics memory it is actually
+                // better to do it this way. Look through the web version for a much better understanding of this.
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
+            }
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -155,9 +155,8 @@ namespace LearnOpenTK
 
             _lampShader.Use();
 
-            Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f);
-            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
+            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
 
             _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
