@@ -51,8 +51,8 @@ namespace LearnOpenTK
             // So here we're checking to see how many vertex attributes our hardware can handle
             // OpenGL at minimum supports 16 vertex attributes, This only needs to be called 
             // When your intensive attribute work and need to know exactly how many are available to you
-            GL.GetInteger(GetPName.MaxVertexAttribs, out int nrAttributes);
-            Debug.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
+            GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
+            Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();

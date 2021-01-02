@@ -62,15 +62,15 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            // We create/bind the EBO the same way as the VBO, except there is a major difference here which can be REALLY confusing.
-            // The binding spot for ElementArrayBuffers is not actually a global binding spot like ArrayBuffer is. 
-            // It's actually a property of the currently bound VertexArrayObject, and binding an EBO with no VAO is undefined behaviour.
+            // We create/bind the Element Buffer Object EBO the same way as the VBO, except there is a major difference here which can be REALLY confusing.
+            // The binding spot for ElementArrayBuffer is not actually a global binding spot like ArrayBuffer is. 
+            // Instead it's actually a property of the currently bound VertexArrayObject, and binding an EBO with no VAO is undefined behaviour.
             // This also means that if you bind another VAO, the current ElementArrayBuffer is going to change with it.
             // Another sneaky part is that you don't need to unbind the buffer in ElementArrayBuffer as unbinding the VAO is going to do this,
             // and unbinding the EBO will remove it from the VAO instead of unbinding it like you would for VBOs or VAOs.
             _elementBufferObject = GL.GenBuffer();
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
-            // We also buffer data to the EBO the same way.
+            // We also upload data to the EBO the same way as we did with VBOs.
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
@@ -86,7 +86,8 @@ namespace LearnOpenTK
 
             _shader.Use();
 
-            // This call will populate the current ElementArrayObject with the one stored in the VAO.
+            // Because ElementArrayObject is a property of the currently bound VAO
+            // the buffer you will find in the ElementArrayBuffer will change with the currently bound VAO.
             GL.BindVertexArray(_vertexArrayObject);
 
             // Then replace your call to DrawTriangles with one to DrawElements

@@ -27,7 +27,6 @@ namespace LearnOpenTK.Common
             //   The fragment shader is what we'll be using the most here.
 
             // Load vertex shader and compile
-            // File.ReadAllText just loads all text from the file whose path is given.
             var shaderSource = File.ReadAllText(vertPath);
 
             // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.

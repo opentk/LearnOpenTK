@@ -4,6 +4,7 @@ using LearnOpenTK.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Diagnostics;
 
 namespace LearnOpenTK
 {
@@ -59,8 +60,8 @@ namespace LearnOpenTK
             // We then enable color attribute (location=1) so it is availble to the shader
             GL.EnableVertexAttribArray(1);
 
-            GL.GetInteger(GetPName.MaxVertexAttribs, out int nrAttributes);
-            Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
+            GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
+            Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();

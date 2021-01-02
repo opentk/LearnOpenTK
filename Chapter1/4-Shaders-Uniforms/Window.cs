@@ -51,8 +51,8 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            GL.GetInteger(GetPName.MaxVertexAttribs, out int nrAttributes);
-            Console.WriteLine("Maximum number of vertex attributes supported: " + nrAttributes);
+            GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
+            Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();

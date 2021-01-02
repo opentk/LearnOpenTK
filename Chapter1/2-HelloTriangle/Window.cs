@@ -80,7 +80,7 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
             // One notable thing about the buffer we just loaded data into is that it doesn't have any structure to it. It's just a bunch of floats (which are actaully just bytes).
-            // The opengl driver not the GPU knows how this data should be interpreted or how it should be divided up into vertices. To do this opengl introduces the idea of a 
+            // The opengl driver doesn't know how this data should be interpreted or how it should be divided up into vertices. To do this opengl introduces the idea of a 
             // Vertex Array Obejct (VAO) which has the job of keeping track of what parts or what buffers correspond to what data. In this example we want to set our VAO up so that 
             // it tells opengl that we want to interpret 12 bytes as 3 floats and divide the buffer into vertices using that.
             // To do this we generate and bind a VAO (which looks deceptivly similar to creating and binding a VBO, but they are different!).
