@@ -135,8 +135,8 @@ namespace LearnOpenTK
             
             // Our two textures are loaded in from memory, you should head over and
             // check them out and compare them to the results.
-            _diffuseMap = new Texture("Resources/container2.png");
-            _specularMap = new Texture("Resources/container2_specular.png");
+            _diffuseMap = Texture.LoadFromFile("Resources/container2.png");
+            _specularMap = Texture.LoadFromFile("Resources/container2_specular.png");
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 

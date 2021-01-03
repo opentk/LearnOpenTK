@@ -67,13 +67,13 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = new Texture("Resources/container.png");
+            _texture = Texture.LoadFromFile("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
             // First texture goes in texture unit 0.
             _texture.Use(TextureUnit.Texture0);
 
             // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
-            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             // Then, the second goes in texture unit 1.
             _texture2.Use(TextureUnit.Texture1);
 

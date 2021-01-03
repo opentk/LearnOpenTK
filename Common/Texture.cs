@@ -10,14 +10,14 @@ namespace LearnOpenTK.Common
     {
         public readonly int Handle;
 
-        // Create texture from path.
-        public Texture(string path)
+        public static Texture LoadFromFile(string path)
         {
             // Generate handle
-            Handle = GL.GenTexture();
+            int handle = GL.GenTexture();
 
             // Bind the handle
-            Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
@@ -82,6 +82,13 @@ namespace LearnOpenTK.Common
             // Here you can see and read about the morié effect https://en.wikipedia.org/wiki/Moir%C3%A9_pattern
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            return new Texture(handle);
+        }
+
+        public Texture(int glHandle)
+        {
+            Handle = glHandle;
         }
 
         // Activate texture

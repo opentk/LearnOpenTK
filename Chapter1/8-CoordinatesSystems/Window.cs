@@ -87,10 +87,10 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = new Texture("Resources/container.png");
+            _texture = Texture.LoadFromFile("Resources/container.png");
             _texture.Use(TextureUnit.Texture0);
 
-            _texture2 = new Texture("Resources/awesomeface.png");
+            _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             _texture2.Use(TextureUnit.Texture1);
 
             _shader.SetInt("texture0", 0);
