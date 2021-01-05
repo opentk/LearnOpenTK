@@ -108,27 +108,26 @@ namespace LearnOpenTK
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
-            // Initialize the vao for the model
-            _vaoModel = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoModel);
+            {
+                // Initialize the vao for the model
+                _vaoModel = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoModel);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+                var vertexLocation = _lightingShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(vertexLocation);
+                GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            }
 
-            var vertexLocation = _lightingShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            {
+                // Initialize the vao for the lamp, this is mostly the same as the code for the model cube
+                _vaoLamp = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoLamp);
 
-            // Initialize the vao for the lamp, this is mostly the same as the code for the model cube
-            _vaoLamp = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoLamp);
-
-            // We only need to bind to the VBO, the container's VBO's data already contains the correct data.
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            // Set the vertex attributes (only position data for our lamp)
-            vertexLocation = _lampShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(vertexLocation);
-            GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+                // Set the vertex attributes (only position data for our lamp)
+                var vertexLocation = _lampShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(vertexLocation);
+                GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
+            }
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -161,9 +160,8 @@ namespace LearnOpenTK
 
             _lampShader.Use();
 
-            Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f); // We scale the lamp cube down a bit to make it less dominant
-            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f); // We scale the lamp cube down a bit to make it less dominant
+            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
 
             _lampShader.SetMatrix4("model", lampMatrix);
             _lampShader.SetMatrix4("view", _camera.GetViewMatrix());

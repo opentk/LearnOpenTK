@@ -79,19 +79,11 @@ namespace LearnOpenTK
             //   but be sure to use the right one for your use case.
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            // We've got the vertices done, but how exactly should this be converted to pixels for the final image?
-            // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
-            // The drawback is that we actually need two more programs for this! These are called "shaders".
-            // Shaders are tiny programs that live on the GPU. OpenGL uses them to handle the vertex-to-pixel pipeline.
-            // Check out the Shader class in Common to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
-            // shader.vert and shader.frag contain the actual shader code.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-
-            // Now, enable the shader.
-            // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
-            _shader.Use();
-
-            // Ignore this for now, it will be explained later.
+            // One notable thing about the buffer we just loaded data into is that it doesn't have any structure to it. It's just a bunch of floats (which are actaully just bytes).
+            // The opengl driver doesn't know how this data should be interpreted or how it should be divided up into vertices. To do this opengl introduces the idea of a 
+            // Vertex Array Obejct (VAO) which has the job of keeping track of what parts or what buffers correspond to what data. In this example we want to set our VAO up so that 
+            // it tells opengl that we want to interpret 12 bytes as 3 floats and divide the buffer into vertices using that.
+            // To do this we generate and bind a VAO (which looks deceptivly similar to creating and binding a VBO, but they are different!).
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
@@ -99,6 +91,8 @@ namespace LearnOpenTK
             // While this makes them incredibly flexible, it means we have to specify how that data will be mapped to the shader's input variables.
 
             // To do this, we use the GL.VertexAttribPointer function
+            // This function has too jobs, to tell opengl about the format of the data, but also to associate the current array buffer with the VAO.
+            // This means that after this call, we have setup this attribute to source data from the current array buffer and interpret it in the way we specified.
             // Arguments:
             //   Location of the input variable in the shader. the layout(location = 0) line in the vertex shader explicitly sets it to 0.
             //   How many elements will be sent to the variable. In this case, 3 floats for every vertex.
@@ -112,15 +106,17 @@ namespace LearnOpenTK
             // Enable variable 0 in the shader.
             GL.EnableVertexAttribArray(0);
 
-            // For a simple project, this would probably be enough. However, if you have a bunch of objects with their own shaders being drawn, it would be incredibly
-            // tedious to do this over and over again every time you need to switch what object is being drawn. Because of this, OpenGL now *requires* that you create
-            // what is known as a Vertex Array Object (VAO). This stores the layout you create with VertexAttribPointer/EnableVertexAttribArray so that it can be
-            // recreated with one simple function call.
-            // By creating the VertexArrayObject above, it has automatically saved this layout, so you can simply bind the VAO again to get everything back how it should be.
+            // We've got the vertices done, but how exactly should this be converted to pixels for the final image?
+            // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
+            // The drawback is that we actually need two more programs for this! These are called "shaders".
+            // Shaders are tiny programs that live on the GPU. OpenGL uses them to handle the vertex-to-pixel pipeline.
+            // Check out the Shader class in Common to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
+            // shader.vert and shader.frag contain the actual shader code.
+            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
-            // Finally, we bind the VBO again so that the VAO will bind that as well.
-            // This means that, when you bind the VAO, it will automatically bind the VBO as well.
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+            // Now, enable the shader.
+            // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
+            _shader.Use();
 
             // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
 

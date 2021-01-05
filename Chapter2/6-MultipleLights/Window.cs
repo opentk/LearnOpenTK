@@ -118,34 +118,35 @@ namespace LearnOpenTK
 
             _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
             _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _diffuseMap = new Texture("Resources/container2.png");
-            _specularMap = new Texture("Resources/container2_specular.png");
+            
+            {
+                _vaoModel = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoModel);
 
-            _vaoModel = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoModel);
+                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
+                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                GL.EnableVertexAttribArray(normalLocation);
+                GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
-            var positionLocation = _lightingShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+                var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+                GL.EnableVertexAttribArray(texCoordLocation);
+                GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+            }
 
-            var normalLocation = _lightingShader.GetAttribLocation("aNormal");
-            GL.EnableVertexAttribArray(normalLocation);
-            GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
+            {
+                _vaoLamp = GL.GenVertexArray();
+                GL.BindVertexArray(_vaoLamp);
 
-            var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
-            GL.EnableVertexAttribArray(texCoordLocation);
-            GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
+                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                GL.EnableVertexAttribArray(positionLocation);
+                GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            }
 
-            _vaoLamp = GL.GenVertexArray();
-            GL.BindVertexArray(_vaoLamp);
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
-
-            positionLocation = _lampShader.GetAttribLocation("aPos");
-            GL.EnableVertexAttribArray(positionLocation);
-            GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
+            _diffuseMap = Texture.LoadFromFile("Resources/container2.png");
+            _specularMap = Texture.LoadFromFile("Resources/container2_specular.png");
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -160,7 +161,7 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _diffuseMap.Use();
+            _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
             _lightingShader.Use();
 
@@ -207,15 +208,14 @@ namespace LearnOpenTK
             _lightingShader.SetFloat("spotLight.constant", 1.0f);
             _lightingShader.SetFloat("spotLight.linear", 0.09f);
             _lightingShader.SetFloat("spotLight.quadratic", 0.032f);
-            _lightingShader.SetFloat("spotLight.cutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5f)));
-            _lightingShader.SetFloat("spotLight.outerCutOff", (float)Math.Cos(MathHelper.DegreesToRadians(12.5f)));
+            _lightingShader.SetFloat("spotLight.cutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+            _lightingShader.SetFloat("spotLight.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
 
             for (int i = 0; i < _cubePositions.Length; i++)
             {
-                Matrix4 model = Matrix4.Identity;
-                model *= Matrix4.CreateTranslation(_cubePositions[i]);
+                Matrix4 model = Matrix4.CreateTranslation(_cubePositions[i]);
                 float angle = 20.0f * i;
-                model *= Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
+                model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
                 _lightingShader.SetMatrix4("model", model);
 
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
@@ -230,9 +230,8 @@ namespace LearnOpenTK
             // We use a loop to draw all the lights at the proper position
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
-                Matrix4 lampMatrix = Matrix4.Identity;
-                lampMatrix *= Matrix4.CreateScale(0.2f);
-                lampMatrix *= Matrix4.CreateTranslation(_pointLightPositions[i]);
+                Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
+                lampMatrix = lampMatrix * Matrix4.CreateTranslation(_pointLightPositions[i]);
 
                 _lampShader.SetMatrix4("model", lampMatrix);
 
