@@ -91,7 +91,7 @@ namespace LearnOpenTK
             // While this makes them incredibly flexible, it means we have to specify how that data will be mapped to the shader's input variables.
 
             // To do this, we use the GL.VertexAttribPointer function
-            // This function has too jobs, to tell opengl about the format of the data, but also to associate the current array buffer with the VAO.
+            // This function has two jobs, to tell opengl about the format of the data, but also to associate the current array buffer with the VAO.
             // This means that after this call, we have setup this attribute to source data from the current array buffer and interpret it in the way we specified.
             // Arguments:
             //   Location of the input variable in the shader. the layout(location = 0) line in the vertex shader explicitly sets it to 0.
