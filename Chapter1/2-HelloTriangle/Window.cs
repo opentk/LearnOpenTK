@@ -44,6 +44,8 @@ namespace LearnOpenTK
         // Now, we start initializing OpenGL.
         protected override void OnLoad()
         {
+            base.OnLoad();
+
             // This will be the color of the background after we clear it, in normalized colors.
             // Normalized colors are mapped on a range of 0.0 to 1.0, with 0.0 representing black, and 1.0 representing
             // the largest possible value for that channel.
@@ -119,13 +121,13 @@ namespace LearnOpenTK
             _shader.Use();
 
             // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
-
-            base.OnLoad();
         }
 
         // Now that initialization is done, let's create our render loop.
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             // This clears the image, using what you set as GL.ClearColor earlier.
             // OpenGL provides several different types of data that can be rendered.
             // You can clear multiple buffers by using multiple bit flags.
@@ -160,33 +162,46 @@ namespace LearnOpenTK
             SwapBuffers();
 
             // And that's all you have to do for rendering! You should now see a yellow triangle on a black screen.
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            base.OnUpdateFrame(e);
+
             var input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
-
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
+            base.OnResize(e);
+
             // When the window gets resized, we have to call GL.Viewport to resize OpenGL's viewport to match the new size.
             // If we don't, the NDC will no longer be correct.
             GL.Viewport(0, 0, Size.X, Size.Y);
-            base.OnResize(e);
         }
 
-        // Now, for cleanup. This isn't technically necessary since C# and OpenGL will clean up all resources automatically when
-        // the program closes, but it's very important to know how anyway.
+        // Now, for cleanup.
+        // You should generally not do cleanup of opengl resources when exiting an application
+        // as that is handled by the driver and operating system when the application exits.
+        // 
+        // There are reasons to delete opengl resources but exiting the application is not one of them.
+        // This is provided here as a reference on how resoruce cleanup is done in opengl but
+        // should not be done when exiting the application.
+        //
+        // Places where cleanup is appropriate would be to delete textures that are no
+        // longer used for whatever reason (e.g. a new scene is loaded that doesn't use a texture).
+        // This would free up video ram (VRAM) that can be used for new textures.
+        //
+        // The comming chapters will not have this code.
         protected override void OnUnload()
         {
+            base.OnUnload();
+
             // Unbind all the resources by binding the targets to 0/null.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -197,7 +212,6 @@ namespace LearnOpenTK
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);
-            base.OnUnload();
         }
     }
 }

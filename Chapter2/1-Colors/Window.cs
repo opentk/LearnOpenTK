@@ -94,6 +94,8 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
+            base.OnLoad();
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
@@ -132,12 +134,12 @@ namespace LearnOpenTK
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             CursorGrabbed = true;
-
-            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Draw the model/cube with the lighting shader
@@ -170,12 +172,12 @@ namespace LearnOpenTK
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             SwapBuffers();
-
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            base.OnUpdateFrame(e);
+
             if (!IsFocused)
             {
                 return;
@@ -232,37 +234,21 @@ namespace LearnOpenTK
                 _camera.Yaw += deltaX * sensitivity;
                 _camera.Pitch -= deltaY * sensitivity;
             }
-
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            _camera.Fov -= e.OffsetY;
             base.OnMouseWheel(e);
+
+            _camera.Fov -= e.OffsetY;
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
+            base.OnResize(e);
+
             GL.Viewport(0, 0, Size.X, Size.Y);
             _camera.AspectRatio = Size.X / (float)Size.Y;
-            base.OnResize(e);
-        }
-
-        protected override void OnUnload()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindVertexArray(0);
-            GL.UseProgram(0);
-
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteVertexArray(_vaoModel);
-            GL.DeleteVertexArray(_vaoLamp);
-
-            GL.DeleteProgram(_lampShader.Handle);
-            GL.DeleteProgram(_lightingShader.Handle);
-
-            base.OnUnload();
         }
     }
 }
