@@ -26,7 +26,7 @@ namespace LearnOpenTK.Common
         private float _yaw = -MathHelper.PiOver2; // Without this you would be started rotated 90 degrees right
 
         // The field of view of the camera (radians)
-        private float _fov = MathHelper.PiOver2;
+        private float _fov = MathHelper.PiOver4;
 
         public Camera(Vector3 position, float aspectRatio)
         {
