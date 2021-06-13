@@ -26,16 +26,16 @@ namespace LearnOpenTK.Common
             // The fragment shader is responsible for then converting the vertices to "fragments", which represent all the data OpenGL needs to draw a pixel.
             //   The fragment shader is what we'll be using the most here.
 
-            // Load vertex shader and compile.
+            // Load vertex shader and compile
             var shaderSource = File.ReadAllText(vertPath);
 
             // GL.CreateShader will create an empty shader (obviously). The ShaderType enum denotes which type of shader will be created.
             var vertexShader = GL.CreateShader(ShaderType.VertexShader);
 
-            // Now, bind the GLSL source code...
+            // Now, bind the GLSL source code
             GL.ShaderSource(vertexShader, shaderSource);
 
-            // And then compile.
+            // And then compile
             CompileShader(vertexShader);
 
             // We do the same for the fragment shader.

@@ -90,7 +90,7 @@ namespace LearnOpenTK
             // You can alternatively use this overload of the same function.
             // GL.Uniform4(vertexColorLocation, new OpenTK.Mathematics.Color4(0f, greenValue, 0f, 0f));
 
-            // Bind the VAO.
+            // Bind the VAO
             GL.BindVertexArray(_vertexArrayObject);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);

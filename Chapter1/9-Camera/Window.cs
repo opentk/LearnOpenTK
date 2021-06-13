@@ -138,7 +138,7 @@ namespace LearnOpenTK
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            if (!IsFocused) // Check to see if the window is focused.
+            if (!IsFocused) // Check to see if the window is focused
             {
                 return;
             }
@@ -179,7 +179,7 @@ namespace LearnOpenTK
                 _camera.Position -= _camera.Up * cameraSpeed * (float)e.Time; // Down
             }
 
-            // Get the mouse state.
+            // Get the mouse state
             var mouse = MouseState;
 
             if (_firstMove) // This bool variable is initially set to true.
@@ -189,14 +189,14 @@ namespace LearnOpenTK
             }
             else
             {
-                // Calculate the offset of the mouse position.
+                // Calculate the offset of the mouse position
                 var deltaX = mouse.X - _lastPos.X;
                 var deltaY = mouse.Y - _lastPos.Y;
                 _lastPos = new Vector2(mouse.X, mouse.Y);
 
-                // Apply the camera pitch and yaw (we clamp the pitch in the camera class).
+                // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
                 _camera.Yaw += deltaX * sensitivity;
-                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top.
+                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
 
             base.OnUpdateFrame(e);

@@ -40,7 +40,7 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        // Add a handle for the EBO.
+        // Add a handle for the EBO
         private int _elementBufferObject;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
