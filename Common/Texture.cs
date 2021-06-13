@@ -12,16 +12,16 @@ namespace LearnOpenTK.Common
 
         public static Texture LoadFromFile(string path)
         {
-            // Generate handle
+            // Generate handle.
             int handle = GL.GenTexture();
 
-            // Bind the handle
+            // Bind the handle.
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, handle);
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
-            // Load the image
+            // Load the image.
             using (var image = new Bitmap(path))
             {
                 // First, we get our pixels from the bitmap we loaded.
@@ -37,7 +37,7 @@ namespace LearnOpenTK.Common
                     ImageLockMode.ReadOnly,
                     System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-                // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D
+                // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D.
                 // Arguments:
                 //   The type of texture we're generating. There are various different types of textures, but the only one we need right now is Texture2D.
                 //   Level of detail. We can use this to start from a smaller mipmap (if we want), but we don't need to do that, so leave it at 0.

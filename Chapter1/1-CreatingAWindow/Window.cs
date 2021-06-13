@@ -9,7 +9,7 @@ namespace LearnOpenTK
     // OpenToolkit allows for several functions to be overriden to extend functionality; this is how we'll be writing code.
     public class Window : GameWindow
     {
-        // A simple constructor to let us set properties like window size, title, FPS, etc. on the window
+        // A simple constructor to let us set properties like window size, title, FPS, etc. on the window.
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
         {

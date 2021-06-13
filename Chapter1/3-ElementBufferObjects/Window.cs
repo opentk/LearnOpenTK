@@ -40,7 +40,7 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        // Add a handle for the EBO
+        // Add a handle for the EBO.
         private int _elementBufferObject;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -86,7 +86,7 @@ namespace LearnOpenTK
 
             _shader.Use();
 
-            // Because ElementArrayObject is a property of the currently bound VAO
+            // Because ElementArrayObject is a property of the currently bound VAO,
             // the buffer you will find in the ElementArrayBuffer will change with the currently bound VAO.
             GL.BindVertexArray(_vertexArrayObject);
 

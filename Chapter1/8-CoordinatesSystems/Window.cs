@@ -107,7 +107,7 @@ namespace LearnOpenTK
             //   Far-clipping. Any vertices farther away from the camera than this value will be clipped.
             _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float) Size.Y, 0.1f, 100.0f);
 
-            // Now, head over to OnRenderFrame to see how we setup the model matrix
+            // Now, head over to OnRenderFrame to see how we setup the model matrix.
 
             base.OnLoad();
         }
@@ -117,7 +117,7 @@ namespace LearnOpenTK
             // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
             _time += 4.0 * e.Time;
 
-            // We clear the depth buffer in addition to the color buffer
+            // We clear the depth buffer in addition to the color buffer.
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             GL.BindVertexArray(_vertexArrayObject);
@@ -130,11 +130,11 @@ namespace LearnOpenTK
             var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
 
             // Then, we pass all of these matrices to the vertex shader.
-            // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects
+            // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects.
 
             // IMPORTANT: OpenTK's matrix types are transposed from what OpenGL would expect - rows and columns are reversed.
             // They are then transposed properly when passed to the shader. 
-            // This means that we retain the same multiplication order in both opentk c# code and glsl shader code.
+            // This means that we retain the same multiplication order in both OpenTK c# code and GLSL shader code.
             // If you pass the individual matrices to the shader and multiply there, you have to do in the order "model * view * projection".
             // You can think like this: first apply the modelToWorld (aka model) matrix, then apply the worldToView (aka view) matrix, 
             // and finally apply the viewToProjectedSpace (aka projection) matrix.

@@ -2,7 +2,7 @@
 
 layout(location = 0) in vec3 aPosition;
 
-// We add another input variable for the texture coordinates
+// We add another input variable for the texture coordinates.
 
 layout(location = 1) in vec2 aTexCoord;
 

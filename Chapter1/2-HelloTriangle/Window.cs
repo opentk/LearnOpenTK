@@ -137,10 +137,10 @@ namespace LearnOpenTK
             // binding the VAO,
             // and then calling an OpenGL function to render.
 
-            // Bind the shader
+            // Bind the shader.
             _shader.Use();
 
-            // Bind the VAO
+            // Bind the VAO.
             GL.BindVertexArray(_vertexArrayObject);
 
             // And then call our drawing function.
