@@ -86,7 +86,7 @@ namespace LearnOpenTK
 
             _shader.Use();
 
-            // Because ElementArrayObject is a property of the currently bound VAO
+            // Because ElementArrayObject is a property of the currently bound VAO,
             // the buffer you will find in the ElementArrayBuffer will change with the currently bound VAO.
             GL.BindVertexArray(_vertexArrayObject);
 

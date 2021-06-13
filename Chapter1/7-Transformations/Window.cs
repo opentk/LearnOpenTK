@@ -65,7 +65,7 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            // shader.frag has been modified yet again, take a look at it as well.
+            // shader.vert has been modified, take a look at it as well.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _shader.Use();
 
@@ -104,7 +104,7 @@ namespace LearnOpenTK
             // If you want, you can just pass the identity matrix to the shader, though it won't affect the vertices at all.
 
             // A fact to note about matrices is that the order of multiplications matter. "matrixA * matrixB" and "matrixB * matrixA" mean different things.
-            // A VERY important thing to know is that opentk matrices are so called row-major. We won't go into the full details here, but here is a good place to read more about it
+            // A VERY important thing to know is that OpenTK matrices are so called row-major. We won't go into the full details here, but here is a good place to read more about it:
             // https://www.scratchapixel.com/lessons/mathematics-physics-for-computer-graphics/geometry/row-major-vs-column-major-vector
             // What it means for us is that we can think of matrix multiplication as going left to right.
             // So "rotate * translate" means rotate (around the origin) first and then translate, as opposed to "translate * rotate" which means translate and then rotate (around the origin).
@@ -126,10 +126,10 @@ namespace LearnOpenTK
             _shader.Use();
 
             // Now that the matrix is finished, pass it to the vertex shader.
-            // Go over to shader.vert to see how we finally apply this to the vertices
+            // Go over to shader.vert to see how we finally apply this to the vertices.
             _shader.SetMatrix4("transform", transform);
 
-            // And that's it for now! In the next tutorial, I'll show you how to setup a full coordinates system.
+            // And that's it for now! In the next tutorial, we'll see how to setup a full coordinates system.
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
