@@ -74,13 +74,13 @@ namespace LearnOpenTK
             // First texture goes in texture unit 0.
             _texture.Use(TextureUnit.Texture0);
 
-            // This is helpful because System.Drawing reads the pixels differently than OpenGL expects
+            // This is helpful because System.Drawing reads the pixels differently than OpenGL expects.
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             // Then, the second goes in texture unit 1.
             _texture2.Use(TextureUnit.Texture1);
 
             // Next, we must setup the samplers in the shaders to use the right textures.
-            // The int we send to the uniform is which texture unit the sampler should use.
+            // The int we send to the uniform indicates which texture unit the sampler should use.
             _shader.SetInt("texture0", 0);
             _shader.SetInt("texture1", 1);
         }

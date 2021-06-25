@@ -8,9 +8,9 @@ using System.Diagnostics;
 
 namespace LearnOpenTK
 
-{   // Here we'll be elaborating on what shaders can do from the Hello World project we worked on before
+{   // Here we'll be elaborating on what shaders can do from the Hello World project we worked on before.
     // Specifically we'll be showing how shaders deal with input and output from the main program 
-    // And between each other
+    // and between each other.
     public class Window : GameWindow
     {
 
@@ -49,10 +49,10 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            // Vertex attributes are the we send input into the vertex shader from the main program 
-            // So here we're checking to see how many vertex attributes our hardware can handle
-            // OpenGL at minimum supports 16 vertex attributes, This only needs to be called 
-            // When your intensive attribute work and need to know exactly how many are available to you
+            // Vertex attributes are the data we send as input into the vertex shader from the main program.
+            // So here we're checking to see how many vertex attributes our hardware can handle.
+            // OpenGL at minimum supports 16 vertex attributes. This only needs to be called 
+            // when your intensive attribute work and need to know exactly how many are available to you.
             GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
             Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 

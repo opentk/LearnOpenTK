@@ -9,8 +9,8 @@ namespace LearnOpenTK
     public class Window : GameWindow
     {
         // Because we're adding a texture, we modify the vertex array to include texture coordinates.
-        // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right
-        // The new layout is three floats to create a vertex, then two floats to create the coordinates
+        // Texture coordinates range from 0.0 to 1.0, with (0.0, 0.0) representing the bottom left, and (1.0, 1.0) representing the top right.
+        // The new layout is three floats to create a vertex, then two floats to create the coordinates.
         private readonly float[] _vertices =
         {
             // Position         Texture coordinates
@@ -34,7 +34,7 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        // For documentation on this, check Texture.cs
+        // For documentation on this, check Texture.cs.
         private Texture _texture;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -64,15 +64,15 @@ namespace LearnOpenTK
             _shader.Use();
 
             // Because there's now 5 floats between the start of the first vertex and the start of the second,
-            // we modify this from 3 * sizeof(float) to 5 * sizeof(float).
+            // we modify the stride from 3 * sizeof(float) to 5 * sizeof(float).
             // This will now pass the new vertex array to the buffer.
             var vertexLocation = _shader.GetAttribLocation("aPosition");
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
             // Next, we also setup texture coordinates. It works in much the same way.
-            // We add an offset of 3, since the first vertex coordinate comes after the first vertex
-            // and change the amount of data to 2 because there's only 2 floats for vertex coordinates
+            // We add an offset of 3, since the texture coordinates comes after the position data.
+            // We also change the amount of data to 2 because there's only 2 floats for texture coordinates.
             var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));

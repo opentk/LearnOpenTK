@@ -8,15 +8,15 @@ using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
 {
-    // We now have a rotating rectangle but how can we make the view move based on the users input
+    // We now have a rotating rectangle but how can we make the view move based on the users input?
     // In this tutorial we will take a look at how you could implement a camera class
-    // and start responding to user input
-    // You can move to the camera class to see a lot of the new code added
-    // Otherwise you can move to Load to see how the camera is initialized
+    // and start responding to user input.
+    // You can move to the camera class to see a lot of the new code added.
+    // Otherwise you can move to Load to see how the camera is initialized.
 
-    // In reality we can't move the camera but we actually move the rectangle
-    // I will explain this more in depth in the web version, however it pretty much gives us the same result
-    // as if i could move the view
+    // In reality, we can't move the camera but we actually move the rectangle.
+    // This will explained more in depth in the web version, however it pretty much gives us the same result
+    // as if the view itself was moved.
     public class Window : GameWindow
     {
         private readonly float[] _vertices =
@@ -46,12 +46,12 @@ namespace LearnOpenTK
 
         private Texture _texture2;
 
-        // I have removed the view and projection matrices as we dont need them here anymore
-        // They can now be found in the new camera class
+        // The view and projection matrices have been removed as we don't need them here anymore.
+        // They can now be found in the new camera class.
 
-        // We need an instance of the new camera class so it can manage the view and projection matrix code
-        // We also need a boolean set to true to detect whether or not the mouse has been moved for the first time
-        // Finally we add the last position of the mouse so we can calculate the mouse offset easily
+        // We need an instance of the new camera class so it can manage the view and projection matrix code.
+        // We also need a boolean set to true to detect whether or not the mouse has been moved for the first time.
+        // Finally, we add the last position of the mouse so we can calculate the mouse offset easily.
         private Camera _camera;
 
         private bool _firstMove = true;
@@ -104,11 +104,11 @@ namespace LearnOpenTK
             _shader.SetInt("texture0", 0);
             _shader.SetInt("texture1", 1);
 
-            // We initialize the camera so that it is 3 units back from where the rectangle is
-            // and give it the proper aspect ratio
+            // We initialize the camera so that it is 3 units back from where the rectangle is.
+            // We also give it the proper aspect ratio.
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
-            // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement
+            // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
             CursorGrabbed = true;
         }
 
@@ -140,7 +140,7 @@ namespace LearnOpenTK
         {
             base.OnUpdateFrame(e);
 
-            if (!IsFocused) // check to see if the window is focused
+            if (!IsFocused) // Check to see if the window is focused
             {
                 return;
             }
@@ -184,7 +184,7 @@ namespace LearnOpenTK
             // Get the mouse state
             var mouse = MouseState;
 
-            if (_firstMove) // this bool variable is initially set to true
+            if (_firstMove) // This bool variable is initially set to true.
             {
                 _lastPos = new Vector2(mouse.X, mouse.Y);
                 _firstMove = false;
@@ -198,12 +198,12 @@ namespace LearnOpenTK
 
                 // Apply the camera pitch and yaw (we clamp the pitch in the camera class)
                 _camera.Yaw += deltaX * sensitivity;
-                _camera.Pitch -= deltaY * sensitivity; // reversed since y-coordinates range from bottom to top
+                _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
         }
 
-        // In the mouse wheel function we manage all the zooming of the camera
-        // this is simply done by changing the FOV of the camera
+        // In the mouse wheel function, we manage all the zooming of the camera.
+        // This is simply done by changing the FOV of the camera.
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
             base.OnMouseWheel(e);
@@ -216,7 +216,7 @@ namespace LearnOpenTK
             base.OnResize(e);
 
             GL.Viewport(0, 0, Size.X, Size.Y);
-            // We need to update the aspect ratio once the window has been resized
+            // We need to update the aspect ratio once the window has been resized.
             _camera.AspectRatio = Size.X / (float)Size.Y;
         }
     }

@@ -8,14 +8,14 @@ using System.Diagnostics;
 
 namespace LearnOpenTK
 {
-    // In this project we will be assigning 3 colors to the triangle, one for vertex.
+    // In this project, we will be assigning 3 colors to the triangle, one for each vertex.
     // The output will be an interpolated value based on the distance from each vertex.
-    // If you want to look more into it the in-between step is called a Rasterizer.
+    // If you want to look more into it, the in-between step is called a Rasterizer.
     public class Window : GameWindow
     {
 
-        // We're assigning three different colors at the asscoiate vertex position
-        // Blue for the top, green for the bottom left and red for the bottom right
+        // We're assigning three different colors at the asscoiate vertex position:
+        // blue for the top, green for the bottom left and red for the bottom right.
         private readonly float[] _vertices =
         {
              // positions        // colors
@@ -50,16 +50,18 @@ namespace LearnOpenTK
             _vertexArrayObject = GL.GenVertexArray();
             GL.BindVertexArray(_vertexArrayObject);
 
-            // We now need to account for 3 color values in the stride variable, so it has 
-            // Gone from 3 floats to 6 floats
+            // Just like before, we create a pointer for the 3 position components of our vertices.
+            // The only difference here is that we need to account for the 3 color values in the stride variable.
+            // Therefore, the stride contains the size of 6 floats instead of 3.
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             GL.EnableVertexAttribArray(0);
 
-            // We create a new pointer for the color values much like the previous pointer we assign 6 
-            // In the stride value on top of which need to correctly set the offset to get the color values 
-            // we do by giving the amount of values there which is 3 and multiple them by their size
+            // We create a new pointer for the color values.
+            // Much like the previous pointer, we assign 6 in the stride value.
+            // We also need to correctly set the offset to get the color values.
+            // The color data starts after the position data, so the offset is the size of 3 floats.
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
-            // We then enable color attribute (location=1) so it is availble to the shader
+            // We then enable color attribute (location=1) so it is available to the shader.
             GL.EnableVertexAttribArray(1);
 
             GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);

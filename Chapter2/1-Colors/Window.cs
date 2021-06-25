@@ -68,9 +68,9 @@ namespace LearnOpenTK
 
         private int _vertexBufferObject;
 
-        // I renamed the vertex array object since we now want to VAO's one for the model (the big cube for testing light shaders),
+        // I renamed the vertex array object since we now want two VAO's one for the model (the big cube for testing light shaders),
         // and one for the lamp so we can see where the light source comes from.
-        // In an actual application you would probably either dont draw the lamp at all or draw it with a model of a lamp of some sort.
+        // In an actual application you would probably either not draw the lamp at all or draw it with a model of a lamp of some sort.
         private int _vaoModel;
 
         private int _vaoLamp;
