@@ -200,8 +200,6 @@ namespace LearnOpenTK
         // The comming chapters will not have this code.
         protected override void OnUnload()
         {
-            base.OnUnload();
-
             // Unbind all the resources by binding the targets to 0/null.
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             GL.BindVertexArray(0);
@@ -212,6 +210,8 @@ namespace LearnOpenTK
             GL.DeleteVertexArray(_vertexArrayObject);
 
             GL.DeleteProgram(_shader.Handle);
+
+            base.OnUnload();
         }
     }
 }
