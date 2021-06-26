@@ -42,6 +42,8 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
+            base.OnLoad();
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             _vertexArrayObject = GL.GenVertexArray();
@@ -81,12 +83,12 @@ namespace LearnOpenTK
             // The int we send to the uniform indicates which texture unit the sampler should use.
             _shader.SetInt("texture0", 0);
             _shader.SetInt("texture1", 1);
-
-            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             GL.BindVertexArray(_vertexArrayObject);
@@ -98,41 +100,25 @@ namespace LearnOpenTK
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
-
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            base.OnUpdateFrame(e);
+
             var input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
-
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Size.X, Size.Y);
             base.OnResize(e);
-        }
 
-        protected override void OnUnload()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindVertexArray(0);
-            GL.UseProgram(0);
-
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteVertexArray(_vertexArrayObject);
-
-            GL.DeleteProgram(_shader.Handle);
-            GL.DeleteTexture(_texture.Handle);
-            GL.DeleteTexture(_texture2.Handle);
-            base.OnUnload();
+            GL.Viewport(0, 0, Size.X, Size.Y);
         }
     }
 }

@@ -67,6 +67,8 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
+            base.OnLoad();
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             GL.Enable(EnableCap.DepthTest);
@@ -108,12 +110,12 @@ namespace LearnOpenTK
 
             // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
             CursorGrabbed = true;
-
-            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             _time += 4.0 * e.Time;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -132,12 +134,12 @@ namespace LearnOpenTK
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
-
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            base.OnUpdateFrame(e);
+
             if (!IsFocused) // Check to see if the window is focused
             {
                 return;
@@ -198,40 +200,24 @@ namespace LearnOpenTK
                 _camera.Yaw += deltaX * sensitivity;
                 _camera.Pitch -= deltaY * sensitivity; // Reversed since y-coordinates range from bottom to top
             }
-
-            base.OnUpdateFrame(e);
         }
 
         // In the mouse wheel function, we manage all the zooming of the camera.
         // This is simply done by changing the FOV of the camera.
         protected override void OnMouseWheel(MouseWheelEventArgs e)
         {
-            _camera.Fov -= e.OffsetY;
             base.OnMouseWheel(e);
+
+            _camera.Fov -= e.OffsetY;
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
+            base.OnResize(e);
+
             GL.Viewport(0, 0, Size.X, Size.Y);
             // We need to update the aspect ratio once the window has been resized.
             _camera.AspectRatio = Size.X / (float)Size.Y;
-            base.OnResize(e);
-        }
-
-        protected override void OnUnload()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindVertexArray(0);
-            GL.UseProgram(0);
-
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteVertexArray(_vertexArrayObject);
-
-            GL.DeleteProgram(_shader.Handle);
-            GL.DeleteTexture(_texture.Handle);
-            GL.DeleteTexture(_texture2.Handle);
-
-            base.OnUnload();
         }
     }
 }

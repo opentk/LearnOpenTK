@@ -57,6 +57,8 @@ namespace LearnOpenTK
 
         protected override void OnLoad()
         {
+            base.OnLoad();
+
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             // We enable depth testing here. If you try to draw something more complex than one plane without this,
@@ -108,12 +110,12 @@ namespace LearnOpenTK
             _projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.DegreesToRadians(45f), Size.X / (float) Size.Y, 0.1f, 100.0f);
 
             // Now, head over to OnRenderFrame to see how we setup the model matrix.
-
-            base.OnLoad();
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            base.OnRenderFrame(e);
+
             // We add the time elapsed since last frame, times 4.0 to speed up animation, to the total amount of time passed.
             _time += 4.0 * e.Time;
 
@@ -145,43 +147,25 @@ namespace LearnOpenTK
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
             SwapBuffers();
-
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            base.OnUpdateFrame(e);
+
             var input = KeyboardState;
 
             if (input.IsKeyDown(Keys.Escape))
             {
                 Close();
             }
-
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
-            GL.Viewport(0, 0, Size.X, Size.Y);
             base.OnResize(e);
-        }
 
-        protected override void OnUnload()
-        {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.BindVertexArray(0);
-            GL.UseProgram(0);
-
-            GL.DeleteBuffer(_vertexBufferObject);
-            GL.DeleteBuffer(_elementBufferObject);
-            GL.DeleteVertexArray(_vertexArrayObject);
-
-            GL.DeleteProgram(_shader.Handle);
-            GL.DeleteTexture(_texture.Handle);
-            GL.DeleteTexture(_texture2.Handle);
-
-            base.OnUnload();
+            GL.Viewport(0, 0, Size.X, Size.Y);
         }
     }
 }
