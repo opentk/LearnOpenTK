@@ -24,6 +24,10 @@ namespace LearnOpenTK.Common
             // Load the image
             using (var image = new Bitmap(path))
             {
+                // Our Bitmap loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
+                // This will correct that, making the texture display properly.
+                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
                 // First, we get our pixels from the bitmap we loaded.
                 // Arguments:
                 //   The pixel area we want. Typically, you want to leave it as (0,0) to (width,height), but you can
