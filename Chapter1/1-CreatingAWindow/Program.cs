@@ -8,7 +8,7 @@ namespace LearnOpenTK
     {
         private static void Main()
         {
-            var nativeWindowSettings = new NativeWindowSettings()
+            NativeWindowSettings nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
                 Title = "LearnOpenTK - Creating a Window",
@@ -17,7 +17,7 @@ namespace LearnOpenTK
             };
 
             // To create a new window, create a class that extends GameWindow, then call Run() on it.
-            using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))
+            using (GameWindow window = new GameWindow(GameWindowSettings.Default, nativeWindowSettings))
             {
                 window.Run();
             }
