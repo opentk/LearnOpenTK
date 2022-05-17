@@ -158,7 +158,7 @@ namespace LearnOpenTK
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             // Draw the lamp, this is mostly the same as for the model cube
-            GL.BindVertexArray(_vaoModel);
+            GL.BindVertexArray(_vaoLamp);
 
             _lampShader.Use();
 
