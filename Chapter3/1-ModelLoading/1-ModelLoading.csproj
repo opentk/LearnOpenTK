@@ -4,6 +4,8 @@
     <RootNamespace>LearnOpenTK</RootNamespace>
     <AssemblyName>LearnOpenTK</AssemblyName>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>
