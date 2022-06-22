@@ -9,28 +9,23 @@ using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using TextureWrapMode = OpenTK.Graphics.OpenGL4.TextureWrapMode;
 using AssimpMesh = Assimp.Mesh;
 using LearnOpenTK.Common;
+using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace LearnOpenTK.Common
 {
     public static class Extensions
     {
-        public static Vector4 ConvertAssimpVector4(this Vector3D AssimpVector)
+        public static Vector3 ConvertAssimpVector3(this Vector3D AssimpVector)
         {
-            Vector4 OpenTkVector;
-            OpenTkVector.X = AssimpVector.X;
-            OpenTkVector.Y = AssimpVector.Y;
-            OpenTkVector.Z = AssimpVector.Z;
-            OpenTkVector.W = 1;
-            return OpenTkVector;
+            // Reinterpret the assimp vector into a OpenTK vector.
+            return Unsafe.As<Vector3D, Vector3>(ref AssimpVector);
         }
+
         public static Matrix4 ConvertAssimpMatrix4(this Matrix4x4 AssimpMatrix)
         {
-            return new Matrix4(
-                    AssimpMatrix.A1, AssimpMatrix.A2, AssimpMatrix.A3, AssimpMatrix.A4,
-                    AssimpMatrix.B1, AssimpMatrix.B2, AssimpMatrix.B3, AssimpMatrix.B4,
-                    AssimpMatrix.C1, AssimpMatrix.C2, AssimpMatrix.C3, AssimpMatrix.C4,
-                    AssimpMatrix.D1, AssimpMatrix.D2, AssimpMatrix.D3, AssimpMatrix.D4
-                    );
+            // Take the row-major assimp matrix and convert it to a row-major OpenTK matrix.
+            return Matrix4.Transpose(Unsafe.As<Matrix4x4, Matrix4>(ref AssimpMatrix));
         }
     }
 
@@ -92,7 +87,7 @@ namespace LearnOpenTK.Common
             //Set the scale of the model
             float scale = 1/200.0f;
             Matrix4 scalingMatrix = Matrix4.CreateScale(scale);
-            //Matrix4x4 scalingMatrix = new Matrix4x4(scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, scale, 0, 0, 0, 0, 1);
+
             // process ASSIMP's root node recursively. We pass in the scaling matrix as the first transform
             ProcessNode(scene.RootNode, scene, scalingMatrix);
 
@@ -107,7 +102,7 @@ namespace LearnOpenTK.Common
         private void ProcessNode(Node node, Scene scene, Matrix4 parentTransform)
         {
             //Multiply the transform of each node by the node of the parent, this will place the meshes in the correct relative location
-            Matrix4 transform = parentTransform * node.Transform.ConvertAssimpMatrix4();
+            Matrix4 transform = node.Transform.ConvertAssimpMatrix4() * parentTransform;
 
             // process each mesh located at the current node
             for (int i = 0; i < node.MeshCount; i++)
@@ -131,22 +126,28 @@ namespace LearnOpenTK.Common
             List<Vertex> vertices = new List<Vertex>();
             List<int> indices = new List<int>();
 
+            // Calculate the inverse matrix once, so we don't need to do it for every vertex.
+            // This matrix in combination with Vector3.TransformNormalInverse is used to transform normal vectors.
+            Matrix4 inverseTransform = Matrix4.Invert(transform);
+            
             // walk through each of the mesh's vertices
             for (int i = 0; i < mesh.VertexCount; i++)
             {
                 Vertex vertex = new Vertex();
 
                 // positions
-                Vector4 position = mesh.Vertices[i].ConvertAssimpVector4();
-                Vector3 transformedPosition = new Vector3(transform * position);
+                Vector3 position = mesh.Vertices[i].ConvertAssimpVector3();
+                Vector3 transformedPosition = Vector3.TransformPosition(position, transform);
                 vertex.Position = transformedPosition;
+                
                 // normals
                 if (mesh.HasNormals)
                 {
-                    Vector4 normal = mesh.Normals[i].ConvertAssimpVector4();
-                    Vector3 transformedNormal = new Vector3(transform * normal);
+                    Vector3 normal = mesh.Normals[i].ConvertAssimpVector3();
+                    Vector3 transformedNormal = Vector3.TransformNormalInverse(normal, inverseTransform);
                     vertex.Normal = transformedNormal;
                 }
+
                 // texture coordinates
                 if (mesh.HasTextureCoords(0)) // does the mesh contain texture coordinates?
                 {
@@ -167,7 +168,9 @@ namespace LearnOpenTK.Common
                     indices.Add(face.Indices[j]);
             }
 
-            //Convert to array for fast memory access after inital load
+            // If we where targeting .net 5+ we could use
+            //   return new Mesh(CollectionsMarshal.AsSpan(vertices), CollectionsMarshal.AsSpan(indices));
+            // to avoid making a copy of all the vertex data.
             return new Mesh(vertices.ToArray(), indices.ToArray());
         }
     }

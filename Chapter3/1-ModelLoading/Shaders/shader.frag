@@ -1,8 +1,8 @@
 #version 330
 
-out vec4 outputColor;
-
 in vec2 TexCoords;
+
+out vec4 outputColor;
 
 uniform sampler2D texture0;
 
