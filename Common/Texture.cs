@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
+using StbImageSharp;
+using System.IO;
 
 namespace LearnOpenTK.Common
 {
@@ -21,25 +23,14 @@ namespace LearnOpenTK.Common
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
-            // Load the image
-            using (var image = new Bitmap(path))
+            // OpenGL has it's texture origin in the lower left corner instead of the top left corner,
+            // so we tell StbImageSharp to flip the image when loading.
+            StbImage.stbi_set_flip_vertically_on_load(1);
+            
+            // Here we open a stream to the file and pass it to StbImageSharp to load.
+            using (Stream stream = File.OpenRead(path))
             {
-                // Our Bitmap loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
-                // This will correct that, making the texture display properly.
-                image.RotateFlip(RotateFlipType.RotateNoneFlipY);
-
-                // First, we get our pixels from the bitmap we loaded.
-                // Arguments:
-                //   The pixel area we want. Typically, you want to leave it as (0,0) to (width,height), but you can
-                //   use other rectangles to get segments of textures, useful for things such as spritesheets.
-                //   The locking mode. Basically, how you want to use the pixels. Since we're passing them to OpenGL,
-                //   we only need ReadOnly.
-                //   Next is the pixel format we want our pixels to be in. In this case, ARGB will suffice.
-                //   We have to fully qualify the name because OpenTK also has an enum named PixelFormat.
-                var data = image.LockBits(
-                    new Rectangle(0, 0, image.Width, image.Height),
-                    ImageLockMode.ReadOnly,
-                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 
                 // Now that our pixels are prepared, it's time to generate a texture. We do this with GL.TexImage2D.
                 // Arguments:
@@ -52,17 +43,9 @@ namespace LearnOpenTK.Common
                 //   The format of the pixels, explained above. Since we loaded the pixels as ARGB earlier, we need to use BGRA.
                 //   Data type of the pixels.
                 //   And finally, the actual pixels.
-                GL.TexImage2D(TextureTarget.Texture2D,
-                    0,
-                    PixelInternalFormat.Rgba,
-                    image.Width,
-                    image.Height,
-                    0,
-                    PixelFormat.Bgra,
-                    PixelType.UnsignedByte,
-                    data.Scan0);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
             }
-
+            
             // Now that our texture is loaded, we can set a few settings to affect how the image appears on rendering.
 
             // First, we set the min and mag filter. These are used for when the texture is scaled down and up, respectively.

@@ -109,7 +109,7 @@ namespace LearnOpenTK
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
             // We make the mouse cursor invisible and captured so we can have proper FPS-camera movement.
-            CursorGrabbed = true;
+            CursorState = CursorState.Grabbed;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
