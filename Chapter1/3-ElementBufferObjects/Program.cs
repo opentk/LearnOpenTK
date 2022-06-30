@@ -1,4 +1,5 @@
 ﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
 namespace LearnOpenTK
@@ -11,6 +12,8 @@ namespace LearnOpenTK
             {
                 Size = new Vector2i(800, 600),
                 Title = "LearnOpenTK - Element Buffer Objects",
+                // This is needed to run on macos
+                Flags = ContextFlags.ForwardCompatible,
             };
 
             using (var window = new Window(GameWindowSettings.Default, nativeWindowSettings))

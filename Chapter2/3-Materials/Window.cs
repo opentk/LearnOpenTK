@@ -167,7 +167,7 @@ namespace LearnOpenTK
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
-            GL.BindVertexArray(_vaoModel);
+            GL.BindVertexArray(_vaoLamp);
 
             _lampShader.Use();
 
