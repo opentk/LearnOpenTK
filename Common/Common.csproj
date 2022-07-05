@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="AssimpNet" Version="4.1.0" />
-    <PackageReference Include="OpenTK" Version="4.4.0" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
+    <PackageReference Include="OpenTK" Version="4.7.4" />
+    <PackageReference Include="StbImageSharp" Version="2.27.11" />
   </ItemGroup>
 </Project>

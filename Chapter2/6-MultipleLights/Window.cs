@@ -152,7 +152,7 @@ namespace LearnOpenTK
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
-            CursorGrabbed = true;
+            CursorState = CursorState.Grabbed;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -211,7 +211,7 @@ namespace LearnOpenTK
             _lightingShader.SetFloat("spotLight.linear", 0.09f);
             _lightingShader.SetFloat("spotLight.quadratic", 0.032f);
             _lightingShader.SetFloat("spotLight.cutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
-            _lightingShader.SetFloat("spotLight.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+            _lightingShader.SetFloat("spotLight.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
 
             for (int i = 0; i < _cubePositions.Length; i++)
             {
