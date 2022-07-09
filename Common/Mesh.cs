@@ -1,4 +1,3 @@
-
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System;
@@ -34,13 +33,13 @@ namespace LearnOpenTK.Common
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, EBO);
             GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(int), ref MemoryMarshal.GetReference(indices), BufferUsageHint.StaticDraw);
 
-            // vertex positions
+            // Vertex positions
             GL.EnableVertexAttribArray(0);
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, Unsafe.SizeOf<Vertex>(), Marshal.OffsetOf<Vertex>(nameof(Vertex.Position)));
-            // vertex normals
+            // Vertex normals
             GL.EnableVertexAttribArray(1);
             GL.VertexAttribPointer(1, 3, VertexAttribPointerType.Float, false, Unsafe.SizeOf<Vertex>(), Marshal.OffsetOf<Vertex>(nameof(Vertex.Normal)));
-            // vertex texture coords
+            // Vertex texture coords
             GL.EnableVertexAttribArray(2);
             GL.VertexAttribPointer(2, 2, VertexAttribPointerType.Float, false, Unsafe.SizeOf<Vertex>(), Marshal.OffsetOf<Vertex>(nameof(Vertex.TexCoords)));
 
@@ -49,7 +48,7 @@ namespace LearnOpenTK.Common
 
         public void Draw()
         {
-            // draw mesh
+            // Draw mesh
             GL.BindVertexArray(VAO);
             GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, 0);
             GL.BindVertexArray(0);

@@ -1,16 +1,13 @@
-﻿using System;
-using LearnOpenTK.Common;
+﻿using LearnOpenTK.Common;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
-using System.Reflection;
 
 namespace LearnOpenTK
 {
-    // In this tutorial we focus on how to set up a scene with multiple lights, both of different types but also
-    // with several point lights
+    // In this tutorial we focus on importing a model using Assimp and then drawing the model in our scene.
     public class Window : GameWindow
     {
         private Model _backPack;
@@ -38,14 +35,16 @@ namespace LearnOpenTK
 
             GL.Enable(EnableCap.DepthTest);
 
-            //Backpack by Berk Gedik: https://sketchfab.com/3d-models/survival-guitar-backpack-low-poly-799f8c4511f84fab8c3f12887f7e6b36
+            // Backpack by Berk Gedik: https://sketchfab.com/3d-models/survival-guitar-backpack-low-poly-799f8c4511f84fab8c3f12887f7e6b36
+            // Here we import the backpack model object, texture and define our Shader.
+            // For now we are just using a simple shader which just samples the texture.
             _backPack = new Model("Resources/Backpack/Survival_BackPack_2.fbx");
-            _backPackShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
             _backPackTexture = Texture.LoadFromFile("Resources/Backpack/1001_albedo.jpg");
+            _backPackShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
-            CursorGrabbed = true;
+            CursorState = CursorState.Grabbed;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -54,6 +53,7 @@ namespace LearnOpenTK
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+            // First we setup the shader, including the texture uniform and then call the Draw() method on the imported model to draw all the contained meshes
             _backPackShader.Use();
             _backPackShader.SetMatrix4("model", Matrix4.Identity);
             _backPackShader.SetMatrix4("view", _camera.GetViewMatrix());
