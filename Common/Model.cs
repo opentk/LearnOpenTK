@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using Assimp;
 using AssimpMesh = Assimp.Mesh;
 using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace LearnOpenTK.Common
 {
@@ -11,7 +12,7 @@ namespace LearnOpenTK.Common
     {
         public static Vector3 ConvertAssimpVector3(this Vector3D AssimpVector)
         {
-            // Reinterpret the assimp vector into a OpenTK vector.
+            // Reinterpret the assimp vector into an OpenTK vector.
             return Unsafe.As<Vector3D, Vector3>(ref AssimpVector);
         }
 
@@ -32,32 +33,17 @@ namespace LearnOpenTK.Common
         // Check out http://assimp.sourceforge.net/main_features_formats.html for a complete list.
         public Model(string path)
         {
-            LoadModel(path);
-        }
-
-        // Draws the model, and thus all its meshes
-        public void Draw()
-        {
-            for (int i = 0; i < meshes.Count; i++)
-                meshes[i].Draw();
-        }
-
-        // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes list.
-
-        private void LoadModel(string path)
-        {
             // Create a new importer
             AssimpContext importer = new AssimpContext();
 
-            // We can define a logging callback function that receives messages during the ImportFile method and print them to the console.
+            // We can define a logging callback function that receives messages during the ImportFile method and print them to the debug console.
             // These give information about which step is happening in the import such as:
             //      "Info, T18696: Found a matching importer for this file format: Autodesk FBX Importer."
             // or it can give you important error information such as:
             //      "Error, T18696: FBX: no material assigned to mesh, setting default material"
-            // Note that in order to see the messages, you must temporarily change your project to be a console application or log the messages another way
             LogStream logstream = new LogStream((String msg, String userData) =>
             {
-                Console.WriteLine(msg);
+                Debug.WriteLine(msg);
             });
             logstream.Attach();
 
@@ -87,6 +73,13 @@ namespace LearnOpenTK.Common
             // Once we are done with the importer, we release the resources since all the data we need
             // is now contained within our list of processed meshes
             importer.Dispose();
+        }
+
+        // Draws the model, and thus all its meshes
+        public void Draw()
+        {
+            for (int i = 0; i < meshes.Count; i++)
+                meshes[i].Draw();
         }
         
         // Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
