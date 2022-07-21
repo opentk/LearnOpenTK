@@ -30,8 +30,8 @@ namespace LearnOpenTK
         private readonly uint[] _indices =
         {
             // Note that indices start at 0!
-            0, 1, 3, // The first triangle will be the bottom-right half of the triangle
-            1, 2, 3  // Then the second will be the top-right half of the triangle
+            0, 1, 3, // The first triangle will be the top-right half of the triangle
+            1, 2, 3  // Then the second will be the bottom-left half of the triangle
         };
 
         private int _vertexBufferObject;
