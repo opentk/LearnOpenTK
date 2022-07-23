@@ -26,7 +26,7 @@ namespace LearnOpenTK.Common
     public class Model
     {
         // Model data
-        private List<Mesh> meshes;
+        public List<Mesh> meshes;
 
         // Constructor, expects a filepath to a 3D model.
         // Assimp supports many common file formats including .fbx, .obj, .blend and many others
@@ -74,14 +74,7 @@ namespace LearnOpenTK.Common
             // is now contained within our list of processed meshes
             importer.Dispose();
         }
-
-        // Draws the model, and thus all its meshes
-        public void Draw()
-        {
-            for (int i = 0; i < meshes.Count; i++)
-                meshes[i].Draw();
-        }
-        
+                
         // Processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
         private void ProcessNode(Node node, Scene scene, Matrix4 parentTransform)
         {

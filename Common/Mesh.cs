@@ -45,13 +45,5 @@ namespace LearnOpenTK.Common
 
             GL.BindVertexArray(0);
         }
-
-        public void Draw()
-        {
-            // Draw mesh
-            GL.BindVertexArray(VAO);
-            GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, 0);
-            GL.BindVertexArray(0);
-        }
     }
 }

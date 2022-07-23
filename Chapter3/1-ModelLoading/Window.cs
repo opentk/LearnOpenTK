@@ -2,15 +2,15 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK
 {
     // In this tutorial we focus on importing a model using Assimp and then drawing the model in our scene.
     public class Window : GameWindow
     {
-        private Model _backPack;
+        private Model _backPackModel;
 
         private Shader _backPackShader;
 
@@ -38,7 +38,7 @@ namespace LearnOpenTK
             // Backpack by Berk Gedik: https://sketchfab.com/3d-models/survival-guitar-backpack-low-poly-799f8c4511f84fab8c3f12887f7e6b36
             // Here we import the backpack model object, texture and define our Shader.
             // For now we are just using a simple shader which just samples the texture.
-            _backPack = new Model("Resources/Backpack/Survival_BackPack_2.fbx");
+            _backPackModel = new Model("Resources/Backpack/Survival_BackPack_2.fbx");
             _backPackTexture = Texture.LoadFromFile("Resources/Backpack/1001_albedo.jpg");
             _backPackShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
 
@@ -60,7 +60,14 @@ namespace LearnOpenTK
             _backPackShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
             _backPackTexture.Use(TextureUnit.Texture0);
             _backPackShader.SetInt("texture0", 0);
-            _backPack.Draw();
+
+            // For each mesh in the model, bind the VAO (that contains all of the vertices and indices) and draw the triangles
+            foreach (Mesh mesh in _backPackModel.meshes)
+            {
+                GL.BindVertexArray(mesh.VAO);
+                GL.DrawElements(PrimitiveType.Triangles, mesh.indicesCount, DrawElementsType.UnsignedInt, 0);
+                GL.BindVertexArray(0);
+            }
 
             SwapBuffers();
         }
