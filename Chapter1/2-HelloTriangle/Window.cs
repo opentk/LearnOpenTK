@@ -186,18 +186,18 @@ namespace LearnOpenTK
         }
 
         // Now, for cleanup.
-        // You should generally not do cleanup of opengl resources when exiting an application
+        // You should generally not do cleanup of opengl resources when exiting an application,
         // as that is handled by the driver and operating system when the application exits.
         // 
-        // There are reasons to delete opengl resources but exiting the application is not one of them.
-        // This is provided here as a reference on how resoruce cleanup is done in opengl but
+        // There are reasons to delete opengl resources, but exiting the application is not one of them.
+        // This is provided here as a reference on how resource cleanup is done in opengl, but
         // should not be done when exiting the application.
         //
-        // Places where cleanup is appropriate would be to delete textures that are no
+        // Places where cleanup is appropriate would be: to delete textures that are no
         // longer used for whatever reason (e.g. a new scene is loaded that doesn't use a texture).
         // This would free up video ram (VRAM) that can be used for new textures.
         //
-        // The comming chapters will not have this code.
+        // The coming chapters will not have this code.
         protected override void OnUnload()
         {
             // Unbind all the resources by binding the targets to 0/null.
