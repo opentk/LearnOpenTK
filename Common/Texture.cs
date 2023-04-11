@@ -40,7 +40,7 @@ namespace LearnOpenTK.Common
                 //   Width of the image
                 //   Height of the image.
                 //   Border of the image. This must always be 0; it's a legacy parameter that Khronos never got rid of.
-                //   The format of the pixels, explained above. Since we loaded the pixels as ARGB earlier, we need to use BGRA.
+                //   The format of the pixels, explained above. Since we loaded the pixels as RGBA earlier, we need to use PixelFormat.Rgba.
                 //   Data type of the pixels.
                 //   And finally, the actual pixels.
                 GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
