@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AssimpNet" Version="4.1.0" />
     <PackageReference Include="OpenTK" Version="4.7.4" />
     <PackageReference Include="StbImageSharp" Version="2.27.11" />
   </ItemGroup>
