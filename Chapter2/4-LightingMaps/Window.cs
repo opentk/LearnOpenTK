@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Graphics.GL;
 
 namespace LearnOpenTK
 {
@@ -109,17 +110,17 @@ namespace LearnOpenTK
                 GL.BindVertexArray(_vaoModel);
 
                 // All of the vertex attributes have been updated to now have a stride of 8 float sizes.
-                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // The location of aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                var normalLocation = 1; // The location of aNormal
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
                 // The texture coords have now been added too, remember we only have 2 coordinates as the texture is 2d,
                 // so the size parameter should only be 2 for the texture coordinates.
-                var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+                var texCoordLocation = 2; // The location of aTexCoord
                 GL.EnableVertexAttribArray(texCoordLocation);
                 GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             }
@@ -130,7 +131,7 @@ namespace LearnOpenTK
 
                 // The lamp shader should have its stride updated aswell, however we dont actually
                 // use the texture coords for the lamp, so we dont need to add any extra attributes.
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // The location of aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             }
@@ -157,38 +158,40 @@ namespace LearnOpenTK
             // and the specular map as our 1st texture.
             _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
 
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
 
-            _lightingShader.SetVector3("viewPos", _camera.Position);
+            Matrix4 model = Matrix4.Identity;
+
+            GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+
+            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
 
             // Here we specify to the shaders what textures they should refer to when we want to get the positions.
-            _lightingShader.SetInt("material.diffuse", 0);
-            _lightingShader.SetInt("material.specular", 1);
-            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            _lightingShader.SetFloat("material.shininess", 32.0f);
+            GL.Uniform1(_lightingShader.UniformLocations["material.diffuse"], 0);
+            GL.Uniform1(_lightingShader.UniformLocations["material.specular"], 1);
+            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
 
-            _lightingShader.SetVector3("light.position", _lightPos);
-            _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
-            _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
-            _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
-
+            GL.Uniform3(_lightingShader.UniformLocations["light.position"], _lightPos);
+            GL.Uniform3(_lightingShader.UniformLocations["light.ambient"], new Vector3(0.2f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.diffuse"], new Vector3(0.5f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.specular"], new Vector3(1.0f));
+            
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f);
-            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            _lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 

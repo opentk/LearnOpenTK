@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using System.Reflection;
 
 namespace LearnOpenTK
 {
@@ -120,15 +121,15 @@ namespace LearnOpenTK
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
 
-                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                var normalLocation = 1; // aNormal
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
-                var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+                var texCoordLocation = 2; // aTexCoord
                 GL.EnableVertexAttribArray(texCoordLocation);
                 GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             }
@@ -139,7 +140,7 @@ namespace LearnOpenTK
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
 
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             }
@@ -162,23 +163,26 @@ namespace LearnOpenTK
 
             _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
 
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
 
-            _lightingShader.SetVector3("viewPos", _camera.Position);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
 
-            _lightingShader.SetInt("material.diffuse", 0);
-            _lightingShader.SetInt("material.specular", 1);
-            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            _lightingShader.SetFloat("material.shininess", 32.0f);
+            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
+
+            // Here we specify to the shaders what textures they should refer to when we want to get the positions.
+            GL.Uniform1(_lightingShader.UniformLocations["material.diffuse"], 0);
+            GL.Uniform1(_lightingShader.UniformLocations["material.specular"], 1);
+            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
 
             // Directional light needs a direction, in this example we just use (-0.2, -1.0, -0.3f) as the lights direction
-            _lightingShader.SetVector3("light.direction", new Vector3(-0.2f, -1.0f, -0.3f));
-            _lightingShader.SetVector3("light.ambient", new Vector3(0.2f));
-            _lightingShader.SetVector3("light.diffuse", new Vector3(0.5f));
-            _lightingShader.SetVector3("light.specular", new Vector3(1.0f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.direction"], new Vector3(-0.2f, -1.0f, -0.3f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.ambient"], new Vector3(0.2f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.diffuse"], new Vector3(0.5f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.specular"], new Vector3(1.0f));
 
             // We want to draw all the cubes at their respective positions
             for (int i = 0; i < _cubePositions.Length; i++)
@@ -188,8 +192,8 @@ namespace LearnOpenTK
                 // We then calculate the angle and rotate the model around an axis
                 float angle = 20.0f * i;
                 model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
-                // Remember to set the model at last so it can be used by opentk
-                _lightingShader.SetMatrix4("model", model);
+                // Remember to set the model at last so it can be used by opengl
+                GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
 
                 // At last we draw all our cubes
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
@@ -197,14 +201,13 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
-            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            _lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 

@@ -69,13 +69,13 @@ namespace LearnOpenTK
 
             // shader.vert has been modified, take a look at it as well.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = 0; // The location of aPos
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = 1; // The location of aTexCoord
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -85,8 +85,8 @@ namespace LearnOpenTK
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             _texture2.Use(TextureUnit.Texture1);
 
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
+            GL.Uniform1(_shader.UniformLocations["texture0"], 0);
+            GL.Uniform1(_shader.UniformLocations["texture1"], 1);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -125,11 +125,11 @@ namespace LearnOpenTK
 
             _texture.Use(TextureUnit.Texture0);
             _texture2.Use(TextureUnit.Texture1);
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Now that the matrix is finished, pass it to the vertex shader.
             // Go over to shader.vert to see how we finally apply this to the vertices.
-            _shader.SetMatrix4("transform", transform);
+            GL.UniformMatrix4(_shader.UniformLocations["transform"], true, ref transform);
 
             // And that's it for now! In the next tutorial, we'll see how to setup a full coordinates system.
 

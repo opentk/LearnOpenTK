@@ -59,13 +59,13 @@ namespace LearnOpenTK
 
             // shader.frag has been modified yet again, take a look at it as well.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = 0; // The location of aPos
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = 1; // The location of aTexCoord
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -81,8 +81,8 @@ namespace LearnOpenTK
 
             // Next, we must setup the samplers in the shaders to use the right textures.
             // The int we send to the uniform indicates which texture unit the sampler should use.
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
+            GL.Uniform1(_shader.UniformLocations["texture0"], 0);
+            GL.Uniform1(_shader.UniformLocations["texture1"], 1);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -95,7 +95,7 @@ namespace LearnOpenTK
 
             _texture.Use(TextureUnit.Texture0);
             _texture2.Use(TextureUnit.Texture1);
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 

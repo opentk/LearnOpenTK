@@ -125,15 +125,15 @@ namespace LearnOpenTK
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
 
-                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
 
-                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                var normalLocation = 1; // aNormal
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 3 * sizeof(float));
 
-                var texCoordLocation = _lightingShader.GetAttribLocation("aTexCoords");
+                var texCoordLocation = 2; // aTexCoord
                 GL.EnableVertexAttribArray(texCoordLocation);
                 GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 8 * sizeof(float), 6 * sizeof(float));
             }
@@ -142,7 +142,7 @@ namespace LearnOpenTK
                 _vaoLamp = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoLamp);
 
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             }
@@ -165,17 +165,19 @@ namespace LearnOpenTK
 
             _diffuseMap.Use(TextureUnit.Texture0);
             _specularMap.Use(TextureUnit.Texture1);
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
 
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
 
-            _lightingShader.SetVector3("viewPos", _camera.Position);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
 
-            _lightingShader.SetInt("material.diffuse", 0);
-            _lightingShader.SetInt("material.specular", 1);
-            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            _lightingShader.SetFloat("material.shininess", 32.0f);
+            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
+
+            GL.Uniform1(_lightingShader.UniformLocations["material.diffuse"], 0);
+            GL.Uniform1(_lightingShader.UniformLocations["material.specular"], 1);
+            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
 
             /*
                Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
@@ -184,58 +186,57 @@ namespace LearnOpenTK
                by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
             */
             // Directional light
-            _lightingShader.SetVector3("dirLight.direction", new Vector3(-0.2f, -1.0f, -0.3f));
-            _lightingShader.SetVector3("dirLight.ambient", new Vector3(0.05f, 0.05f, 0.05f));
-            _lightingShader.SetVector3("dirLight.diffuse", new Vector3(0.4f, 0.4f, 0.4f));
-            _lightingShader.SetVector3("dirLight.specular", new Vector3(0.5f, 0.5f, 0.5f));
+            GL.Uniform3(_lightingShader.UniformLocations["dirLight.direction"], new Vector3(-0.2f, -1.0f, -0.3f));
+            GL.Uniform3(_lightingShader.UniformLocations["dirLight.ambient"], new Vector3(0.05f, 0.05f, 0.05f));
+            GL.Uniform3(_lightingShader.UniformLocations["dirLight.diffuse"], new Vector3(0.4f, 0.4f, 0.4f));
+            GL.Uniform3(_lightingShader.UniformLocations["dirLight.specular"], new Vector3(0.5f, 0.5f, 0.5f));
 
             // Point lights
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
-                _lightingShader.SetVector3($"pointLights[{i}].position", _pointLightPositions[i]);
-                _lightingShader.SetVector3($"pointLights[{i}].ambient", new Vector3(0.05f, 0.05f, 0.05f));
-                _lightingShader.SetVector3($"pointLights[{i}].diffuse", new Vector3(0.8f, 0.8f, 0.8f));
-                _lightingShader.SetVector3($"pointLights[{i}].specular", new Vector3(1.0f, 1.0f, 1.0f));
-                _lightingShader.SetFloat($"pointLights[{i}].constant", 1.0f);
-                _lightingShader.SetFloat($"pointLights[{i}].linear", 0.09f);
-                _lightingShader.SetFloat($"pointLights[{i}].quadratic", 0.032f);
+                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].position"], _pointLightPositions[i]);
+                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].ambient"], new Vector3(0.05f, 0.05f, 0.05f));
+                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].diffuse"], new Vector3(0.8f, 0.8f, 0.8f));
+                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].specular"], new Vector3(1.0f, 1.0f, 1.0f));
+                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].constant"], 1.0f);
+                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].linear"], 0.09f);
+                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].quadratic"], 0.032f);
             }
 
             // Spot light
-            _lightingShader.SetVector3("spotLight.position", _camera.Position);
-            _lightingShader.SetVector3("spotLight.direction", _camera.Front);
-            _lightingShader.SetVector3("spotLight.ambient", new Vector3(0.0f, 0.0f, 0.0f));
-            _lightingShader.SetVector3("spotLight.diffuse", new Vector3(1.0f, 1.0f, 1.0f));
-            _lightingShader.SetVector3("spotLight.specular", new Vector3(1.0f, 1.0f, 1.0f));
-            _lightingShader.SetFloat("spotLight.constant", 1.0f);
-            _lightingShader.SetFloat("spotLight.linear", 0.09f);
-            _lightingShader.SetFloat("spotLight.quadratic", 0.032f);
-            _lightingShader.SetFloat("spotLight.cutOff", MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
-            _lightingShader.SetFloat("spotLight.outerCutOff", MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
+            GL.Uniform3(_lightingShader.UniformLocations["spotLight.position"], _camera.Position);
+            GL.Uniform3(_lightingShader.UniformLocations["spotLight.direction"], _camera.Front);
+            GL.Uniform3(_lightingShader.UniformLocations["spotLight.ambient"], new Vector3(0.0f, 0.0f, 0.0f));
+            GL.Uniform3(_lightingShader.UniformLocations["spotLight.diffuse"], new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform3(_lightingShader.UniformLocations["spotLight.specular"], new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform1(_lightingShader.UniformLocations["spotLight.constant"], 1.0f);
+            GL.Uniform1(_lightingShader.UniformLocations["spotLight.linear"], 0.09f);
+            GL.Uniform1(_lightingShader.UniformLocations["spotLight.quadratic"], 0.032f);
+            GL.Uniform1(_lightingShader.UniformLocations["spotLight.cutOff"], MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+            GL.Uniform1(_lightingShader.UniformLocations["spotLight.outerCutOff"], MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
 
             for (int i = 0; i < _cubePositions.Length; i++)
             {
                 Matrix4 model = Matrix4.CreateTranslation(_cubePositions[i]);
                 float angle = 20.0f * i;
                 model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
-                _lightingShader.SetMatrix4("model", model);
+                GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
 
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
             }
 
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
             // We use a loop to draw all the lights at the proper position
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
-                Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
-                lampMatrix = lampMatrix * Matrix4.CreateTranslation(_pointLightPositions[i]);
+                Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_pointLightPositions[i]);
 
-                _lampShader.SetMatrix4("model", lampMatrix);
+                GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
 
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
             }

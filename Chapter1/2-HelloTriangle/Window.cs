@@ -118,7 +118,7 @@ namespace LearnOpenTK
 
             // Now, enable the shader.
             // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
         }
@@ -140,7 +140,7 @@ namespace LearnOpenTK
             // and then calling an OpenGL function to render.
 
             // Bind the shader
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Bind the VAO
             GL.BindVertexArray(_vertexArrayObject);

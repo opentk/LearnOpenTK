@@ -77,7 +77,7 @@ namespace LearnOpenTK
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -86,7 +86,7 @@ namespace LearnOpenTK
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Because ElementArrayObject is a property of the currently bound VAO,
             // the buffer you will find in the ElementArrayBuffer will change with the currently bound VAO.

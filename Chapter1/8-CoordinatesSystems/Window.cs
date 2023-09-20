@@ -79,13 +79,13 @@ namespace LearnOpenTK
 
             // shader.vert has been modified. Take a look at it after the explanation in OnRenderFrame.
             _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = 0; // The location of aPos
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = 1; // The location of aTexCoord
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
@@ -95,8 +95,8 @@ namespace LearnOpenTK
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             _texture2.Use(TextureUnit.Texture1);
 
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
+            GL.Uniform1(_shader.UniformLocations["texture0"], 0);
+            GL.Uniform1(_shader.UniformLocations["texture1"], 1);
 
             // For the view, we don't do too much here. Next tutorial will be all about a Camera class that will make it much easier to manipulate the view.
             // For now, we move it backwards three units on the Z axis.
@@ -126,10 +126,10 @@ namespace LearnOpenTK
 
             _texture.Use(TextureUnit.Texture0);
             _texture2.Use(TextureUnit.Texture1);
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Finally, we have the model matrix. This determines the position of the model.
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            var model = Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
 
             // Then, we pass all of these matrices to the vertex shader.
             // You could also multiply them here and then pass, which is faster, but having the separate matrices available is used for some advanced effects.
@@ -140,9 +140,9 @@ namespace LearnOpenTK
             // If you pass the individual matrices to the shader and multiply there, you have to do in the order "model * view * projection".
             // You can think like this: first apply the modelToWorld (aka model) matrix, then apply the worldToView (aka view) matrix, 
             // and finally apply the viewToProjectedSpace (aka projection) matrix.
-            _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", _view);
-            _shader.SetMatrix4("projection", _projection);
+            GL.UniformMatrix4(_shader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_shader.UniformLocations["view"], true, ref _view);
+            GL.UniformMatrix4(_shader.UniformLocations["projection"], true, ref _projection);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 
