@@ -74,10 +74,10 @@ namespace LearnOpenTK
 
         // The texture containing information for the diffuse map, this would more commonly
         // just be called the color/texture of the object.
-        private Texture _diffuseMap;
+        private int _diffuseMap;
 
         // The specular map is a black/white representation of how specular each part of the texture is.
-        private Texture _specularMap;
+        private int _specularMap;
 
         private Camera _camera;
 
@@ -102,8 +102,8 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
+            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
 
             {
                 _vaoModel = GL.GenVertexArray();
@@ -156,8 +156,11 @@ namespace LearnOpenTK
 
             // The two textures need to be used, in this case we use the diffuse map as our 0th texture
             // and the specular map as our 1st texture.
-            _diffuseMap.Use(TextureUnit.Texture0);
-            _specularMap.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _diffuseMap);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _specularMap);
+
             GL.UseProgram(_lightingShader.Handle);
 
             Matrix4 projection = _camera.GetProjectionMatrix();

@@ -41,9 +41,9 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        private Texture _texture;
+        private int _texture;
 
-        private Texture _texture2;
+        private int _texture2;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -68,7 +68,7 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // shader.vert has been modified, take a look at it as well.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
             GL.UseProgram(_shader.Handle);
 
             var vertexLocation = 0; // The location of aPos
@@ -80,10 +80,12 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             _texture = Texture.LoadFromFile("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
 
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
-            _texture2.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
 
             GL.Uniform1(_shader.UniformLocations["texture0"], 0);
             GL.Uniform1(_shader.UniformLocations["texture1"], 1);
@@ -123,8 +125,11 @@ namespace LearnOpenTK
             // The next tutorial will be about how to set one up so we can use more human-readable numbers.
             transform = transform * Matrix4.CreateTranslation(0.1f, 0.1f, 0.0f);
 
-            _texture.Use(TextureUnit.Texture0);
-            _texture2.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
+
             GL.UseProgram(_shader.Handle);
 
             // Now that the matrix is finished, pass it to the vertex shader.

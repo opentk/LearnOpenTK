@@ -114,7 +114,7 @@ namespace LearnOpenTK
             // Shaders are tiny programs that live on the GPU. OpenGL uses them to handle the vertex-to-pixel pipeline.
             // Check out the Shader class in Common to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
             // shader.vert and shader.frag contain the actual shader code.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
 
             // Now, enable the shader.
             // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.

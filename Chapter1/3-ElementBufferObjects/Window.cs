@@ -76,7 +76,7 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
             GL.UseProgram(_shader.Handle);
         }
 

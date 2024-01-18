@@ -89,9 +89,9 @@ namespace LearnOpenTK
 
         private Shader _lightingShader;
 
-        private Texture _diffuseMap;
+        private int _diffuseMap;
 
-        private Texture _specularMap;
+        private int _specularMap;
 
         private Camera _camera;
 
@@ -116,8 +116,8 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
+            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
             
             {
                 _vaoModel = GL.GenVertexArray();
@@ -161,8 +161,11 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _diffuseMap.Use(TextureUnit.Texture0);
-            _specularMap.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _diffuseMap);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _specularMap);
+
             GL.UseProgram(_lightingShader.Handle);
 
             Matrix4 projection = _camera.GetProjectionMatrix();

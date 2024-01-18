@@ -35,7 +35,7 @@ namespace LearnOpenTK
         private Shader _shader;
 
         // For documentation on this, check Texture.cs.
-        private Texture _texture;
+        private int _texture;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -60,7 +60,7 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
             GL.UseProgram(_shader.Handle);
 
             // Because there's now 5 floats between the start of the first vertex and the start of the second,
@@ -78,7 +78,8 @@ namespace LearnOpenTK
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             _texture = Texture.LoadFromFile("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -89,7 +90,9 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
+
             GL.UseProgram(_shader.Handle);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);

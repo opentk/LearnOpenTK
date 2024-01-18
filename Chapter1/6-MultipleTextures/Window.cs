@@ -31,9 +31,9 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        private Texture _texture;
+        private int _texture;
 
-        private Texture _texture2;
+        private int _texture2;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -58,7 +58,7 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // shader.frag has been modified yet again, take a look at it as well.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
             GL.UseProgram(_shader.Handle);
 
             var vertexLocation = 0; // The location of aPos
@@ -72,14 +72,19 @@ namespace LearnOpenTK
             _texture = Texture.LoadFromFile("Resources/container.png");
             // Texture units are explained in Texture.cs, at the Use function.
             // First texture goes in texture unit 0.
-            _texture.Use(TextureUnit.Texture0);
+
+            // First we use GL.ActiveTexture to tell OpenGL which texture unit we would like following commands to use.
+            GL.ActiveTexture(TextureUnit.Texture0);
+            // Then we bind our first texture to the 0th texture unit as a 2D texture.
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
 
             // This is helpful because System.Drawing reads the pixels differently than OpenGL expects.
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
             // Then, the second goes in texture unit 1.
-            _texture2.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
 
-            // Next, we must setup the samplers in the shaders to use the right textures.
+            // Next, we must setup the samplers in the shaders to use the right texture units.
             // The int we send to the uniform indicates which texture unit the sampler should use.
             GL.Uniform1(_shader.UniformLocations["texture0"], 0);
             GL.Uniform1(_shader.UniformLocations["texture1"], 1);
@@ -93,8 +98,11 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
-            _texture2.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
+
             GL.UseProgram(_shader.Handle);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);

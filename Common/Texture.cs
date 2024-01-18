@@ -8,11 +8,9 @@ using System.IO;
 namespace LearnOpenTK.Common
 {
     // A helper class, much like Shader, meant to simplify loading textures.
-    public class Texture
+    public static class Texture
     {
-        public readonly int Handle;
-
-        public static Texture LoadFromFile(string path)
+        public static int LoadFromFile(string path)
         {
             // Generate handle
             int handle = GL.GenTexture();
@@ -70,22 +68,7 @@ namespace LearnOpenTK.Common
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
-        }
-
-        public Texture(int glHandle)
-        {
-            Handle = glHandle;
-        }
-
-        // Activate texture
-        // Multiple textures can be bound, if your shader needs more than just one.
-        // If you want to do that, use GL.ActiveTexture to set which slot GL.BindTexture binds to.
-        // The OpenGL standard requires that there be at least 16, but there can be more depending on your graphics card.
-        public void Use(TextureUnit unit)
-        {
-            GL.ActiveTexture(unit);
-            GL.BindTexture(TextureTarget.Texture2D, Handle);
+            return handle;
         }
     }
 }
