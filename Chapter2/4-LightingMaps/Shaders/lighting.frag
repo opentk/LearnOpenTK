@@ -28,26 +28,26 @@ in vec3 FragPos;
 
 // Now we need the texture coordinates, however we only need one set even though we have 2 textures,
 // as every fragment should have the same texture position no matter what texture we are using.
-in vec2 TexCoords;
+in vec2 TexCoord;
 
 void main()
 {
     // Each of the 3 different components now use a texture for the material values instead of the object wide color they had before.
     // Note: The ambient and the diffuse share the same texture.
     // ambient
-    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoords));
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, TexCoord));
 
     // Diffuse 
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(light.position - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoords));
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, TexCoord));
 
     // Specular
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 
     vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);

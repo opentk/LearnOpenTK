@@ -56,8 +56,8 @@ namespace LearnOpenTK
             GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
             Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
+            GL.UseProgram(_shader.Handle);
 
             // We start the stopwatch here as this method is only called once.
             _timer = new Stopwatch();
@@ -70,7 +70,7 @@ namespace LearnOpenTK
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            _shader.Use();
+            GL.UseProgram(_shader.Handle);
 
             // Here, we get the total seconds that have elapsed since the last time this method has reset
             // and we assign it to the timeValue variable so it can be used for the pulsating color.

@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Graphics.GL;
 
 namespace LearnOpenTK
 {
@@ -96,20 +97,21 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
+            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
 
             {
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
 
-                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                // Specified in the shader.vert file, aPos has location 0.
+                var positionLocation = 0;
                 GL.EnableVertexAttribArray(positionLocation);
                 // Remember to change the stride as we now have 6 floats per vertex
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-                // We now need to define the layout of the normal so the shader can use it
-                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                // Specified in the shader.vert file, aNormal has location 1.
+                var normalLocation = 1;
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             }
@@ -118,7 +120,8 @@ namespace LearnOpenTK
                 _vaoLamp = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoLamp);
 
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                // Specified in the shader.vert file, aPos has location 0.
+                var positionLocation = 0;
                 GL.EnableVertexAttribArray(positionLocation);
                 // Also change the stride here as we now have 6 floats per vertex. Now we don't define the normal for the lamp VAO
                 // this is because it isn't used, it might seem like a waste to use the same VBO if they dont have the same data
@@ -140,29 +143,33 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
 
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
 
-            _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 0.5f, 0.31f));
-            _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
-            _lightingShader.SetVector3("lightPos", _lightPos);
-            _lightingShader.SetVector3("viewPos", _camera.Position);
+            Matrix4 model = Matrix4.Identity;
+
+            GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+
+            GL.Uniform3(_lightingShader.UniformLocations["objectColor"], new Vector3(1.0f, 0.5f, 0.31f));
+            GL.Uniform3(_lightingShader.UniformLocations["lightColor"], new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform3(_lightingShader.UniformLocations["lightPos"], _lightPos);
+            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f);
-            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            _lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 

@@ -42,9 +42,9 @@ namespace LearnOpenTK
 
         private Shader _shader;
 
-        private Texture _texture;
+        private int _texture;
 
-        private Texture _texture2;
+        private int _texture2;
 
         // The view and projection matrices have been removed as we don't need them here anymore.
         // They can now be found in the new camera class.
@@ -84,25 +84,27 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, _elementBufferObject);
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
+            GL.UseProgram(_shader.Handle);
 
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = 0; // The location of aPos
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = 1; // The location of aTexCoord
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             _texture = Texture.LoadFromFile("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
 
             _texture2 = Texture.LoadFromFile("Resources/awesomeface.png");
-            _texture2.Use(TextureUnit.Texture1);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
 
-            _shader.SetInt("texture0", 0);
-            _shader.SetInt("texture1", 1);
+            GL.Uniform1(_shader.UniformLocations["texture0"], 0);
+            GL.Uniform1(_shader.UniformLocations["texture1"], 1);
 
             // We initialize the camera so that it is 3 units back from where the rectangle is.
             // We also give it the proper aspect ratio.
@@ -122,14 +124,20 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
-            _texture2.Use(TextureUnit.Texture1);
-            _shader.Use();
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
+            GL.ActiveTexture(TextureUnit.Texture1);
+            GL.BindTexture(TextureTarget.Texture2D, _texture2);
 
-            var model = Matrix4.Identity * Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
-            _shader.SetMatrix4("model", model);
-            _shader.SetMatrix4("view", _camera.GetViewMatrix());
-            _shader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UseProgram(_shader.Handle);
+
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
+
+            var model = Matrix4.CreateRotationX((float)MathHelper.DegreesToRadians(_time));
+            GL.UniformMatrix4(_shader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_shader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_shader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 

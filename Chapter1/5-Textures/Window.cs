@@ -35,7 +35,7 @@ namespace LearnOpenTK
         private Shader _shader;
 
         // For documentation on this, check Texture.cs.
-        private Texture _texture;
+        private int _texture;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -60,25 +60,26 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
 
             // The shaders have been modified to include the texture coordinates, check them out after finishing the OnLoad function.
-            _shader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
-            _shader.Use();
+            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
+            GL.UseProgram(_shader.Handle);
 
             // Because there's now 5 floats between the start of the first vertex and the start of the second,
             // we modify the stride from 3 * sizeof(float) to 5 * sizeof(float).
             // This will now pass the new vertex array to the buffer.
-            var vertexLocation = _shader.GetAttribLocation("aPosition");
+            var vertexLocation = 0; // The location of aPos
             GL.EnableVertexAttribArray(vertexLocation);
             GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 5 * sizeof(float), 0);
 
             // Next, we also setup texture coordinates. It works in much the same way.
             // We add an offset of 3, since the texture coordinates comes after the position data.
             // We also change the amount of data to 2 because there's only 2 floats for texture coordinates.
-            var texCoordLocation = _shader.GetAttribLocation("aTexCoord");
+            var texCoordLocation = 1; // The location of aTexCoord
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
             _texture = Texture.LoadFromFile("Resources/container.png");
-            _texture.Use(TextureUnit.Texture0);
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -89,8 +90,10 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vertexArrayObject);
 
-            _texture.Use(TextureUnit.Texture0);
-            _shader.Use();
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, _texture);
+
+            GL.UseProgram(_shader.Handle);
 
             GL.DrawElements(PrimitiveType.Triangles, _indices.Length, DrawElementsType.UnsignedInt, 0);
 

@@ -96,18 +96,18 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
+            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
 
             {
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
 
-                var positionLocation = _lightingShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // The location of aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
 
-                var normalLocation = _lightingShader.GetAttribLocation("aNormal");
+                var normalLocation = 1; // The location of aNormal
                 GL.EnableVertexAttribArray(normalLocation);
                 GL.VertexAttribPointer(normalLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 3 * sizeof(float));
             }
@@ -116,7 +116,7 @@ namespace LearnOpenTK
                 _vaoLamp = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoLamp);
 
-                var positionLocation = _lampShader.GetAttribLocation("aPos");
+                var positionLocation = 0; // The location of aPos
                 GL.EnableVertexAttribArray(positionLocation);
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 6 * sizeof(float), 0);
             }
@@ -134,20 +134,24 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoModel);
 
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
 
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
+            Matrix4 model = Matrix4.Identity;
 
-            _lightingShader.SetVector3("viewPos", _camera.Position);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+
+            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
 
             // Here we set the material values of the cube, the material struct is just a container so to access
             // the underlying values we simply type "material.value" to get the location of the uniform
-            _lightingShader.SetVector3("material.ambient", new Vector3(1.0f, 0.5f, 0.31f));
-            _lightingShader.SetVector3("material.diffuse", new Vector3(1.0f, 0.5f, 0.31f));
-            _lightingShader.SetVector3("material.specular", new Vector3(0.5f, 0.5f, 0.5f));
-            _lightingShader.SetFloat("material.shininess", 32.0f);
+            GL.Uniform3(_lightingShader.UniformLocations["material.ambient"], new Vector3(1.0f, 0.5f, 0.31f));
+            GL.Uniform3(_lightingShader.UniformLocations["material.diffuse"], new Vector3(1.0f, 0.5f, 0.31f));
+            GL.Uniform3(_lightingShader.UniformLocations["material.specular"], new Vector3(1.0f, 0.5f, 0.5f));
+            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
 
             // This is where we change the lights color over time using the sin function
             Vector3 lightColor;
@@ -160,24 +164,22 @@ namespace LearnOpenTK
             Vector3 ambientColor = lightColor * new Vector3(0.2f);
             Vector3 diffuseColor = lightColor * new Vector3(0.5f);
 
-            _lightingShader.SetVector3("light.position", _lightPos);
-            _lightingShader.SetVector3("light.ambient", ambientColor);
-            _lightingShader.SetVector3("light.diffuse", diffuseColor);
-            _lightingShader.SetVector3("light.specular", new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform3(_lightingShader.UniformLocations["light.position"], _lightPos);
+            GL.Uniform3(_lightingShader.UniformLocations["light.ambient"], ambientColor);
+            GL.Uniform3(_lightingShader.UniformLocations["light.diffuse"], diffuseColor);
+            GL.Uniform3(_lightingShader.UniformLocations["light.specular"], new Vector3(1.0f, 1.0f, 1.0f));
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            Matrix4 lampMatrix = Matrix4.Identity;
-            lampMatrix *= Matrix4.CreateScale(0.2f);
-            lampMatrix *= Matrix4.CreateTranslation(_lightPos);
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            _lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 

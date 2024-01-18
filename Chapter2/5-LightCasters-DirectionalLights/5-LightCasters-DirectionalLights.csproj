@@ -18,4 +18,16 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Shaders\lighting.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\shader.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\shader.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

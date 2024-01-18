@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Graphics.GL;
 
 namespace LearnOpenTK
 {
@@ -107,15 +108,16 @@ namespace LearnOpenTK
             // Load the two different shaders, they use the same vertex shader program. However they have two different fragment shaders.
             // This is because the lamp only uses a basic shader to turn it white, it wouldn't make sense to have the lamp lit in other colors.
             // The lighting shaders uses the lighting.frag shader which is what a large part of this chapter will be about
-            _lightingShader = new Shader("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = new Shader("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
+            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
 
             {
                 // Initialize the vao for the model
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
 
-                var vertexLocation = _lightingShader.GetAttribLocation("aPos");
+                // Specified in the shader.vert file, aPos has location 0.
+                var vertexLocation = 0;
                 GL.EnableVertexAttribArray(vertexLocation);
                 GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             }
@@ -125,8 +127,8 @@ namespace LearnOpenTK
                 _vaoLamp = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoLamp);
 
-                // Set the vertex attributes (only position data for our lamp)
-                var vertexLocation = _lampShader.GetAttribLocation("aPos");
+                // Specified in the shader.vert file, aPos has location 0.
+                var vertexLocation = 0;
                 GL.EnableVertexAttribArray(vertexLocation);
                 GL.VertexAttribPointer(vertexLocation, 3, VertexAttribPointerType.Float, false, 3 * sizeof(float), 0);
             }
@@ -145,29 +147,34 @@ namespace LearnOpenTK
             // Draw the model/cube with the lighting shader
             GL.BindVertexArray(_vaoModel);
 
-            _lightingShader.Use();
+            GL.UseProgram(_lightingShader.Handle);
+
+            Matrix4 projection = _camera.GetProjectionMatrix();
+            Matrix4 view = _camera.GetViewMatrix();
 
             // Matrix4.Identity is used as the matrix, since we just want to draw it at 0, 0, 0
-            _lightingShader.SetMatrix4("model", Matrix4.Identity);
-            _lightingShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lightingShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            Matrix4 model = Matrix4.Identity;
 
-            _lightingShader.SetVector3("objectColor", new Vector3(1.0f, 0.5f, 0.31f));
-            _lightingShader.SetVector3("lightColor", new Vector3(1.0f, 1.0f, 1.0f));
+            GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+
+            GL.Uniform3(_lightingShader.UniformLocations["objectColor"], new Vector3(1.0f, 0.5f, 0.31f));
+            GL.Uniform3(_lightingShader.UniformLocations["lightColor"], new Vector3(1.0f, 1.0f, 1.0f));
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             // Draw the lamp, this is mostly the same as for the model cube
             GL.BindVertexArray(_vaoLamp);
 
-            _lampShader.Use();
+            GL.UseProgram(_lampShader.Handle);
 
-            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f); // We scale the lamp cube down a bit to make it less dominant
-            lampMatrix = lampMatrix * Matrix4.CreateTranslation(_lightPos);
+            // We scale the lamp cube down a bit to make it less dominant
+            Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            _lampShader.SetMatrix4("model", lampMatrix);
-            _lampShader.SetMatrix4("view", _camera.GetViewMatrix());
-            _lampShader.SetMatrix4("projection", _camera.GetProjectionMatrix());
+            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
+            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
