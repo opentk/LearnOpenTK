@@ -1,6 +1,4 @@
 ﻿using OpenTK.Graphics.OpenGL4;
-using System.Drawing;
-using System.Drawing.Imaging;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using StbImageSharp;
 using System.IO;
@@ -10,25 +8,30 @@ namespace LearnOpenTK.Common
     // A helper class, much like Shader, meant to simplify loading textures.
     public class Texture
     {
-        public readonly int Handle;
+        public int ID;
+        public string type;
+        public string path;
 
-        public static Texture LoadFromFile(string path)
+        public static Texture LoadFromFile(string path, string directory, string type)
         {
-            // Generate handle
-            int handle = GL.GenTexture();
+            string filename = new string(path);
+            filename = directory + '/' + filename;
+
+            // Generate handle ID
+            int ID = GL.GenTexture();
 
             // Bind the handle
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, handle);
+            GL.BindTexture(TextureTarget.Texture2D, ID);
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
             // OpenGL has it's texture origin in the lower left corner instead of the top left corner,
             // so we tell StbImageSharp to flip the image when loading.
-            StbImage.stbi_set_flip_vertically_on_load(1);
+            // StbImage.stbi_set_flip_vertically_on_load(1);
             
             // Here we open a stream to the file and pass it to StbImageSharp to load.
-            using (Stream stream = File.OpenRead(path))
+            using (Stream stream = File.OpenRead(filename))
             {
                 ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
 
@@ -70,12 +73,15 @@ namespace LearnOpenTK.Common
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(handle);
+            return new Texture(ID, path, type);
         }
 
-        public Texture(int glHandle)
+
+        public Texture(int glHandle, string path, string type)
         {
-            Handle = glHandle;
+            this.ID = glHandle;
+            this.path = path;
+            this.type = type;
         }
 
         // Activate texture
@@ -85,7 +91,7 @@ namespace LearnOpenTK.Common
         public void Use(TextureUnit unit)
         {
             GL.ActiveTexture(unit);
-            GL.BindTexture(TextureTarget.Texture2D, Handle);
+            GL.BindTexture(TextureTarget.Texture2D, ID);
         }
     }
 }
