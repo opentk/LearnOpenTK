@@ -151,8 +151,6 @@ namespace LearnOpenTK
 
             _camera = new Camera(new Vector3(0.0f, 5.0f, 4.0f), Size.X / (float)Size.Y);
             WindowState = WindowState.Maximized;
-
-            CursorGrabbed = true;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
