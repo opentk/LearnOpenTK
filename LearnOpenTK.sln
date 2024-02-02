@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Shaders-Uniforms", "Chapt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Shaders-MoreAttributes", "Chapter1\4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3.1.3_ShadowMapping", "Chapter5\3.1.3-ShadowMapping\3.1.3_ShadowMapping.csproj", "{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3-1-AdvancedLighting-ShadowMapping", "Chapter5\3.1.3-ShadowMapping\3-1-AdvancedLighting-ShadowMapping.csproj", "{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter5", "Chapter5", "{BBA7AD1A-E744-4520-814B-2EEEC4CA6491}"
 EndProject
