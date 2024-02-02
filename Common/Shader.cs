@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace LearnOpenTK.Common
 {
@@ -69,6 +70,7 @@ namespace LearnOpenTK.Common
             // First, we have to get the number of active uniforms in the shader.
             GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
 
+            
             // Next, allocate the dictionary to hold the locations.
             _uniformLocations = new Dictionary<string, int>();
 
@@ -76,13 +78,29 @@ namespace LearnOpenTK.Common
             for (var i = 0; i < numberOfUniforms; i++)
             {
                 // get the name of this uniform,
-                var key = GL.GetActiveUniform(Handle, i, out _, out _);
+                var key = GL.GetActiveUniform(Handle, i, out int size, out ActiveUniformType type);
 
-                // get the location,
-                var location = GL.GetUniformLocation(Handle, key);
+                if (key.EndsWith("[0]"))
+                {
+                    var prefix = key.Substring(0, key.IndexOf('['));
+                    for (int k = 0; k < size; k++)
+                    {
+                        var newKey = prefix + "[" + k + "]";
+                        // get the location,
+                        var location = GL.GetUniformLocation(Handle, newKey);
 
-                // and then add it to the dictionary.
-                _uniformLocations.Add(key, location);
+                        // and then add it to the dictionary.
+                        _uniformLocations.Add(newKey, location);
+                    }
+                }
+                else
+                {
+                    // get the location,
+                    var location = GL.GetUniformLocation(Handle, key);
+
+                    // and then add it to the dictionary.
+                    _uniformLocations.Add(key, location);
+                }
             }
         }
 
@@ -199,6 +217,7 @@ namespace LearnOpenTK.Common
         public void SetVector3(string name, Vector3 data)
         {
             GL.UseProgram(Handle);
+            //var location = GL.GetUniformLocation(Handle, name);
             GL.Uniform3(_uniformLocations[name], data);
         }
     }
