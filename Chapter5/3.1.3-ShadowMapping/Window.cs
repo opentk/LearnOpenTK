@@ -149,8 +149,8 @@ namespace LearnOpenTK
 
             InitGL();
 
-            _camera = new Camera(new Vector3(0.0f, 5.0f, 4.0f), Size.X / (float)Size.Y);
-            WindowState = WindowState.Maximized;
+            _camera = new Camera(new Vector3(0.0f, 0.0f, 3.0f), Size.X / (float)Size.Y);
+            //WindowState = WindowState.Maximized;
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -335,17 +335,17 @@ namespace LearnOpenTK
             model = model * Matrix4.CreateTranslation(0.0f, 1.5f, 0.0f);
             shader.SetMatrix4("model", model);
             renderCube();
+
             model = Matrix4.Identity;
             model = model * Matrix4.CreateScale(new Vector3(0.5f));
             model = model * Matrix4.CreateTranslation(2.0f, 0.0f, 1.0f);
             shader.SetMatrix4("model", model);
             renderCube();
+
             model = Matrix4.Identity;
-            //model = glm::rotate(model, glm::radians(60.0f), glm::normalize(new Vector3(1.0, 0.0, 1.0)));
-            ///model = model * Matrix4.CreateRotationX
+            model = model * Matrix4.CreateFromAxisAngle(new Vector3(1f, 0, 1f), MathHelper.DegreesToRadians(60.0f)); 
             model = model * Matrix4.CreateScale(new Vector3(0.25f));
             model = model * Matrix4.CreateTranslation(-1.0f, 0.0f, 2.0f);
-
             shader.SetMatrix4("model", model);
             renderCube();
         }
