@@ -11,7 +11,7 @@ namespace LearnOpenTK
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new Vector2i(800, 600),
-                Title = "LearnOpenTK - Basic lighting",
+                Title = "LearnOpenTK - Shadow Mapping",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,
             };
