@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>LearnOpenTK</RootNamespace>
+    <AssemblyName>LearnOpenTK</AssemblyName>
+  <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Shaders/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenTK" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Shaders\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\wood.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
