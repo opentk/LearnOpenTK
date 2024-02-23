@@ -15,12 +15,12 @@ namespace LearnOpenTK.Common
         public static Texture LoadFromFile(string filename, string type = "texture_diffuse")
         {
 
-            // Generate handle ID
-            int ID = GL.GenTexture();
+            // Generate handle
+            int handle = GL.GenTexture();
 
             // Bind the handle
             GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.Texture2D, ID);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
 
             // For this example, we're going to use .NET's built-in System.Drawing library to load textures.
 
@@ -71,7 +71,7 @@ namespace LearnOpenTK.Common
             // Here is an example of mips in action https://en.wikipedia.org/wiki/File:Mipmap_Aliasing_Comparison.png
             GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
 
-            return new Texture(ID, filename, type);
+            return new Texture(handle, filename, type);
         }
 
         public Texture(int glHandle, string path, string type)
