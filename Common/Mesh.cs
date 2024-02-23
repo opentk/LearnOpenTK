@@ -74,7 +74,7 @@ namespace LearnOpenTK.Common
                     number = new string("" + heightNr++); // transfer int to string
                 
                 // now set the sampler to the correct texture unit
-                GL.Uniform1(GL.GetUniformLocation(shader.ID, (name + number)), i);
+                GL.Uniform1(GL.GetUniformLocation(shader.Handle, (name + number)), i);
                 // and finally bind the texture
                 GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
             }
