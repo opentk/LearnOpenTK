@@ -10,7 +10,7 @@ namespace LearnOpenTK.Common
     // A simple class meant to help create shaders.
     public class Shader
     {
-        public readonly int ID;
+        public readonly int Handle;
 
         private readonly Dictionary<string, int> _uniformLocations;
 
@@ -46,19 +46,19 @@ namespace LearnOpenTK.Common
 
             // These two shaders must then be merged into a shader program, which can then be used by OpenGL.
             // To do this, create a program...
-            ID = GL.CreateProgram();
+            Handle = GL.CreateProgram();
 
             // Attach both shaders...
-            GL.AttachShader(ID, vertexShader);
-            GL.AttachShader(ID, fragmentShader);
+            GL.AttachShader(Handle, vertexShader);
+            GL.AttachShader(Handle, fragmentShader);
 
             // And then link them together.
-            LinkProgram(ID);
+            LinkProgram(Handle);
 
             // When the shader program is linked, it no longer needs the individual shaders attached to it; the compiled code is copied into the shader program.
             // Detach them, and then delete them.
-            GL.DetachShader(ID, vertexShader);
-            GL.DetachShader(ID, fragmentShader);
+            GL.DetachShader(Handle, vertexShader);
+            GL.DetachShader(Handle, fragmentShader);
             GL.DeleteShader(fragmentShader);
             GL.DeleteShader(vertexShader);
 
@@ -67,7 +67,7 @@ namespace LearnOpenTK.Common
             // later.
 
             // First, we have to get the number of active uniforms in the shader.
-            GL.GetProgram(ID, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
+            GL.GetProgram(Handle, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
 
             // Next, allocate the dictionary to hold the locations.
             _uniformLocations = new Dictionary<string, int>();
@@ -76,10 +76,10 @@ namespace LearnOpenTK.Common
             for (var i = 0; i < numberOfUniforms; i++)
             {
                 // get the name of this uniform,
-                var key = GL.GetActiveUniform(ID, i, out _, out _);
+                var key = GL.GetActiveUniform(Handle, i, out _, out _);
 
                 // get the location,
-                var location = GL.GetUniformLocation(ID, key);
+                var location = GL.GetUniformLocation(Handle, key);
 
                 // and then add it to the dictionary.
                 _uniformLocations.Add(key, location);
@@ -118,14 +118,14 @@ namespace LearnOpenTK.Common
         // A wrapper function that enables the shader program.
         public void Use()
         {
-            GL.UseProgram(ID);
+            GL.UseProgram(Handle);
         }
 
         // The shader sources provided with this project use hardcoded layout(location)-s. If you want to do it dynamically,
         // you can omit the layout(location=X) lines in the vertex shader, and use this in VertexAttribPointer instead of the hardcoded values.
         public int GetAttribLocation(string attribName)
         {
-            return GL.GetAttribLocation(ID, attribName);
+            return GL.GetAttribLocation(Handle, attribName);
         }
 
         // Uniform setters
@@ -144,7 +144,7 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetInt(string name, int data)
         {
-            GL.UseProgram(ID);
+            GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
 
@@ -155,7 +155,7 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetFloat(string name, float data)
         {
-            GL.UseProgram(ID);
+            GL.UseProgram(Handle);
             GL.Uniform1(_uniformLocations[name], data);
         }
 
@@ -171,7 +171,7 @@ namespace LearnOpenTK.Common
         /// </remarks>
         public void SetMatrix4(string name, Matrix4 data)
         {
-            GL.UseProgram(ID);
+            GL.UseProgram(Handle);
             GL.UniformMatrix4(_uniformLocations[name], true, ref data);
         }
 
@@ -182,7 +182,7 @@ namespace LearnOpenTK.Common
         /// <param name="data">The data to set</param>
         public void SetVector3(string name, Vector3 data)
         {
-            GL.UseProgram(ID);
+            GL.UseProgram(Handle);
             GL.Uniform3(_uniformLocations[name], data);
         }
     }

@@ -172,8 +172,6 @@ namespace LearnOpenTK
             // First we setup the shader, including the texture uniform and then call the Draw() method on the imported model to draw all the contained meshes
             _backPackShader.Use();
             Matrix4 model = Matrix4.Identity;
-            //Matrix4.CreateScale(2.0f, 2.0f, 2.0f, out model);
-            //Matrix4.CreateTranslation(0.0f, 0.0f, 2.8f, out model);
 
             _backPackShader.SetMatrix4("model", model);
             _backPackShader.SetMatrix4("view", _camera.GetViewMatrix());
@@ -189,7 +187,7 @@ namespace LearnOpenTK
             _shader.Use();
 
             // Change triangle color
-            int vertexColorLocation = GL.GetUniformLocation(_shader.ID, "ourColor");
+            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "ourColor");
             GL.Uniform4(vertexColorLocation, _color.X, _color.Y, _color.Z, 1.0f);
 
             // Bind the VAO

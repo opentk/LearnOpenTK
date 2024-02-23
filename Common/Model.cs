@@ -194,17 +194,17 @@ namespace LearnOpenTK.Common
         {
             List<Texture> textures = new List<Texture>();
 
-            
             for (int i = 0; i < mat.GetMaterialTextureCount(type); i++)
             {
                 TextureSlot str;
                 mat.GetMaterialTexture(type, i, out str);
+                string filename = directory + "/" + str.FilePath;
                 // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
                 bool skip = false;
                 for (int j = 0; j < textures_loaded.Count; j++)
                 {
                     
-                    if (textures_loaded[j].path.CompareTo(str.FilePath)==0)
+                    if (textures_loaded[j].path.CompareTo(filename) ==0)
                     {
                         textures.Add(textures_loaded[j]);
                         skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
@@ -213,7 +213,7 @@ namespace LearnOpenTK.Common
                 }
                 if (!skip)
                 {   // if texture hasn't been loaded already, load it
-                    Texture texture = Texture.LoadFromFile(str.FilePath, directory, typeName);
+                    Texture texture = Texture.LoadFromFile(filename, typeName);
                     textures.Add(texture);
                     textures_loaded.Add(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
                 }

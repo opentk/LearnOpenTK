@@ -77,7 +77,7 @@ namespace LearnOpenTK
             GL.EnableVertexAttribArray(texCoordLocation);
             GL.VertexAttribPointer(texCoordLocation, 2, VertexAttribPointerType.Float, false, 5 * sizeof(float), 3 * sizeof(float));
 
-            _texture = Texture.LoadFromFile("Resources/container.png");
+            _texture = Texture.LoadFromFile("container.png", "Resources", "diffuse");
             _texture.Use(TextureUnit.Texture0);
         }
 

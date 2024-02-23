@@ -83,7 +83,7 @@ namespace LearnOpenTK
 
             // This gets the uniform variable location from the frag shader so that we can 
             // assign the new green value to it.
-            int vertexColorLocation = GL.GetUniformLocation(_shader.ID, "ourColor");
+            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "ourColor");
 
             // Here we're assigning the ourColor variable in the frag shader 
             // via the OpenGL Uniform method which takes in the value as the individual vec values (which total 4 in this instance).
