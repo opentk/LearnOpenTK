@@ -76,7 +76,7 @@ namespace LearnOpenTK.Common
                 // now set the sampler to the correct texture unit
                 GL.Uniform1(GL.GetUniformLocation(shader.Handle, (name + number)), i);
                 // and finally bind the texture
-                GL.BindTexture(TextureTarget.Texture2D, textures[i].ID);
+                GL.BindTexture(TextureTarget.Texture2D, textures[i].Handle);
             }
 
             GL.BindVertexArray(VAO);
