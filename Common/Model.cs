@@ -6,6 +6,7 @@ using AssimpMesh = Assimp.Mesh;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Matrix4x4 = Assimp.Matrix4x4;
+using System.IO;
 
 namespace LearnOpenTK.Common
 {
@@ -198,7 +199,7 @@ namespace LearnOpenTK.Common
             {
                 TextureSlot str;
                 mat.GetMaterialTexture(type, i, out str);
-                string filename = directory + "/" + str.FilePath;
+                string filename = Path.Combine(directory, str.FilePath);
                 // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
                 bool skip = false;
                 for (int j = 0; j < textures_loaded.Count; j++)
