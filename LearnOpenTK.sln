@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30309.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-CreatingAWindow", "Chapter1\1-CreatingAWindow\1-CreatingAWindow.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
 EndProject
@@ -41,11 +41,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-LightCasters-PointLights"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "5-LightCasters-Spotlight", "Chapter2\5-LightCasters-Spotlight\5-LightCasters-Spotlight.csproj", "{2DD36D08-FBC6-40E1-8EB9-3C94ABE6985E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-InsAndOuts", "Chapter1\4-Shaders-InsAndOuts\4-Shaders-InsAndOuts.csproj", "{1234CBB6-22C1-42D0-828B-1D1E7085EF33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Shaders-InsAndOuts", "Chapter1\4-Shaders-InsAndOuts\4-Shaders-InsAndOuts.csproj", "{1234CBB6-22C1-42D0-828B-1D1E7085EF33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-Uniforms", "Chapter1\4-Shaders-Uniforms\4-Shaders-Uniforms.csproj", "{E8DA696D-F948-4967-BF75-1570A2957C3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Shaders-Uniforms", "Chapter1\4-Shaders-Uniforms\4-Shaders-Uniforms.csproj", "{E8DA696D-F948-4967-BF75-1570A2957C3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "4-Shaders-MoreAttributes", "Chapter1\4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-Shaders-MoreAttributes", "Chapter1\4-Shaders-MoreAttributes\4-Shaders-MoreAttributes.csproj", "{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "3-1-AdvancedLighting-ShadowMapping", "Chapter5\3.1.3-ShadowMapping\3-1-AdvancedLighting-ShadowMapping.csproj", "{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter5", "Chapter5", "{BBA7AD1A-E744-4520-814B-2EEEC4CA6491}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-PBR-Lighting", "Chapter6\1-PBR-Lighting\1-PBR-Lighting.csproj", "{633E14EA-5A93-4FD0-B2BF-A820A852CE6D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter6", "Chapter6", "{EF8CEE04-BE7B-4F02-9266-8ABD9B9ACD76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter4", "Chapter4", "{6C07F1A6-9ACB-46CA-83F1-4E988ECC161B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "4-1-FrameBuffers", "Chapter4\4.1-Framebuffers\4-1-FrameBuffers.csproj", "{51C574E2-211C-4B94-9085-1857BEC02F7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +145,18 @@ Global
 		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{951CDA27-F60E-46E4-AF74-9ED130B0B1DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{633E14EA-5A93-4FD0-B2BF-A820A852CE6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{633E14EA-5A93-4FD0-B2BF-A820A852CE6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{633E14EA-5A93-4FD0-B2BF-A820A852CE6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{633E14EA-5A93-4FD0-B2BF-A820A852CE6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51C574E2-211C-4B94-9085-1857BEC02F7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51C574E2-211C-4B94-9085-1857BEC02F7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51C574E2-211C-4B94-9085-1857BEC02F7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51C574E2-211C-4B94-9085-1857BEC02F7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -157,9 +181,9 @@ Global
 		{1234CBB6-22C1-42D0-828B-1D1E7085EF33} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
 		{E8DA696D-F948-4967-BF75-1570A2957C3B} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
 		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}
+		{951CDA27-F60E-46E4-AF74-9ED130B0B1DC} = {BBA7AD1A-E744-4520-814B-2EEEC4CA6491}
+		{633E14EA-5A93-4FD0-B2BF-A820A852CE6D} = {EF8CEE04-BE7B-4F02-9266-8ABD9B9ACD76}
+		{51C574E2-211C-4B94-9085-1857BEC02F7D} = {6C07F1A6-9ACB-46CA-83F1-4E988ECC161B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}
