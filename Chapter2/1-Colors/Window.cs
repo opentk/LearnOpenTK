@@ -251,11 +251,11 @@ namespace LearnOpenTK
             _camera.Fov -= e.OffsetY;
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
         {
-            base.OnResize(e);
+            base.OnFramebufferResize(e);
 
-            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+            GL.Viewport(0, 0, e.Width, e.Height);
             
             _camera.AspectRatio = Size.X / (float)Size.Y;
         }

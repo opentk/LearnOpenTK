@@ -168,11 +168,11 @@ namespace LearnOpenTK
             }
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
         {
-            base.OnResize(e);
+            base.OnFramebufferResize(e);
 
-            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+            GL.Viewport(0, 0, e.Width, e.Height);
         }
 
         private static int CompileProgram(string vertexSource, string fragmentSource)
