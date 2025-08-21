@@ -1,10 +1,11 @@
-using LearnOpenTK.Common;
+using OpenTK.Graphics.GL;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Graphics.GL;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -78,9 +79,9 @@ namespace LearnOpenTK
 
         // We also need two shaders, one for the lamp and one for our lighting material.
         // The lighting shader is where most of this chapter will take place as this is where a lot of the lighting "magic" happens.
-        private Shader _lampShader;
+        private int _lampShader;
 
-        private Shader _lightingShader;
+        private int _lightingShader;
 
         private Camera _camera;
 
@@ -108,8 +109,8 @@ namespace LearnOpenTK
             // Load the two different shaders, they use the same vertex shader program. However they have two different fragment shaders.
             // This is because the lamp only uses a basic shader to turn it white, it wouldn't make sense to have the lamp lit in other colors.
             // The lighting shaders uses the lighting.frag shader which is what a large part of this chapter will be about
-            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
+            _lightingShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/lighting.frag"));
+            _lampShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
 
             {
                 // Initialize the vao for the model
@@ -147,7 +148,7 @@ namespace LearnOpenTK
             // Draw the model/cube with the lighting shader
             GL.BindVertexArray(_vaoModel);
 
-            GL.UseProgram(_lightingShader.Handle);
+            GL.UseProgram(_lightingShader);
 
             Matrix4 projection = _camera.GetProjectionMatrix();
             Matrix4 view = _camera.GetViewMatrix();
@@ -155,26 +156,26 @@ namespace LearnOpenTK
             // Matrix4.Identity is used as the matrix, since we just want to draw it at 0, 0, 0
             Matrix4 model = Matrix4.Identity;
 
-            GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
-            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "model"), true, ref model);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "projection"), true, ref projection);
 
-            GL.Uniform3(_lightingShader.UniformLocations["objectColor"], new Vector3(1.0f, 0.5f, 0.31f));
-            GL.Uniform3(_lightingShader.UniformLocations["lightColor"], new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "objectColor"), new Vector3(1.0f, 0.5f, 0.31f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "lightColor"), new Vector3(1.0f, 1.0f, 1.0f));
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
             // Draw the lamp, this is mostly the same as for the model cube
             GL.BindVertexArray(_vaoLamp);
 
-            GL.UseProgram(_lampShader.Handle);
+            GL.UseProgram(_lampShader);
 
             // We scale the lamp cube down a bit to make it less dominant
             Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
-            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "model"), true, ref lampMatrix);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "projection"), true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
@@ -254,8 +255,54 @@ namespace LearnOpenTK
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+            
             _camera.AspectRatio = Size.X / (float)Size.Y;
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            int handle = GL.CreateProgram();
+
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            GL.LinkProgram(handle);
+
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            int shader = GL.CreateShader(type);
+
+            GL.ShaderSource(shader, source);
+
+            GL.CompileShader(shader);
+
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
         }
     }
 }

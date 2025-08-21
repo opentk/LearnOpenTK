@@ -1,10 +1,11 @@
-﻿using System;
-using LearnOpenTK.Common;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using StbImageSharp;
+using System;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -87,9 +88,9 @@ namespace LearnOpenTK
 
         private int _vaoLamp;
 
-        private Shader _lampShader;
+        private int _lampShader;
 
-        private Shader _lightingShader;
+        private int _lightingShader;
 
         private int _diffuseMap;
 
@@ -118,9 +119,9 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
-            
+            _lightingShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/lighting.frag"));
+            _lampShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
+
             {
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
@@ -147,8 +148,8 @@ namespace LearnOpenTK
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             }
 
-            _diffuseMap = Texture.LoadFromFile("Resources/container2.png");
-            _specularMap = Texture.LoadFromFile("Resources/container2_specular.png");
+            _diffuseMap = LoadTextureFromFile("Resources/container2.png");
+            _specularMap = LoadTextureFromFile("Resources/container2_specular.png");
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -167,19 +168,19 @@ namespace LearnOpenTK
             GL.BindTexture(TextureTarget.Texture2D, _diffuseMap);
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, _specularMap);
-            GL.UseProgram(_lightingShader.Handle);
+            GL.UseProgram(_lightingShader);
 
             Matrix4 projection = _camera.GetProjectionMatrix();
             Matrix4 view = _camera.GetViewMatrix();
 
-            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "projection"), true, ref projection);
 
-            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "viewPos"), _camera.Position);
 
-            GL.Uniform1(_lightingShader.UniformLocations["material.diffuse"], 0);
-            GL.Uniform1(_lightingShader.UniformLocations["material.specular"], 1);
-            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.diffuse"), 0);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.specular"), 1);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.shininess"), 32.0f);
 
             /*
                Here we set all the uniforms for the 5/6 types of lights we have. We have to set them manually and index
@@ -188,57 +189,57 @@ namespace LearnOpenTK
                by using 'Uniform buffer objects', but that is something we'll discuss in the 'Advanced GLSL' tutorial.
             */
             // Directional light
-            GL.Uniform3(_lightingShader.UniformLocations["dirLight.direction"], new Vector3(-0.2f, -1.0f, -0.3f));
-            GL.Uniform3(_lightingShader.UniformLocations["dirLight.ambient"], new Vector3(0.05f, 0.05f, 0.05f));
-            GL.Uniform3(_lightingShader.UniformLocations["dirLight.diffuse"], new Vector3(0.4f, 0.4f, 0.4f));
-            GL.Uniform3(_lightingShader.UniformLocations["dirLight.specular"], new Vector3(0.5f, 0.5f, 0.5f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "dirLight.direction"), new Vector3(-0.2f, -1.0f, -0.3f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "dirLight.ambient"), new Vector3(0.05f, 0.05f, 0.05f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "dirLight.diffuse"), new Vector3(0.4f, 0.4f, 0.4f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "dirLight.specular"), new Vector3(0.5f, 0.5f, 0.5f));
 
             // Point lights
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
-                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].position"], _pointLightPositions[i]);
-                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].ambient"], new Vector3(0.05f, 0.05f, 0.05f));
-                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].diffuse"], new Vector3(0.8f, 0.8f, 0.8f));
-                GL.Uniform3(_lightingShader.UniformLocations[$"pointLights[{i}].specular"], new Vector3(1.0f, 1.0f, 1.0f));
-                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].constant"], 1.0f);
-                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].linear"], 0.09f);
-                GL.Uniform1(_lightingShader.UniformLocations[$"pointLights[{i}].quadratic"], 0.032f);
+                GL.Uniform3(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].position"), _pointLightPositions[i]);
+                GL.Uniform3(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].ambient"), new Vector3(0.05f, 0.05f, 0.05f));
+                GL.Uniform3(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].diffuse"), new Vector3(0.8f, 0.8f, 0.8f));
+                GL.Uniform3(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].specular"), new Vector3(1.0f, 1.0f, 1.0f));
+                GL.Uniform1(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].constant"), 1.0f);
+                GL.Uniform1(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].linear"), 0.09f);
+                GL.Uniform1(GL.GetUniformLocation(_lightingShader, $"pointLights[{i}].quadratic"), 0.032f);
             }
 
             // Spot light
-            GL.Uniform3(_lightingShader.UniformLocations["spotLight.position"], _camera.Position);
-            GL.Uniform3(_lightingShader.UniformLocations["spotLight.direction"], _camera.Front);
-            GL.Uniform3(_lightingShader.UniformLocations["spotLight.ambient"], new Vector3(0.0f, 0.0f, 0.0f));
-            GL.Uniform3(_lightingShader.UniformLocations["spotLight.diffuse"], new Vector3(1.0f, 1.0f, 1.0f));
-            GL.Uniform3(_lightingShader.UniformLocations["spotLight.specular"], new Vector3(1.0f, 1.0f, 1.0f));
-            GL.Uniform1(_lightingShader.UniformLocations["spotLight.constant"], 1.0f);
-            GL.Uniform1(_lightingShader.UniformLocations["spotLight.linear"], 0.09f);
-            GL.Uniform1(_lightingShader.UniformLocations["spotLight.quadratic"], 0.032f);
-            GL.Uniform1(_lightingShader.UniformLocations["spotLight.cutOff"], MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
-            GL.Uniform1(_lightingShader.UniformLocations["spotLight.outerCutOff"], MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "spotLight.position"), _camera.Position);
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "spotLight.direction"), _camera.Front);
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "spotLight.ambient"), new Vector3(0.0f, 0.0f, 0.0f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "spotLight.diffuse"), new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "spotLight.specular"), new Vector3(1.0f, 1.0f, 1.0f));
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "spotLight.constant"), 1.0f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "spotLight.linear"), 0.09f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "spotLight.quadratic"), 0.032f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "spotLight.cutOff"), MathF.Cos(MathHelper.DegreesToRadians(12.5f)));
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "spotLight.outerCutOff"), MathF.Cos(MathHelper.DegreesToRadians(17.5f)));
 
             for (int i = 0; i < _cubePositions.Length; i++)
             {
                 Matrix4 model = Matrix4.CreateTranslation(_cubePositions[i]);
                 float angle = 20.0f * i;
                 model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
-                GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+                GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "model"), true, ref model);
 
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
             }
 
             GL.BindVertexArray(_vaoLamp);
 
-            GL.UseProgram(_lampShader.Handle);
+            GL.UseProgram(_lampShader);
 
-            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "projection"), true, ref projection);
             // We use a loop to draw all the lights at the proper position
             for (int i = 0; i < _pointLightPositions.Length; i++)
             {
                 Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_pointLightPositions[i]);
 
-                GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
+                GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "model"), true, ref lampMatrix);
 
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
             }
@@ -319,8 +320,80 @@ namespace LearnOpenTK
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+
             _camera.AspectRatio = Size.X / (float)Size.Y;
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            int handle = GL.CreateProgram();
+
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            GL.LinkProgram(handle);
+
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            int shader = GL.CreateShader(type);
+
+            GL.ShaderSource(shader, source);
+
+            GL.CompileShader(shader);
+
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
+        }
+
+        public static int LoadTextureFromFile(string path)
+        {
+            int handle = GL.GenTexture();
+
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
+
+            StbImage.stbi_set_flip_vertically_on_load(1);
+
+            using (Stream stream = File.OpenRead(path))
+            {
+                ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            }
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            return handle;
         }
     }
 }

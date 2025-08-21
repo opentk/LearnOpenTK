@@ -1,9 +1,11 @@
-﻿using LearnOpenTK.Common;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using StbImageSharp;
+using System;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -83,9 +85,9 @@ namespace LearnOpenTK
 
         private int _vaoLamp;
 
-        private Shader _lampShader;
+        private int _lampShader;
 
-        private Shader _lightingShader;
+        private int _lightingShader;
 
         private int _diffuseMap;
 
@@ -114,9 +116,9 @@ namespace LearnOpenTK
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, _vertices.Length * sizeof(float), _vertices, BufferUsageHint.StaticDraw);
 
-            _lightingShader = Shader.FromFile("Shaders/shader.vert", "Shaders/lighting.frag");
-            _lampShader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
-            
+            _lightingShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/lighting.frag"));
+            _lampShader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
+
             {
                 _vaoModel = GL.GenVertexArray();
                 GL.BindVertexArray(_vaoModel);
@@ -143,8 +145,8 @@ namespace LearnOpenTK
                 GL.VertexAttribPointer(positionLocation, 3, VertexAttribPointerType.Float, false, 8 * sizeof(float), 0);
             }
 
-            _diffuseMap = Texture.LoadFromFile("Resources/container2.png");
-            _specularMap = Texture.LoadFromFile("Resources/container2_specular.png");
+            _diffuseMap = LoadTextureFromFile("Resources/container2.png");
+            _specularMap = LoadTextureFromFile("Resources/container2_specular.png");
 
             _camera = new Camera(Vector3.UnitZ * 3, Size.X / (float)Size.Y);
 
@@ -164,29 +166,29 @@ namespace LearnOpenTK
             GL.ActiveTexture(TextureUnit.Texture1);
             GL.BindTexture(TextureTarget.Texture2D, _specularMap);
 
-            GL.UseProgram(_lightingShader.Handle);
+            GL.UseProgram(_lightingShader);
 
             Matrix4 projection = _camera.GetProjectionMatrix();
             Matrix4 view = _camera.GetViewMatrix();
 
-            GL.UniformMatrix4(_lightingShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lightingShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "projection"), true, ref projection);
 
-            GL.Uniform3(_lightingShader.UniformLocations["viewPos"], _camera.Position);
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "viewPos"), _camera.Position);
 
             // Here we specify to the shaders what textures they should refer to when we want to get the positions.
-            GL.Uniform1(_lightingShader.UniformLocations["material.diffuse"], 0);
-            GL.Uniform1(_lightingShader.UniformLocations["material.specular"], 1);
-            GL.Uniform1(_lightingShader.UniformLocations["material.shininess"], 32.0f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.diffuse"), 0);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.specular"), 1);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "material.shininess"), 32.0f);
 
             // Directional light needs a direction, in this example we just use (-0.2, -1.0, -0.3f) as the lights direction
-            GL.Uniform3(_lightingShader.UniformLocations["light.position"], _lightPos);
-            GL.Uniform1(_lightingShader.UniformLocations["light.constant"], 1.0f);
-            GL.Uniform1(_lightingShader.UniformLocations["light.linear"], 0.09f);
-            GL.Uniform1(_lightingShader.UniformLocations["light.quadratic"], 0.032f);
-            GL.Uniform3(_lightingShader.UniformLocations["light.ambient"], new Vector3(0.2f));
-            GL.Uniform3(_lightingShader.UniformLocations["light.diffuse"], new Vector3(0.5f));
-            GL.Uniform3(_lightingShader.UniformLocations["light.specular"], new Vector3(1.0f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "light.position"), _lightPos);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "light.constant"), 1.0f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "light.linear"), 0.09f);
+            GL.Uniform1(GL.GetUniformLocation(_lightingShader, "light.quadratic"), 0.032f);
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "light.ambient"), new Vector3(0.2f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "light.diffuse"), new Vector3(0.5f));
+            GL.Uniform3(GL.GetUniformLocation(_lightingShader, "light.specular"), new Vector3(1.0f));
 
             // We want to draw all the cubes at their respective positions
             for (int i = 0; i < _cubePositions.Length; i++)
@@ -198,7 +200,7 @@ namespace LearnOpenTK
                 float angle = 20.0f * i;
                 model = model * Matrix4.CreateFromAxisAngle(new Vector3(1.0f, 0.3f, 0.5f), angle);
                 // Remember to set the model at last so it can be used by opentk
-                GL.UniformMatrix4(_lightingShader.UniformLocations["model"], true, ref model);
+                GL.UniformMatrix4(GL.GetUniformLocation(_lightingShader, "model"), true, ref model);
 
                 // At last we draw all our cubes
                 GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
@@ -206,13 +208,13 @@ namespace LearnOpenTK
 
             GL.BindVertexArray(_vaoLamp);
 
-            GL.UseProgram(_lampShader.Handle);
+            GL.UseProgram(_lampShader);
 
             Matrix4 lampMatrix = Matrix4.CreateScale(0.2f) * Matrix4.CreateTranslation(_lightPos);
 
-            GL.UniformMatrix4(_lampShader.UniformLocations["model"], true, ref lampMatrix);
-            GL.UniformMatrix4(_lampShader.UniformLocations["view"], true, ref view);
-            GL.UniformMatrix4(_lampShader.UniformLocations["projection"], true, ref projection);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "model"), true, ref lampMatrix);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "view"), true, ref view);
+            GL.UniformMatrix4(GL.GetUniformLocation(_lampShader, "projection"), true, ref projection);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
 
@@ -292,8 +294,80 @@ namespace LearnOpenTK
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+
             _camera.AspectRatio = Size.X / (float)Size.Y;
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            int handle = GL.CreateProgram();
+
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            GL.LinkProgram(handle);
+
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            int shader = GL.CreateShader(type);
+
+            GL.ShaderSource(shader, source);
+
+            GL.CompileShader(shader);
+
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
+        }
+
+        public static int LoadTextureFromFile(string path)
+        {
+            int handle = GL.GenTexture();
+
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, handle);
+
+            StbImage.stbi_set_flip_vertically_on_load(1);
+
+            using (Stream stream = File.OpenRead(path))
+            {
+                ImageResult image = ImageResult.FromStream(stream, ColorComponents.RedGreenBlueAlpha);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, image.Data);
+            }
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+
+            return handle;
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using LearnOpenTK.Common;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -34,7 +35,7 @@ namespace LearnOpenTK
         // This class is a wrapper around a shader, which helps us manage it.
         // The shader class's code is in the Common project.
         // What shaders are and what they're used for will be explained later in this tutorial.
-        private Shader _shader;
+        private int _shader;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -112,13 +113,13 @@ namespace LearnOpenTK
             // Modern OpenGL makes this pipeline very free, giving us a lot of freedom on how vertices are turned to pixels.
             // The drawback is that we actually need two more programs for this! These are called "shaders".
             // Shaders are tiny programs that live on the GPU. OpenGL uses them to handle the vertex-to-pixel pipeline.
-            // Check out the Shader class in Common to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
+            // Check out the CompileProgram function to see how we create our shaders, as well as a more in-depth explanation of how shaders work.
             // shader.vert and shader.frag contain the actual shader code.
-            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
+            _shader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
 
             // Now, enable the shader.
             // Just like the VBO, this is global, so every function that uses a shader will modify this one until a new one is bound instead.
-            GL.UseProgram(_shader.Handle);
+            GL.UseProgram(_shader);
 
             // Setup is now complete! Now we move to the OnRenderFrame function to finally draw the triangle.
         }
@@ -140,7 +141,7 @@ namespace LearnOpenTK
             // and then calling an OpenGL function to render.
 
             // Bind the shader
-            GL.UseProgram(_shader.Handle);
+            GL.UseProgram(_shader);
 
             // Bind the VAO
             GL.BindVertexArray(_vertexArrayObject);
@@ -182,7 +183,7 @@ namespace LearnOpenTK
 
             // When the window gets resized, we have to call GL.Viewport to resize OpenGL's viewport to match the new size.
             // If we don't, the NDC will no longer be correct.
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
         }
 
         // Now, for cleanup.
@@ -197,7 +198,7 @@ namespace LearnOpenTK
         // longer used for whatever reason (e.g. a new scene is loaded that doesn't use a texture).
         // This would free up video ram (VRAM) that can be used for new textures.
         //
-        // The coming chapters will not have this code.
+        // The coming chapters will not have this cleanup code.
         protected override void OnUnload()
         {
             // Unbind all the resources by binding the targets to 0/null.
@@ -209,9 +210,70 @@ namespace LearnOpenTK
             GL.DeleteBuffer(_vertexBufferObject);
             GL.DeleteVertexArray(_vertexArrayObject);
 
-            GL.DeleteProgram(_shader.Handle);
+            GL.DeleteProgram(_shader);
 
             base.OnUnload();
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            // Compile vertex shader.
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+
+            // We do the same for the fragment shader.
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            // These two shaders must then be merged into a shader program, which can then be used by OpenGL.
+            // To do this, create a program...
+            int handle = GL.CreateProgram();
+
+            // Attach both shaders...
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            // And then link them together.
+            GL.LinkProgram(handle);
+
+            // Check for linking errors
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                // We can use `GL.GetProgramInfoLog(program)` to get information about the error.
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            // When the shader program is linked, it no longer needs the individual shaders attached to it; the compiled code is copied into the shader program.
+            // Detach them, and then delete them.
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            // GL.CreateShader will create an empty shader. The ShaderType enum denotes which type of shader will be created.
+            int shader = GL.CreateShader(type);
+
+            // Upload the GLSL source code.
+            GL.ShaderSource(shader, source);
+
+            // Try to compile the shader
+            GL.CompileShader(shader);
+
+            // Check for compilation errors
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                // We can use `GL.GetShaderInfoLog(shader)` to get information about the error.
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
         }
     }
 }

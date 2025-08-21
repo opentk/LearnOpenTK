@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30309.148
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "1-CreatingAWindow", "Chapter1\1-CreatingAWindow\1-CreatingAWindow.csproj", "{39A0FE24-A920-4C13-9BB9-18483FECD55D}"
 EndProject
@@ -18,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "8-CoordinatesSystems", "Chapter1\8-CoordinatesSystems\8-CoordinatesSystems.csproj", "{13DFF44A-3D98-44B9-ADE0-B447053FECFC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "9-Camera", "Chapter1\9-Camera\9-Camera.csproj", "{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chapter1", "Chapter1", "{F7676E7B-4F14-48D9-8985-3FA73BF633BD}"
 EndProject
@@ -85,10 +83,6 @@ Global
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2E87EBD-BA5C-4A22-820F-99B492B39BCB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2CEFE30B-F99D-4E62-8D33-2366A6F75F7F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F363CEB6-1E2C-4114-AA8C-85452472F82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F363CEB6-1E2C-4114-AA8C-85452472F82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F363CEB6-1E2C-4114-AA8C-85452472F82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -157,9 +151,6 @@ Global
 		{1234CBB6-22C1-42D0-828B-1D1E7085EF33} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
 		{E8DA696D-F948-4967-BF75-1570A2957C3B} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
 		{EB44CAF3-EB1B-4FD1-B29C-DA592568E013} = {F7676E7B-4F14-48D9-8985-3FA73BF633BD}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A8747DC-91DB-4ECB-AB4A-5504F9D715D9}

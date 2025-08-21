@@ -1,10 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using OpenTK.Graphics.OpenGL4;
-using LearnOpenTK.Common;
-using OpenTK.Windowing.Desktop;
+﻿using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -29,7 +30,7 @@ namespace LearnOpenTK
 
         private int _vertexArrayObject;
 
-        private Shader _shader;
+        private int _shader;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
             : base(gameWindowSettings, nativeWindowSettings)
@@ -56,8 +57,8 @@ namespace LearnOpenTK
             GL.GetInteger(GetPName.MaxVertexAttribs, out int maxAttributeCount);
             Debug.WriteLine($"Maximum number of vertex attributes supported: {maxAttributeCount}");
 
-            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
-            GL.UseProgram(_shader.Handle);
+            _shader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
+            GL.UseProgram(_shader);
 
             // We start the stopwatch here as this method is only called once.
             _timer = new Stopwatch();
@@ -70,7 +71,7 @@ namespace LearnOpenTK
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.UseProgram(_shader.Handle);
+            GL.UseProgram(_shader);
 
             // Here, we get the total seconds that have elapsed since the last time this method has reset
             // and we assign it to the timeValue variable so it can be used for the pulsating color.
@@ -83,7 +84,7 @@ namespace LearnOpenTK
 
             // This gets the uniform variable location from the frag shader so that we can 
             // assign the new green value to it.
-            int vertexColorLocation = GL.GetUniformLocation(_shader.Handle, "ourColor");
+            int vertexColorLocation = GL.GetUniformLocation(_shader, "ourColor");
 
             // Here we're assigning the ourColor variable in the frag shader 
             // via the OpenGL Uniform method which takes in the value as the individual vec values (which total 4 in this instance).
@@ -116,7 +117,52 @@ namespace LearnOpenTK
         {
             base.OnResize(e);
 
-            GL.Viewport(0, 0, Size.X, Size.Y);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            int handle = GL.CreateProgram();
+
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            GL.LinkProgram(handle);
+
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            int shader = GL.CreateShader(type);
+
+            GL.ShaderSource(shader, source);
+
+            GL.CompileShader(shader);
+
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
         }
     }
 }

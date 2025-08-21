@@ -10,7 +10,7 @@ namespace LearnOpenTK
         {
             var nativeWindowSettings = new NativeWindowSettings()
             {
-                Size = new Vector2i(800, 600),
+                ClientSize = new Vector2i(800, 600),
                 Title = "LearnOpenTK - Transformations",
                 // This is needed to run on macos
                 Flags = ContextFlags.ForwardCompatible,

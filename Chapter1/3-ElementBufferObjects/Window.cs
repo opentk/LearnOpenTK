@@ -1,8 +1,9 @@
-﻿using LearnOpenTK.Common;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+using System;
+using System.IO;
 
 namespace LearnOpenTK
 {
@@ -38,7 +39,7 @@ namespace LearnOpenTK
 
         private int _vertexArrayObject;
 
-        private Shader _shader;
+        private int _shader;
 
         // Add a handle for the EBO
         private int _elementBufferObject;
@@ -76,8 +77,8 @@ namespace LearnOpenTK
             GL.BufferData(BufferTarget.ElementArrayBuffer, _indices.Length * sizeof(uint), _indices, BufferUsageHint.StaticDraw);
             // The EBO has now been properly setup. Go to the Render function to see how we draw our rectangle now!
 
-            _shader = Shader.FromFile("Shaders/shader.vert", "Shaders/shader.frag");
-            GL.UseProgram(_shader.Handle);
+            _shader = CompileProgram(File.ReadAllText("Shaders/shader.vert"), File.ReadAllText("Shaders/shader.frag"));
+            GL.UseProgram(_shader);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -86,7 +87,7 @@ namespace LearnOpenTK
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.UseProgram(_shader.Handle);
+            GL.UseProgram(_shader);
 
             // Because ElementArrayObject is a property of the currently bound VAO,
             // the buffer you will find in the ElementArrayBuffer will change with the currently bound VAO.
@@ -118,7 +119,53 @@ namespace LearnOpenTK
         protected override void OnResize(ResizeEventArgs e)
         {
             base.OnResize(e);
-            GL.Viewport(0, 0, Size.X, Size.Y);
+
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+        }
+
+        private static int CompileProgram(string vertexSource, string fragmentSource)
+        {
+            int vertexShader = CompileShader(ShaderType.VertexShader, vertexSource);
+            int fragmentShader = CompileShader(ShaderType.FragmentShader, fragmentSource);
+
+            int handle = GL.CreateProgram();
+
+            GL.AttachShader(handle, vertexShader);
+            GL.AttachShader(handle, fragmentShader);
+
+            GL.LinkProgram(handle);
+
+            GL.GetProgram(handle, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
+            {
+                string infoLog = GL.GetProgramInfoLog(handle);
+                throw new Exception($"Error occurred whilst linking Program({handle}):\n{infoLog}");
+            }
+
+            GL.DetachShader(handle, vertexShader);
+            GL.DetachShader(handle, fragmentShader);
+            GL.DeleteShader(fragmentShader);
+            GL.DeleteShader(vertexShader);
+
+            return handle;
+        }
+
+        private static int CompileShader(ShaderType type, string source)
+        {
+            int shader = GL.CreateShader(type);
+
+            GL.ShaderSource(shader, source);
+
+            GL.CompileShader(shader);
+
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
+            {
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Error occurred whilst compiling Shader({shader}):\n{infoLog}");
+            }
+
+            return shader;
         }
     }
 }
